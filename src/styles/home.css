@@ -1,0 +1,23 @@
+.home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    text-align: center;
+  }
+  
+  .home-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--color-principal); /* Dorado bonito */
+    margin-bottom: 1rem;
+  }
+  
+  .home-slogan {
+    font-size: 1.2rem;
+    font-family: var(--font-secundaria);
+    color: var(--color-texto);
+  }
+  

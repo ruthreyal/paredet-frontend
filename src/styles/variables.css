@@ -1,0 +1,17 @@
+:root {
+    /* Colores */
+    --color-principal: #c9a04d;
+    --color-secundario: #ffffff;
+    --color-texto: #222;
+    --color-fondo: #f7f7f7;
+    --color-error: #e63946;
+    --color-negro: #000;
+  
+    /* Tipografías */
+    --font-principal: 'Roboto', sans-serif;
+    --font-secundaria: 'Open Sans', sans-serif;
+  
+    /* Tamaños */
+    --border-radius: 8px;
+  }
+  

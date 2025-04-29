@@ -1,0 +1,40 @@
+# --- GLOBAL ---
+.DS_Store
+Thumbs.db
+
+# --- LOGS ---
+*.log
+
+# --- JAVA / SPRING BOOT BACKEND ---
+target/
+*.class
+*.jar
+*.war
+*.iml
+*.ipr
+*.iws
+*.idea/
+*.project
+*.classpath
+.apt_generated/
+.factorypath/
+.springBeans/
+sts4-cache/
+
+# --- MAVEN ---
+.mvn/
+mvnw
+mvnw.cmd
+
+# --- REACT FRONTEND ---
+node_modules/
+build/
+.env
+.env.local
+
+# --- VSCODE ---
+.vscode/
+
+# --- OS Specific ---
+*.swp
+

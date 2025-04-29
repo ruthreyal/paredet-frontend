@@ -1,0 +1,147 @@
+/* 🔵 BOTONES */
+.btn-gold {
+    background-color: var(--color-principal);
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-gold:hover {
+    background-color: #a77f2a;
+  }
+  
+  /* 🔵 INPUTS */
+  .input-field {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    width: 100%;
+  }
+  
+  /* 🔵 TÍTULOS */
+  .section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  /* 🔵 NAVBAR y MENÚ */
+  .logo-text {
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+  }
+  
+  .slogan {
+    font-size: 0.8rem;
+    color: var(--color-principal);
+  }
+  
+  /* 🔵 NAVBAR MOBILE */
+  .menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+  
+  .menu-toggle span {
+    width: 25px;
+    height: 2px;
+    background-color: white;
+  }
+  
+  .mobile-menu {
+    background-color: var(--color-negro);
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    padding-bottom: 1rem;
+    display: none;
+    flex-direction: column;
+  }
+  
+  .mobile-menu.show {
+    display: flex;
+  }
+
+  /* ALERTAS PERSONALIZADAS */
+.alert-success {
+    background-color: var(--color-principal);
+    color: var(--color-secundario);
+    border: none;
+  }
+  
+  .alert-danger {
+    background-color: var(--color-error);
+    color: var(--color-secundario);
+    border: none;
+  }
+
+  /* 🔵 Estilo para el texto del logo (PAREDET) */
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: var(--color-secundario);
+  }
+  
+  /* 🔵 Estilo para el slogan */
+  .slogan {
+    font-size: 0.8rem;
+    color: var(--color-principal);
+    margin-top: 0.5rem;
+  }
+  
+  /* 🔵 Estilo para los enlaces del navbar */
+  .navbar-nav .nav-link {
+    color: var(--color-secundario);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+  }
+  
+  /* 🔵 Estilo para el botón hamburguesa */
+  .menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+  
+  .menu-toggle span {
+    width: 25px;
+    height: 2px;
+    background-color: white;
+  }
+  
+  /* 🔵 Estilo para el menú móvil */
+  .mobile-menu {
+    background-color: var(--color-negro);
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    padding-bottom: 1rem;
+    display: none;
+    flex-direction: column;
+  }
+  
+  .mobile-menu.show {
+    display: flex;
+  }
+  
+  
+  
