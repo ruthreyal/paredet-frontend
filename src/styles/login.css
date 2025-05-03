@@ -32,6 +32,21 @@
   justify-content: space-between; 
 }
 
+.position-relative {
+  position: relative !;
+}
+
+.ver-password-icon {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-9%);
+  cursor: pointer;
+  color: #666;
+  font-size: 1rem;
+}
+
+
 
 
   

@@ -1,0 +1,17 @@
+footer {
+    background-color: var(--color-negro);
+    color: var(--color-secundario);
+    text-align: center;
+    padding: 1rem 0;
+    font-family: var(--font-secundaria);
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  @media (max-width: 576px) {
+    footer {
+      font-size: 0.8rem;
+      padding: 0.8rem 0;
+    }
+  }
+  

@@ -70,10 +70,15 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <span onClick={() => setVerPassword(!verPassword)} className="position-absolute top-50 end-0 translate-middle-y pe-3" style={{ cursor: "pointer" }}>
-              {verPassword ? <FaEyeSlash /> : <FaEye />}
+            <span
+              onClick={() => setVerPassword(!verPassword)}
+              className="position-absolute top-50 end-0 translate-middle-y pe-3"
+              style={{ cursor: "pointer" }}
+            >
+              {verPassword ? <FaEye /> : <FaEyeSlash />}
             </span>
           </div>
+
 
           {mensaje && (
             <div className="alert alert-danger mt-2 login-message-container" role="alert">
