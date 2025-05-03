@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "../styles/login.css";
-import { FaUserPlus, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaUserPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import registroService from "../services/registroService";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import UsuarioForm from "../components/UsuarioForm";
 
 const Registro = () => {
   const [formData, setFormData] = useState({
@@ -20,11 +20,11 @@ const Registro = () => {
     codigoPostal: "",
   });
 
+  const [mensaje, setMensaje] = useState("");
   const [verPassword, setVerPassword] = useState(false);
   const [verRepetir, setVerRepetir] = useState(false);
 
   const { login } = useContext(AuthContext);
-  const [mensaje, setMensaje] = useState("");
   const navigate = useNavigate();
 
   const paisesConCiudades = {
@@ -76,89 +76,27 @@ const Registro = () => {
     <main className="container d-flex justify-content-center align-items-center" style={{ minHeight: "80vh", paddingTop: "3rem", paddingBottom: "3rem" }}>
       <section className="login-box d-flex flex-column justify-content-between" style={{ maxWidth: "500px", width: "100%" }} aria-labelledby="registro">
         <h2 id="registro" className="section-title">Formulario de registro</h2>
-
         <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="nombre">Nombre *</label>
-            <input id="nombre" name="nombre" type="text" className="input-field" required value={formData.nombre} onChange={handleChange} />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="apellido">Apellido *</label>
-            <input id="apellido" name="apellido" type="text" className="input-field" required value={formData.apellido} onChange={handleChange} />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="email">Email *</label>
-            <input id="email" name="email" type="email" className="input-field" required value={formData.email} onChange={handleChange} />
-          </div>
-
-          <div className="mb-3 position-relative">
-            <label htmlFor="password">Contraseña *</label>
-            <input id="password" name="password" type={verPassword ? "text" : "password"} className="input-field" required minLength="6" value={formData.password} onChange={handleChange} />
-            <span onClick={() => setVerPassword(!verPassword)} className="position-absolute top-50 end-0 translate-middle-y pe-3" style={{ cursor: "pointer" }}>
-              {verPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-
-          <div className="mb-3 position-relative">
-            <label htmlFor="repetirPassword">Repetir contraseña *</label>
-            <input id="repetirPassword" name="repetirPassword" type={verRepetir ? "text" : "password"} className="input-field" required minLength="6" value={formData.repetirPassword} onChange={handleChange} />
-            <span onClick={() => setVerRepetir(!verRepetir)} className="position-absolute top-50 end-0 translate-middle-y pe-3" style={{ cursor: "pointer" }}>
-              {verRepetir ? <FaEyeSlash /> : <FaEye />}
-            </span>
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="telefono">Teléfono *</label>
-            <input id="telefono" name="telefono" type="tel" className="input-field" required value={formData.telefono} onChange={handleChange} />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="direccion">Dirección</label>
-            <input id="direccion" name="direccion" type="text" className="input-field" value={formData.direccion} onChange={handleChange} />
-          </div>
-
-          <div className="mb-3">
-            <label htmlFor="pais">País</label>
-            <select id="pais" name="pais" className="input-field" value={formData.pais} onChange={handleChange}>
-              <option value="">Selecciona un país</option>
-              {Object.keys(paisesConCiudades).map((pais) => (
-                <option key={pais} value={pais}>{pais}</option>
-              ))}
-            </select>
-          </div>
-
-          {formData.pais && (
-            <div className="mb-3">
-              <label htmlFor="ciudad">Ciudad</label>
-              <select id="ciudad" name="ciudad" className="input-field" value={formData.ciudad} onChange={handleChange}>
-                <option value="">Selecciona una ciudad</option>
-                {paisesConCiudades[formData.pais].map((ciudad) => (
-                  <option key={ciudad} value={ciudad}>{ciudad}</option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          <div className="mb-3">
-            <label htmlFor="codigoPostal">Código Postal</label>
-            <input id="codigoPostal" name="codigoPostal" type="text" className="input-field" value={formData.codigoPostal} onChange={handleChange} />
-          </div>
-
-          <div className="login-message-container mt-3" role="alert">
+          <UsuarioForm
+            formData={formData}
+            handleChange={handleChange}
+            mostrarPassword={true}
+            verPassword={verPassword}
+            setVerPassword={setVerPassword}
+            verRepetir={verRepetir}
+            setVerRepetir={setVerRepetir}
+            readonlyEmail={false}
+            paisesConCiudades={paisesConCiudades}
+          >
             {mensaje && (
-              <div className={`alert ${mensaje.includes("exitoso") ? "alert-success" : "alert-danger"}`}>
+              <div className={`alert mt-3 ${mensaje.includes("exitoso") ? "alert-success" : "alert-danger"}`} role="alert">
                 {mensaje}
               </div>
             )}
-          </div>
-
-          <button type="submit" className="btn btn-outline-dark w-100 mt-2">
-            <FaUserPlus className="me-2" />
-            Registrarse
-          </button>
-
+            <button type="submit" className="btn btn-outline-dark w-100 mt-2">
+              <FaUserPlus className="me-2" /> Registrarse
+            </button>
+          </UsuarioForm>
         </form>
       </section>
     </main>
@@ -166,4 +104,5 @@ const Registro = () => {
 };
 
 export default Registro;
+
 

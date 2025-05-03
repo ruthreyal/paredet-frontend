@@ -1,0 +1,43 @@
+/* Contenedor principal del layout de administrador */
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--color-fondo);
+    font-family: var(--font-secundaria);
+  }
+  
+  /* Sidebar lateral */
+  .admin-sidebar {
+    width: 220px;
+    background-color: var(--color-negro);
+    color: var(--color-secundario);
+    min-height: 100vh;
+  }
+  
+  .admin-sidebar h4 {
+    font-family: var(--font-principal);
+    font-size: 1.2rem;
+    color: var(--color-principal);
+  }
+  
+  .admin-sidebar .nav-link {
+    color: var(--color-secundario);
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s ease;
+  }
+  
+  .admin-sidebar .nav-link:hover {
+    background-color: var(--color-principal);
+    color: var(--color-negro);
+  }
+  
+  /* Área principal */
+  .admin-main {
+    padding: 2rem;
+    flex-grow: 1;
+    background-color: var(--color-secundario);
+    color: var(--color-texto);
+  }
+  
+  

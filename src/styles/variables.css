@@ -1,18 +1,20 @@
 :root {
   /* Colores */
-  --color-principal: #c9a04d;
+  --color-principal: #c9a04d;     
   --color-secundario: #ffffff;
   --color-texto: #222;
   --color-fondo: #f7f7f7;
-  --color-error: #8B1E3F; 
-  --color-negro: #202020; 
-  
-  /* Tipografías */
-  --font-principal: 'Playfair Display', serif;
-  --font-secundaria: 'Lato', sans-serif;
+  --color-error: #7b1e1e;         
+  --color-negro: #1c1c1c;          
+  --color-dark: #2a2a2a;         
 
+  /* Tipografías */
+  --font-principal: 'Playfair Display', serif; 
+  --font-secundaria: 'Lato', sans-serif;       
+  
   /* Tamaños */
   --border-radius: 8px;
 }
+
 
   

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import usuarioService from "../services/usuarioService";
 import axios from "axios";
-import { FaSave, FaKey, FaTrash, FaEye, FaEyeSlash } from "react-icons/fa";
-import "../styles/login.css";
+import { FaSave, FaKey, FaTrash } from "react-icons/fa";
 import { API_BASE_URL } from "../services/apiConfig";
+import UsuarioForm from "../components/UsuarioForm";
+import "../styles/login.css";
 
 const PerfilPage = () => {
   const [usuario, setUsuario] = useState(null);
@@ -12,6 +13,7 @@ const PerfilPage = () => {
   const [nuevaPassword, setNuevaPassword] = useState("");
   const [verActual, setVerActual] = useState(false);
   const [verNueva, setVerNueva] = useState(false);
+
   const token = localStorage.getItem("token");
   const email = token ? JSON.parse(atob(token.split(".")[1])).sub : null;
 
@@ -24,17 +26,14 @@ const PerfilPage = () => {
   };
 
   useEffect(() => {
-    const fetchUsuario = async () => {
-      if (!email || !token) return;
-      try {
-        const datos = await usuarioService.getUsuarioPorEmail(email, token);
-        setUsuario(datos);
-      } catch {
+    if (!email || !token) return;
+    usuarioService
+      .getUsuarioPorEmail(email, token)
+      .then(setUsuario)
+      .catch(() => {
         setMensaje("Error al cargar los datos del usuario");
         setTimeout(() => setMensaje(""), 3000);
-      }
-    };
-    fetchUsuario();
+      });
   }, [email, token]);
 
   const handleChange = (e) => {
@@ -57,26 +56,19 @@ const PerfilPage = () => {
     }
 
     try {
-      await axios.put(
-        `${API_BASE_URL}/usuarios/email/${usuario.email}`,
-        usuario,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      await axios.put(`${API_BASE_URL}/usuarios/email/${usuario.email}`, usuario, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       setMensaje("Datos actualizados correctamente");
-      setTimeout(() => setMensaje(""), 3000);
     } catch {
       setMensaje("Error al actualizar los datos");
+    } finally {
       setTimeout(() => setMensaje(""), 3000);
     }
   };
 
   const handleCambiarPassword = async (e) => {
     e.preventDefault();
-
     if (!contrasenaActual || !nuevaPassword) {
       setMensaje("Debes completar ambos campos de contraseña.");
       setTimeout(() => setMensaje(""), 3000);
@@ -93,36 +85,29 @@ const PerfilPage = () => {
       await axios.put(
         `${API_BASE_URL}/usuarios/email/${email}/cambiar-password`,
         { actual: contrasenaActual, nueva: nuevaPassword },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
       setMensaje("Contraseña actualizada correctamente");
       setContrasenaActual("");
       setNuevaPassword("");
-      setTimeout(() => setMensaje(""), 3000);
     } catch {
       setMensaje("La contraseña actual no es correcta");
+    } finally {
       setTimeout(() => setMensaje(""), 3000);
     }
   };
 
   const handleEliminarCuenta = async () => {
-    if (window.confirm("¿Estás segura de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.")) {
-      try {
-        await axios.delete(`${API_BASE_URL}/usuarios/email/${usuario.email}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        localStorage.removeItem("token");
-        window.location.href = "/";
-      } catch {
-        setMensaje("Error al eliminar la cuenta");
-        setTimeout(() => setMensaje(""), 3000);
-      }
+    if (!window.confirm("¿Estás segura de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.")) return;
+    try {
+      await axios.delete(`${API_BASE_URL}/usuarios/email/${email}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      localStorage.removeItem("token");
+      window.location.href = "/";
+    } catch {
+      setMensaje("Error al eliminar la cuenta");
+      setTimeout(() => setMensaje(""), 3000);
     }
   };
 
@@ -132,62 +117,19 @@ const PerfilPage = () => {
     <main className="container login-container py-5">
       <section className="login-box" style={{ maxWidth: "500px", width: "100%" }}>
         <h2>Mi perfil</h2>
+
         <form onSubmit={handleGuardar}>
-          <div className="mb-3">
-            <label>Nombre *</label>
-            <input type="text" name="nombre" value={usuario.nombre || ""} onChange={handleChange} className="form-control" required />
-          </div>
-
-          <div className="mb-3">
-            <label>Apellido *</label>
-            <input type="text" name="apellido" value={usuario.apellido || ""} onChange={handleChange} className="form-control" required />
-          </div>
-
-          <div className="mb-3">
-            <label>Email *</label>
-            <input type="email" name="email" value={usuario.email || ""} className="form-control" readOnly />
-          </div>
-
-          <div className="mb-3">
-            <label>Teléfono *</label>
-            <input type="tel" name="telefono" value={usuario.telefono || ""} onChange={handleChange} className="form-control" required />
-          </div>
-
-          <div className="mb-3">
-            <label>Dirección</label>
-            <input type="text" name="direccion" value={usuario.direccion || ""} onChange={handleChange} className="form-control" />
-          </div>
-
-          <div className="mb-3">
-            <label>País</label>
-            <select name="pais" value={usuario.pais || ""} onChange={handleChange} className="form-control">
-              <option value="">Selecciona un país</option>
-              {Object.keys(paisesConCiudades).map((pais) => (
-                <option key={pais} value={pais}>{pais}</option>
-              ))}
-            </select>
-          </div>
-
-          {usuario.pais && (
-            <div className="mb-3">
-              <label>Ciudad</label>
-              <select name="ciudad" value={usuario.ciudad || ""} onChange={handleChange} className="form-control">
-                <option value="">Selecciona una ciudad</option>
-                {paisesConCiudades[usuario.pais].map((ciudad) => (
-                  <option key={ciudad} value={ciudad}>{ciudad}</option>
-                ))}
-              </select>
-            </div>
-          )}
-
-          <div className="mb-3">
-            <label>Código Postal</label>
-            <input type="text" name="codigoPostal" value={usuario.codigoPostal || ""} onChange={handleChange} className="form-control" />
-          </div>
-
-          <button type="submit" className="btn btn-gold w-100">
-            <FaSave className="me-2" /> Guardar cambios
-          </button>
+          <UsuarioForm
+            formData={usuario}
+            handleChange={handleChange}
+            mostrarPassword={false}
+            readonlyEmail={true}
+            paisesConCiudades={paisesConCiudades}
+          >
+            <button type="submit" className="btn btn-gold w-100 mb-3">
+              <FaSave className="me-2" /> Guardar cambios
+            </button>
+          </UsuarioForm>
         </form>
 
         <hr className="my-4" />
@@ -204,11 +146,11 @@ const PerfilPage = () => {
               onChange={(e) => setContrasenaActual(e.target.value)}
             />
             <span
-              onClick={() => setVerActual(!verActual)}
               className="position-absolute top-50 end-0 translate-middle-y pe-3"
               style={{ cursor: "pointer" }}
+              onClick={() => setVerActual(!verActual)}
             >
-              {verActual ? <FaEyeSlash /> : <FaEye />}
+              {verActual ? "🙈" : "👁️"}
             </span>
           </div>
 
@@ -222,11 +164,11 @@ const PerfilPage = () => {
               minLength={6}
             />
             <span
-              onClick={() => setVerNueva(!verNueva)}
               className="position-absolute top-50 end-0 translate-middle-y pe-3"
               style={{ cursor: "pointer" }}
+              onClick={() => setVerNueva(!verNueva)}
             >
-              {verNueva ? <FaEyeSlash /> : <FaEye />}
+              {verNueva ? "🙈" : "👁️"}
             </span>
           </div>
 
@@ -238,11 +180,11 @@ const PerfilPage = () => {
         <hr className="my-4" />
 
         <button className="btn btn-outline-danger w-100" onClick={handleEliminarCuenta}>
-          <FaTrash className="me-2" /> Eliminar mi cuenta
+          <FaTrash className="me-2" /> Eliminar cuenta
         </button>
 
         {mensaje && (
-          <div className="alert-elegante" role="alert">
+          <div className="alert-elegante mt-3" role="alert">
             {mensaje}
           </div>
         )}

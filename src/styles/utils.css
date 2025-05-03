@@ -1,158 +1,121 @@
 /* 🔵 BOTONES */
+/* UTILIDADES GENERALES */
+.container-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.section-title {
+  font-family: var(--font-principal);
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--color-texto);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.alert-elegante {
+  background-color: var(--color-principal);
+  color: var(--color-secundario);
+  border: none;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+}
+
 .btn-gold {
-    background-color: var(--color-principal);
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: var(--border-radius);
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .btn-gold:hover {
-    background-color: #a77f2a;
-  }
-  
-  /* 🔵 INPUTS */
-  .input-field {
-    padding: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: var(--border-radius);
-    width: 100%;
-  }
-  
-  /* 🔵 TÍTULOS */
-  .section-title {
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  /* 🔵 NAVBAR y MENÚ */
-  .logo-text {
-    font-size: 1.5rem;
-    letter-spacing: 2px;
-  }
-  
-  .slogan {
-    font-size: 0.8rem;
-    color: var(--color-principal);
-  }
-  
-  /* 🔵 NAVBAR MOBILE */
-  .menu-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-  }
-  
-  .menu-toggle span {
-    width: 25px;
-    height: 2px;
-    background-color: white;
-  }
-  
-  .mobile-menu {
-    background-color: var(--color-negro);
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    padding-bottom: 1rem;
-    display: none;
-    flex-direction: column;
-  }
-  
-  .mobile-menu.show {
-    display: flex;
-  }
+  background-color: var(--color-principal);
+  color: var(--color-secundario);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-weight: bold;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+}
 
-  /* ALERTAS PERSONALIZADAS */
-.alert-success {
-    background-color: var(--color-principal);
-    color: var(--color-secundario);
-    border: none;
-  }
-  
-  .alert-danger {
-    background-color: var(--color-error);
-    color: var(--color-secundario);
-    border: none;
-  }
+.btn-gold:hover {
+  background-color: #b8903d;
+}
 
-  /* 🔵 Estilo para el texto del logo (PAREDET) */
-.logo-text {
-    font-size: 1.5rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: var(--color-secundario);
-  }
-  
-  /* 🔵 Estilo para el slogan */
-  .slogan {
-    font-size: 0.8rem;
-    color: var(--color-principal);
-    margin-top: 0.5rem;
-  }
-  
-  /* 🔵 Estilo para los enlaces del navbar */
-  .navbar-nav .nav-link {
-    color: var(--color-secundario);
-    font-weight: 500;
-    padding: 0.5rem 1rem;
-  }
-  
-  /* 🔵 Estilo para el botón hamburguesa */
-  .menu-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 4px;
-  }
-  
-  .menu-toggle span {
-    width: 25px;
-    height: 2px;
-    background-color: white;
-  }
-  
-  /* 🔵 Estilo para el menú móvil */
-  .mobile-menu {
-    background-color: var(--color-negro);
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    padding-bottom: 1rem;
-    display: none;
-    flex-direction: column;
-  }
-  
-  .mobile-menu.show {
-    display: flex;
-  }
-  
-  .alert-elegante {
-    background-color: white;
-    border: 1px solid var(--color-principal);
-    color: var(--color-texto);
-    padding: 1rem;
-    border-radius: var(--border-radius);
-    text-align: center;
-    font-size: 0.95rem;
-    margin-top: 1rem;
-    transition: opacity 0.3s ease;
-  }
+.btn-dark {
+  background-color: var(--color-negro);
+  color: var(--color-secundario);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-weight: bold;
+  border-radius: var(--border-radius);
+  transition: background-color 0.3s ease;
+}
+
+.btn-dark:hover {
+  background-color: #000000;
+}
+
+/* PARA ICONOS DENTRO DE INPUT (OJO CONTRASEÑA) */
+.input-icon-wrapper {
+  position: relative;
+}
+
+.input-icon-wrapper input {
+  padding-right: 2.5rem;
+}
+
+.input-icon-wrapper span {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: var(--color-texto);
+}
+
+/* BOTÓN MENÚ HAMBURGUESA */
+.menu-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+}
+
+.menu-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--color-secundario);
+  transition: all 0.3s ease;
+}
+
+.menu-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(4px, -4px);
+}
+
+/* MENÚ MÓVIL */
+.mobile-menu {
+  background-color: var(--color-negro);
+  position: absolute;
+  width: 100%;
+  top: 100%;
+  left: 0;
+  z-index: 999;
+  display: none;
+}
+
+.mobile-menu.show {
+  display: block;
+}
+
   
   
