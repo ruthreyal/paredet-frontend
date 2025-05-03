@@ -9,16 +9,16 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     console.log("Token en useEffect:", token);
-
+  
     const cargarUsuario = async () => {
       if (token) {
         try {
-          const id = JSON.parse(atob(token.split(".")[1])).sub;
-          console.log("ID extraído del token:", id);
-
-          const data = await usuarioService.getUsuarioPorId(id, token); // ✅ Ahora pasamos también el token
+          const email = JSON.parse(atob(token.split(".")[1])).sub;
+          console.log("Email extraído del token:", email);
+  
+          const data = await usuarioService.getUsuarioPorEmail(email, token);
           console.log("Datos del usuario recibidos:", data);
-
+  
           setUsuario(data);
         } catch (error) {
           console.error("Error cargando usuario desde AuthContext", error);
@@ -28,9 +28,9 @@ const AuthProvider = ({ children }) => {
         console.warn("No hay token disponible.");
       }
     };
-
+  
     cargarUsuario();
-  }, [token]);
+  }, [token]);  
 
   const login = (nuevoToken) => {
     localStorage.setItem("token", nuevoToken);

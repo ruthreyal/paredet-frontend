@@ -1,11 +1,8 @@
 import axios from "axios";
 import { API_BASE_URL } from "./apiConfig";
 
-/**
- * Obtiene un usuario por su ID, enviando el token JWT en la cabecera Authorization.
- */
-const getUsuarioPorId = async (id, token) => {
-  const response = await axios.get(`${API_BASE_URL}/usuarios/${id}`, {
+const getUsuarioPorEmail = async (email, token) => {
+  const response = await axios.get(`${API_BASE_URL}/usuarios/email/${email}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -14,9 +11,10 @@ const getUsuarioPorId = async (id, token) => {
 };
 
 const usuarioService = {
-  getUsuarioPorId,
+  getUsuarioPorEmail,
 };
 
 export default usuarioService;
+
 
 

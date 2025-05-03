@@ -1,0 +1,35 @@
+/* Estilo base para navbar */
+.navbar {
+    background-color: var(--color-negro);
+    font-family: var(--font-secundaria);
+  }
+  
+  /* Logo responsivo */
+  .logo-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-principal);
+  }
+  
+  @media (max-width: 576px) {
+    .logo-text {
+      font-size: 1.2rem;
+    }
+  
+    .navbar .nav-link {
+      font-size: 0.9rem;
+      padding: 0.4rem 0.6rem;
+    }
+  
+    .navbar-nav {
+      gap: 0.5rem !important;
+    }
+  
+    .bi-person,
+    .bi-cart,
+    .bi-search {
+      font-size: 1.1rem !important;
+    }
+  }
+  
+  

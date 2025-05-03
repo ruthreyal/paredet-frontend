@@ -21,7 +21,12 @@
   }
   
   /* Títulos */
-  h1, h2, h3 {
+   h1, h2, h3 {
     font-family: var(--font-principal);
+    font-weight: 600;
+  }
+
+  h4, h5, h6 {
+    font-family: var(--font-secudaria);
   }
   

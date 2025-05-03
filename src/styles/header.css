@@ -1,32 +1,48 @@
 .header-container {
-    background-color: var(--color-negro);
-    text-align: center;
-    max-height: 300px; 
-    overflow: hidden; /* ✅ Para evitar que se desborde */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
+  background-color: var(--color-negro);
+  text-align: center;
+  max-height: 300px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-logo {
+  width: 100px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--color-principal);
+  font-family: var(--font-principal);
+}
+
+.slogan {
+  font-size: 0.9rem;
+  color: var(--color-principal);
+  font-family: var(--font-secundaria);
+}
+
+@media (max-width: 576px) {
   .header-logo {
-    width: 100px; /* ✅ Limitamos el tamaño del logo */
-    height: auto;
-    margin-bottom: 1rem;
+    width: 70px;
   }
-  
+
   .logo-text {
-    font-size: 1.5rem;
-    font-weight: bold;
-    letter-spacing: 2px;
-    color: var(--color-principal);
-    margin-bottom: 0.3rem;
+    font-size: 1.2rem;
   }
-  
+
   .slogan {
-    font-size: 0.9rem;
-    color: var(--color-principal);
-    font-family: var(--font-secundaria);
+    font-size: 0.8rem;
   }
+}
+
+
   
   
