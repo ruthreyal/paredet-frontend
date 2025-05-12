@@ -2,6 +2,7 @@ import './styles/variables.css';
 import './styles/base.css';
 import './styles/utils.css';
 import './styles/login.css'; 
+import AutoRedirect from './components/AutoRedirect'; 
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
@@ -15,7 +16,9 @@ import AuthProvider from './context/AuthContext';
 import AdminLayout from './pages/admin/AdminLayout';
 import AdminUsuarios from "./pages/admin/AdminUsuarios";
 import UsuarioForm from "./components/UsuarioForm";
-
+import EditarUsuario from './pages/admin/EditarUsuario';
+import RecuperarPassword from "./pages/RecuperarPassword";
+import RestablecerPassword from "./pages/RestablecerPassword";
 
 function App() {
   return (
@@ -23,24 +26,29 @@ function App() {
       <Router>
         <Routes>
 
-          {/* ✅ Rutas de administrador con layout especial */}
-          <Route path="/admin/*" element={<AdminLayout />} />
-          <Route path="usuarios" element={<AdminUsuarios />} />
-          <Route path="usuarios/crear" element={<UsuarioForm />} />
-          <Route path="usuarios/editar/:email" element={<UsuarioForm />} />
-          {/* ✅ Resto de la web con header/navbar/footer */}
+          {/* RUTAS DE ADMIN CON SUBRUTAS */}
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route path="usuarios" element={<AdminUsuarios />} />
+            <Route path="usuarios/crear" element={<UsuarioForm />} />
+            <Route path="usuarios/editar/:email" element={<EditarUsuario />} />
+          </Route>
+
+          {/* Resto de la web con layout común */}
           <Route
             path="*"
             element={
               <div className="d-flex flex-column min-vh-100">
                 <Header />
                 <Navbar />
+                <AutoRedirect />
                 <main className="flex-grow-1">
                   <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/registro" element={<Registro />} />
                     <Route path="/perfil" element={<PerfilPage />} />
+                    <Route path="/recuperar-password" element={<RecuperarPassword />} />
+                    <Route path="/restablecer-password" element={<RestablecerPassword />} />
                   </Routes>
                 </main>
                 <Footer />
@@ -54,6 +62,7 @@ function App() {
 }
 
 export default App;
+
 
 
 

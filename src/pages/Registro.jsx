@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import registroService from "../services/registroService";
 import { AuthContext } from "../context/AuthContext";
 import UsuarioForm from "../components/UsuarioForm";
+import FormularioContraseñaNueva from "../components/FormularioContraseñaNueva";
 
 const Registro = () => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,7 @@ const Registro = () => {
     pais: "",
     ciudad: "",
     codigoPostal: "",
+    rol: "USER"
   });
 
   const [mensaje, setMensaje] = useState("");
@@ -32,13 +34,13 @@ const Registro = () => {
     Portugal: ["Lisboa", "Oporto", "Coímbra", "Braga"],
     Francia: ["París", "Lyon", "Marsella", "Toulouse"],
     Italia: ["Roma", "Milán", "Florencia", "Venecia"],
-    Inglaterra: ["Londres", "Manchester", "Birmingham", "Liverpool"],
+    Inglaterra: ["Londres", "Manchester", "Birmingham", "Liverpool"]
   };
 
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value,
+      [e.target.name]: e.target.value
     }));
   };
 
@@ -60,11 +62,14 @@ const Registro = () => {
       return;
     }
 
-    const usuarioARegistrar = { ...formData };
+    const usuarioARegistrar = {
+      ...formData,
+      rol: { nombre: formData.rol }
+    };
     delete usuarioARegistrar.repetirPassword;
 
     try {
-      const token = await registroService.register(usuarioARegistrar);
+      const token = await registroService.registerPublic(usuarioARegistrar);
       login(token);
       navigate("/");
     } catch (error) {
@@ -73,30 +78,41 @@ const Registro = () => {
   };
 
   return (
-    <main className="container d-flex justify-content-center align-items-center" style={{ minHeight: "80vh", paddingTop: "3rem", paddingBottom: "3rem" }}>
-      <section className="login-box d-flex flex-column justify-content-between" style={{ maxWidth: "500px", width: "100%" }} aria-labelledby="registro">
+    <main
+      className="container d-flex justify-content-center align-items-center"
+      style={{ minHeight: "80vh", paddingTop: "3rem", paddingBottom: "3rem" }}
+    >
+      <section
+        className="login-box d-flex flex-column justify-content-between"
+        style={{ maxWidth: "500px", width: "100%" }}
+        aria-labelledby="registro"
+      >
         <h2 id="registro" className="section-title">Formulario de registro</h2>
         <form onSubmit={handleSubmit}>
           <UsuarioForm
             formData={formData}
             handleChange={handleChange}
-            mostrarPassword={true}
+            readonlyEmail={false}
+            paisesConCiudades={paisesConCiudades}
+            isAdmin={false}
+          />
+          <FormularioContraseñaNueva
+            password={formData.password}
+            repetirPassword={formData.repetirPassword}
             verPassword={verPassword}
             setVerPassword={setVerPassword}
             verRepetir={verRepetir}
             setVerRepetir={setVerRepetir}
-            readonlyEmail={false}
-            paisesConCiudades={paisesConCiudades}
-          >
-            {mensaje && (
-              <div className={`alert mt-3 ${mensaje.includes("exitoso") ? "alert-success" : "alert-danger"}`} role="alert">
-                {mensaje}
-              </div>
-            )}
-            <button type="submit" className="btn btn-outline-dark w-100 mt-2">
-              <FaUserPlus className="me-2" /> Registrarse
-            </button>
-          </UsuarioForm>
+            handleChange={handleChange}
+          />
+          {mensaje && (
+            <div className="alert alert-danger mt-3" role="alert">
+              {mensaje}
+            </div>
+          )}
+          <button type="submit" className="btn btn-outline-dark w-100 mt-2">
+            <FaUserPlus className="me-2" /> Registrarse
+          </button>
         </form>
       </section>
     </main>
@@ -104,5 +120,4 @@ const Registro = () => {
 };
 
 export default Registro;
-
 

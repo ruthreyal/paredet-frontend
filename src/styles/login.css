@@ -46,6 +46,22 @@
   font-size: 1rem;
 }
 
+.forgot-password button {
+  background: none;
+  border: none;
+  color: var(--color-texto);
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+}
+
+.forgot-password button:hover {
+  color: var(--color-principal);
+  text-decoration: underline;
+}
+
+
 
 
 

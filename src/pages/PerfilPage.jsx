@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import usuarioService from "../services/usuarioService";
 import axios from "axios";
-import { FaSave, FaKey, FaTrash } from "react-icons/fa";
+import { FaSave, FaTrash } from "react-icons/fa";
 import { API_BASE_URL } from "../services/apiConfig";
 import UsuarioForm from "../components/UsuarioForm";
+import FormularioCambiarContraseña from "../components/FormularioCambiarContraseña";
 import "../styles/login.css";
 
 const PerfilPage = () => {
@@ -15,14 +16,23 @@ const PerfilPage = () => {
   const [verNueva, setVerNueva] = useState(false);
 
   const token = localStorage.getItem("token");
-  const email = token ? JSON.parse(atob(token.split(".")[1])).sub : null;
+  let email = null;
+
+  try {
+    if (token) {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      email = payload?.sub || null;
+    }
+  } catch {
+    console.error("Error al extraer email del token.");
+  }
 
   const paisesConCiudades = {
     España: ["Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao"],
     Portugal: ["Lisboa", "Oporto", "Coímbra", "Braga"],
     Francia: ["París", "Lyon", "Marsella", "Toulouse"],
     Italia: ["Roma", "Milán", "Florencia", "Venecia"],
-    Inglaterra: ["Londres", "Manchester", "Birmingham", "Liverpool"],
+    Inglaterra: ["Londres", "Manchester", "Birmingham", "Liverpool"]
   };
 
   useEffect(() => {
@@ -57,7 +67,7 @@ const PerfilPage = () => {
 
     try {
       await axios.put(`${API_BASE_URL}/usuarios/email/${usuario.email}`, usuario, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
       setMensaje("Datos actualizados correctamente");
     } catch {
@@ -101,7 +111,7 @@ const PerfilPage = () => {
     if (!window.confirm("¿Estás segura de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.")) return;
     try {
       await axios.delete(`${API_BASE_URL}/usuarios/email/${email}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}` }
       });
       localStorage.removeItem("token");
       window.location.href = "/";
@@ -111,7 +121,9 @@ const PerfilPage = () => {
     }
   };
 
-  if (!usuario) return <p className="text-center mt-5">Cargando...</p>;
+  if (!usuario || typeof usuario !== "object") {
+    return <p className="text-center mt-5">Cargando...</p>;
+  }
 
   return (
     <main className="container login-container py-5">
@@ -122,60 +134,30 @@ const PerfilPage = () => {
           <UsuarioForm
             formData={usuario}
             handleChange={handleChange}
-            mostrarPassword={false}
             readonlyEmail={true}
             paisesConCiudades={paisesConCiudades}
-          >
-            <button type="submit" className="btn btn-gold w-100 mb-3">
-              <FaSave className="me-2" /> Guardar cambios
-            </button>
-          </UsuarioForm>
+          />
+          <button type="submit" className="btn btn-gold w-100 mb-3">
+            <FaSave className="me-2" /> Guardar cambios
+          </button>
         </form>
 
         <hr className="my-4" />
 
-        <form onSubmit={handleCambiarPassword}>
-          <h5 className="mb-3">Cambiar contraseña</h5>
-
-          <div className="mb-3 position-relative">
-            <label>Contraseña actual</label>
-            <input
-              type={verActual ? "text" : "password"}
-              className="form-control"
-              value={contrasenaActual}
-              onChange={(e) => setContrasenaActual(e.target.value)}
-            />
-            <span
-              className="position-absolute top-50 end-0 translate-middle-y pe-3"
-              style={{ cursor: "pointer" }}
-              onClick={() => setVerActual(!verActual)}
-            >
-              {verActual ? "🙈" : "👁️"}
-            </span>
-          </div>
-
-          <div className="mb-3 position-relative">
-            <label>Nueva contraseña</label>
-            <input
-              type={verNueva ? "text" : "password"}
-              className="form-control"
-              value={nuevaPassword}
-              onChange={(e) => setNuevaPassword(e.target.value)}
-              minLength={6}
-            />
-            <span
-              className="position-absolute top-50 end-0 translate-middle-y pe-3"
-              style={{ cursor: "pointer" }}
-              onClick={() => setVerNueva(!verNueva)}
-            >
-              {verNueva ? "🙈" : "👁️"}
-            </span>
-          </div>
-
-          <button type="submit" className="btn btn-dark w-100">
-            <FaKey className="me-2" /> Cambiar contraseña
-          </button>
-        </form>
+        <FormularioCambiarContraseña
+          contrasenaActual={contrasenaActual}
+          nuevaPassword={nuevaPassword}
+          verActual={verActual}
+          setVerActual={setVerActual}
+          verNueva={verNueva}
+          setVerNueva={setVerNueva}
+          handleChange={(e) => {
+            const { name, value } = e.target;
+            if (name === "contrasenaActual") setContrasenaActual(value);
+            if (name === "nuevaPassword") setNuevaPassword(value);
+          }}
+          handleSubmit={handleCambiarPassword}
+        />
 
         <hr className="my-4" />
 
@@ -194,5 +176,7 @@ const PerfilPage = () => {
 };
 
 export default PerfilPage;
+
+
 
 

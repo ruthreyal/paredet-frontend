@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/navbar.css";
 
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
@@ -64,7 +63,6 @@ const Navbar = () => {
 
       {/* NAVBAR MOBILE */}
       <nav className="navbar navbar-dark custom-navbar-mobile d-flex d-lg-none justify-content-between align-items-center px-3 py-2">
-
         <button className={`menu-toggle ${isOpen ? "open" : ""}`} onClick={toggleMenu} aria-label="Toggle menu">
           <span></span><span></span><span></span>
         </button>
@@ -99,6 +97,7 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
 
 
 
