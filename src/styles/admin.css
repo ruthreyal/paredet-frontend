@@ -27,10 +27,19 @@
     transition: background-color 0.3s ease;
   }
   
-  .admin-sidebar .nav-link:hover {
-    background-color: var(--color-principal);
-    color: var(--color-negro);
+  .admin-sidebar .nav-link {
+    color: var(--color-secundario);
+    text-decoration: none;
+    transition: color 0.3s ease;
   }
+  
+  .admin-sidebar .nav-link:hover,
+  .admin-sidebar .nav-link.active {
+    color: var(--color-principal); 
+    font-weight: bold;
+    background-color: transparent;
+  }
+  
   
   /* Área principal */
   .admin-main {
@@ -92,12 +101,13 @@
   background-color: #a68129;
 }
 
-.btn-eliminar {
-  background-color: #dc3545;
-  color: white;
-}
-.btn-eliminar:hover {
-  background-color: #b02a37;
+.admin-sidebar .nav-link:active,
+.admin-sidebar .nav-link:focus,
+.admin-sidebar .nav-link.active {
+  color: var(--color-principal) !important;
+  background-color: transparent !important;
+  outline: none;
+  text-decoration: none;
 }
 
   
