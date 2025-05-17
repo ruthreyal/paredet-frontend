@@ -13,6 +13,7 @@ const EditarUsuario = () => {
   const [mensaje, setMensaje] = useState("");
   const [verPassword, setVerPassword] = useState(false);
   const [verRepetir, setVerRepetir] = useState(false);
+  const [mostrarPassword, setMostrarPassword] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,9 +29,9 @@ const EditarUsuario = () => {
           pais: data.pais || "",
           ciudad: data.ciudad || "",
           codigoPostal: data.codigoPostal || "",
-          rol: data.rol || { nombre: "USER" },
+          rol: { nombre: data.rolNombre || "USER" },
           password: "",
-          repetirPassword: ""
+          repetirPassword: "",
         });
       } catch (error) {
         setMensaje("Error al cargar usuario.");
@@ -47,7 +48,7 @@ const EditarUsuario = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -56,7 +57,7 @@ const EditarUsuario = () => {
 
     const payload = {
       ...formData,
-      rol: formData.rol ? { nombre: formData.rol.nombre || "USER" } : null
+      rol: formData.rol ? { nombre: formData.rol.nombre || "USER" } : null,
     };
 
     try {
@@ -72,8 +73,29 @@ const EditarUsuario = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-4">Cargando formulario...</p>;
-  if (!formData) return <p className="text-center mt-4 text-danger">No se pudo cargar el formulario</p>;
+  const handleEliminar = async () => {
+    const confirmacion = window.confirm(
+      "¿Estás segura de que deseas eliminar este usuario?"
+    );
+    if (!confirmacion) return;
+
+    try {
+      await usuarioService.eliminarUsuario(email, token);
+      navigate("/admin/usuarios");
+    } catch (error) {
+      setMensaje("Error al eliminar usuario.");
+      setTimeout(() => setMensaje(""), 3000);
+    }
+  };
+
+  if (loading)
+    return <p className="text-center mt-4">Cargando formulario...</p>;
+  if (!formData)
+    return (
+      <p className="text-center mt-4 text-danger">
+        No se pudo cargar el formulario
+      </p>
+    );
 
   return (
     <div className="container mt-4">
@@ -89,18 +111,46 @@ const EditarUsuario = () => {
           paisesConCiudades={null}
           isAdmin={true}
         />
-        <FormularioContraseñaNueva
-          password={formData.password}
-          repetirPassword={formData.repetirPassword}
-          verPassword={verPassword}
-          setVerPassword={setVerPassword}
-          verRepetir={verRepetir}
-          setVerRepetir={setVerRepetir}
-          handleChange={handleChange}
-        />
-        <div className="text-end mt-4">
+
+        {/* Cambiar contraseña toggle */}
+        <p
+          className="cambiar-password-toggle"
+          onClick={() => setMostrarPassword(!mostrarPassword)}
+          aria-expanded={mostrarPassword}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) =>
+            (e.key === "Enter" || e.key === " ") &&
+            setMostrarPassword(!mostrarPassword)
+          }
+        >
+          {mostrarPassword ? "Ocultar contraseña ▲" : "Cambiar contraseña ▼"}
+        </p>
+
+        {mostrarPassword && (
+          <FormularioContraseñaNueva
+            password={formData.password}
+            repetirPassword={formData.repetirPassword}
+            verPassword={verPassword}
+            setVerPassword={setVerPassword}
+            verRepetir={verRepetir}
+            setVerRepetir={setVerRepetir}
+            handleChange={handleChange}
+          />
+        )}
+
+        <div className="d-flex justify-content-between align-items-center mt-4">
           <button type="submit" className="btn btn-dark">
             Guardar cambios
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-dark"
+            onClick={handleEliminar}
+            aria-label="Eliminar usuario"
+          >
+            Eliminar usuario
           </button>
         </div>
       </form>
@@ -109,12 +159,3 @@ const EditarUsuario = () => {
 };
 
 export default EditarUsuario;
-
-
-
-
-
-
-
-
-
