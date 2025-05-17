@@ -110,4 +110,8 @@
   text-decoration: none;
 }
 
+.admin-sidebar .logout-wrapper {
+  position: sticky;
+  bottom: 1rem;
+}
   

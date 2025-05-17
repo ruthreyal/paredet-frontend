@@ -38,10 +38,20 @@ const AdminLayout = () => {
                 Usuarios
               </Link>
             </li>
+            <li>
+              <Link to="/admin/categorias" className="nav-link">
+                Categorías
+              </Link>
+            </li>
+            <li>
+              <Link to="/" className="nav-link">
+                Ir a la web
+              </Link>
+            </li>
           </ul>
         </div>
 
-        <div className="text-center mt-auto">
+        <div className="logout-wrapper text-center mt-auto">
           <button
             onClick={handleLogout}
             className="btn-claro-inverso"
