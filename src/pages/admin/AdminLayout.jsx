@@ -18,15 +18,35 @@ const AdminLayout = () => {
         <div>
           <h4 className="text-center mb-4">Panel Admin</h4>
           <ul className="nav flex-column">
-            <li><Link to="/admin" className="nav-link">Dashboard</Link></li>
-            <li><Link to="/admin/productos" className="nav-link">Productos</Link></li>
-            <li><Link to="/admin/pedidos" className="nav-link">Pedidos</Link></li>
-            <li><Link to="/admin/usuarios" className="nav-link">Usuarios</Link></li>
+            <li>
+              <Link to="/admin" className="nav-link">
+                Dashboard
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/productos" className="nav-link">
+                Productos
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/pedidos" className="nav-link">
+                Pedidos
+              </Link>
+            </li>
+            <li>
+              <Link to="/admin/usuarios" className="nav-link">
+                Usuarios
+              </Link>
+            </li>
           </ul>
         </div>
 
         <div className="text-center mt-auto">
-          <button onClick={handleLogout} className="btn btn-outline-danger w-100">
+          <button
+            onClick={handleLogout}
+            className="btn-claro-inverso"
+            aria-label="Cerrar sesión"
+          >
             Cerrar sesión
           </button>
         </div>
@@ -40,4 +60,3 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
-

@@ -117,5 +117,23 @@
   display: block;
 }
 
+.btn-claro-inverso {
+  background-color: transparent;
+  color: var(--color-principal);
+  border: 2px solid var(--color-principal);
+  border-radius: var(--border-radius);
+  padding: 0.4rem 0.9rem;
+  font-weight: bold;
+  font-family: var(--font-secundaria);
+  width: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-claro-inverso:hover {
+  background-color: var(--color-principal);
+  color: var(--color-negro);
+}
+
+
   
   
