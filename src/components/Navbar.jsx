@@ -115,63 +115,14 @@ const Navbar = () => {
           <span></span>
           <span></span>
         </button>
-        <span className="fw-bold text-uppercase text-white mx-auto logo-text">
+
+        <span className="logo-text text-white fw-bold text-uppercase mx-auto">
           PAREDET
         </span>
-        <div className="d-flex align-items-center gap-2 position-relative">
-          <i
-            className="bi bi-person text-white fs-5"
-            onClick={handleMobileProfileClick}
-            role="button"
-          ></i>
-          {usuario && (
-            <span className="text-white small">¡Hola, {usuario.nombre}!</span>
-          )}
-          {isProfileMenuOpen && usuario && (
-            <div
-              className="position-absolute end-0 mt-2 bg-white rounded shadow p-2"
-              style={{ minWidth: "150px", zIndex: 999 }}
-            >
-              <ul className="list-unstyled mb-0">
-                <li>
-                  <Link
-                    to="/perfil"
-                    className="dropdown-item"
-                    onClick={toggleProfileMenu}
-                  >
-                    Mi perfil
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/favoritos"
-                    className="dropdown-item"
-                    onClick={toggleProfileMenu}
-                  >
-                    Favoritos
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/pedidos"
-                    className="dropdown-item"
-                    onClick={toggleProfileMenu}
-                  >
-                    Mis pedidos
-                  </Link>
-                </li>
-                <li>
-                  <button
-                    className="dropdown-item text-danger"
-                    onClick={handleLogout}
-                  >
-                    Cerrar sesión
-                  </button>
-                </li>
-              </ul>
-            </div>
-          )}
-        </div>
+
+        <Link to="/buscar" className="text-white fs-5">
+          <i className="bi bi-search"></i>
+        </Link>
       </nav>
 
       {/* MENÚ DESPLEGABLE MOBILE */}
