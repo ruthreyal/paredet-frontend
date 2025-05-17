@@ -1,12 +1,17 @@
-/* Reset básico */
-* {
+/* Reset básico para márgenes y caja */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Estilo general del body */
-body {
+/* Reglas globales */
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
   font-family: var(--font-secundaria);
   background-color: var(--color-fondo);
   color: var(--color-texto);
@@ -14,13 +19,13 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Enlaces */
+/* Enlaces sin subrayado */
 a {
   text-decoration: none;
   color: inherit;
 }
 
-/* Títulos */
+/* Títulos principales con fuente elegante */
 h1, h2, h3 {
   font-family: var(--font-principal);
 }
@@ -29,7 +34,7 @@ h4, h5, h6 {
   font-family: var(--font-secundaria);
 }
 
-/* Formularios comunes */
+/* Formularios generales */
 .form-box {
   background-color: var(--color-secundario);
   max-width: 500px;
@@ -63,24 +68,17 @@ select {
   border-radius: var(--border-radius);
 }
 
-/* Botones */
+/* Botones base */
 button {
   padding: 0.75rem 1rem;
   border-radius: var(--border-radius);
 }
 
+/* ✅ Prevención extra para scroll horizontal */
+img, video, iframe,
+.container, .row, .col,
+div, section, main, aside {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
-/* Botón de acceso general elegante */
-.btn-acceso {
-  border: 1px solid var(--color-dark);
-  background-color: transparent;
-  color: var(--color-texto);
-  padding: 0.6rem 1.2rem;
-  font-weight: 600;
-  border-radius: var(--border-radius);
-  transition: all 0.3s ease;
-}
-.btn-acceso:hover {
-  background-color: var(--color-dark);
-  color: white;
-}

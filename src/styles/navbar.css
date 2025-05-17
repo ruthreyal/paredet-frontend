@@ -1,44 +1,79 @@
 /* Estilo base para navbar */
 .navbar {
-    background-color: var(--color-negro);
-    font-family: var(--font-secundaria);
-  }
-  
-  /* Logo responsivo */
+  background-color: var(--color-negro);
+  font-family: var(--font-secundaria);
+}
+
+/* Logo responsivo */
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-principal);
+}
+
+@media (max-width: 576px) {
   .logo-text {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--color-principal);
+    font-size: 1.2rem;
   }
-  
-  @media (max-width: 576px) {
-    .logo-text {
-      font-size: 1.2rem;
-    }
-  
-    .navbar .nav-link {
-      font-size: 0.9rem;
-      padding: 0.4rem 0.6rem;
-    }
-  
-    .navbar-nav {
-      gap: 0.5rem !important;
-    }
-  
-    .bi-person,
-    .bi-cart,
-    .bi-search {
-      font-size: 1.1rem !important;
-    }
+
+  .navbar .nav-link {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.6rem;
   }
-  
-  @media (max-width: 991.98px) {
-    .logo-text {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-    }
+
+  .navbar-nav {
+    gap: 0.5rem !important;
   }
-  
-  
+
+  .bi-person,
+  .bi-cart,
+  .bi-search {
+    font-size: 1.1rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .logo-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+}
+
+.mobile-menu {
+  position: fixed;
+  top: 3.5rem;
+  left: 0;
+  width: 75%;
+  max-width: 300px;
+  background-color: var(--color-negro);
+  color: white;
+  padding: 1.5rem 1rem;
+  z-index: 1050;
+  display: none;
+  height: auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.mobile-menu.show {
+  display: block;
+}
+
+.mobile-menu {
+  z-index: 11000;
+}
+
+.custom-navbar-mobile {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+  box-shadow: none;
+  height: 3.5rem;
+}
+
+.dropdown-menu.show {
+  display: block !important;
+}
