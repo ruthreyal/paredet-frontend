@@ -60,6 +60,22 @@
   color: var(--color-principal);
   text-decoration: underline;
 }
+.register-prompt {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.register-link {
+  color: #777;
+  text-decoration: underline;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.register-link:hover {
+  color: var(--color-principal);
+}
+
 
 
 

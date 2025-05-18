@@ -25,7 +25,10 @@ const Login = () => {
       const emailFromToken = payload.sub;
 
       // Obtener datos del usuario desde el backend
-      const usuario = await usuarioService.getUsuarioPorEmail(emailFromToken, token);
+      const usuario = await usuarioService.getUsuarioPorEmail(
+        emailFromToken,
+        token
+      );
 
       // Redirigir según el rol
       if (usuario.rolNombre === "ADMIN") {
@@ -33,7 +36,6 @@ const Login = () => {
       } else {
         navigate("/");
       }
-
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       setMensaje("Credenciales incorrectas");
@@ -41,20 +43,39 @@ const Login = () => {
   };
 
   return (
-    <main className="container login-container" role="main" aria-label="Página de identificación">
-      <section className="login-box" aria-labelledby="crear-cuenta">
-        <h2 id="crear-cuenta" className="section-title">Crear cuenta</h2>
-        <p>Crea una nueva cuenta gratuita y disfruta de todas las ventajas de Mi Cuenta Paredet.</p>
-        <button className="btn btn-outline-dark w-100 mt-2" onClick={() => navigate("/registro")}>
+    <main
+      className="container login-container"
+      role="main"
+      aria-label="Página de identificación"
+    >
+      <section
+        className="login-box login-box-registro d-none d-md-flex"
+        aria-labelledby="crear-cuenta"
+      >
+        <h2 id="crear-cuenta" className="section-title">
+          Crear cuenta
+        </h2>
+        <p>
+          Crea una nueva cuenta gratuita y disfruta de todas las ventajas de Mi
+          Cuenta Paredet.
+        </p>
+        <button
+          className="btn btn-outline-dark w-100 mt-2"
+          onClick={() => navigate("/registro")}
+        >
           <FaUserPlus className="me-2" /> Crear cuenta
         </button>
       </section>
 
       <section className="login-box" aria-labelledby="tengo-cuenta">
-        <h2 id="tengo-cuenta" className="section-title">Tengo cuenta</h2>
+        <h2 id="tengo-cuenta" className="section-title">
+          Tengo cuenta
+        </h2>
         <form onSubmit={handleLogin}>
           <div className="mb-3">
-            <label htmlFor="email" className="form-label">Email</label>
+            <label htmlFor="email" className="form-label">
+              Email
+            </label>
             <input
               id="email"
               type="email"
@@ -66,7 +87,9 @@ const Login = () => {
           </div>
 
           <div className="mb-3 position-relative">
-            <label htmlFor="password" className="form-label">Contraseña</label>
+            <label htmlFor="password" className="form-label">
+              Contraseña
+            </label>
             <input
               id="password"
               type={verPassword ? "text" : "password"}
@@ -101,10 +124,19 @@ const Login = () => {
             </button>
           </p>
 
-
           <button type="submit" className="btn btn-outline-dark w-100 mt-2">
             <FaLock className="me-2" /> Entrar
           </button>
+          <p className="register-prompt mt-3 d-md-none text-center">
+            ¿No tienes cuenta?
+            <span
+              className="register-link"
+              onClick={() => navigate("/registro")}
+              role="link"
+            >
+              Regístrate
+            </span>
+          </p>
         </form>
       </section>
     </main>
@@ -112,11 +144,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
-
-
-
-
-
-  
