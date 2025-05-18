@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import "../styles/registro.css";
+import "../styles/formularios.css";
 import { FaUserPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import registroService from "../services/registroService";
@@ -105,8 +105,7 @@ const Registro = () => {
       className="container d-flex justify-content-center align-items-center"
       style={{ minHeight: "80vh", paddingTop: "3rem", paddingBottom: "3rem" }}
     >
-      <section
-        className="login-box d-flex flex-column justify-content-between"
+      <section className="form-box d-flex flex-column justify-content-between"
         style={{ maxWidth: "500px", width: "100%" }}
         aria-labelledby="registro"
       >

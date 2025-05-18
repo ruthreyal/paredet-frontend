@@ -19,19 +19,6 @@
   flex-wrap: wrap;
 }
 
-.login-box {
-  background-color: white;
-  padding: 2rem;
-  border-radius: var(--border-radius);
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-  flex: 1 1 400px;
-  max-width: 450px;
-  min-height: 450px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; 
-}
-
 .position-relative {
   position: relative !;
 }
@@ -60,21 +47,21 @@
   color: var(--color-principal);
   text-decoration: underline;
 }
-.register-prompt {
-  font-size: 0.9rem;
-  color: #777;
+
+.login-box {
+  background-color: white;
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  flex: 1 1 400px;
+  max-width: 450px;
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.register-link {
-  color: #777;
-  text-decoration: underline;
-  margin-left: 5px;
-  cursor: pointer;
-}
 
-.register-link:hover {
-  color: var(--color-principal);
-}
 
 
 

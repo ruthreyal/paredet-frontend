@@ -1,0 +1,31 @@
+.dashboard-container {
+    padding: 1rem;
+  }
+  
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .dashboard-card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+  }
+  
+  .dashboard-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--color-texto);
+  }
+  
+  .dashboard-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--color-principal);
+  }
+  

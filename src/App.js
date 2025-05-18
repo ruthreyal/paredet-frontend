@@ -2,7 +2,7 @@ import "./styles/variables.css";
 import "./styles/base.css";
 import "./styles/utils.css";
 import "./styles/login.css";
-import AutoRedirect from "./components/AutoRedirect";
+import AutoRedirect from "./routes/AutoRedirect";
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";

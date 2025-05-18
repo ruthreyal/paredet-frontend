@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import usuarioService from "../../services/usuarioService";
-import "../../styles/admin.css";
+import "../../styles/adminUsuarios.css";
 import { useNavigate } from "react-router-dom";
 import FormularioCrearUsuario from "./FormularioCrearUsuario";
 
@@ -75,34 +75,23 @@ const AdminUsuarios = () => {
           <thead>
             <tr>
               <th scope="col">Nombre</th>
-              <th scope="col">Apellido</th>
+              <th scope="col" className="d-none d-md-table-cell">Apellido</th>
               <th scope="col">Email</th>
               <th scope="col">Rol</th>
-              <th scope="col">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {usuariosFiltrados.map((usuario) => (
-              <tr key={usuario.id}>
+              <tr
+                key={usuario.id}
+                onClick={() => navigate(`/admin/usuarios/editar/${usuario.email}`)}
+                style={{ cursor: "pointer" }}
+                aria-label={`Editar usuario ${usuario.nombre}`}
+              >
                 <td>{usuario.nombre}</td>
-                <td>{usuario.apellido}</td>
+                <td className="d-none d-md-table-cell">{usuario.apellido}</td>
                 <td>{usuario.email}</td>
-                <td>{usuario.rol}</td>
-                <td>
-                  <button
-                    className="btn btn-link"
-                    onClick={() => navigate(`/admin/usuarios/${usuario.id}/editar`)}
-                    aria-label={`Editar usuario ${usuario.nombre}`}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="btn btn-link text-danger"
-                    aria-label={`Eliminar usuario ${usuario.nombre}`}
-                  >
-                    Eliminar
-                  </button>
-                </td>
+                <td>{usuario.rolNombre}</td>
               </tr>
             ))}
           </tbody>
@@ -115,4 +104,5 @@ const AdminUsuarios = () => {
 };
 
 export default AdminUsuarios;
+
 

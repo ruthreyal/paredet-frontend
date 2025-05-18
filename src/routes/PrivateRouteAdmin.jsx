@@ -4,5 +4,11 @@ import { AuthContext } from "../context/AuthContext";
 
 export const PrivateRouteAdmin = () => {
   const { usuario } = useContext(AuthContext);
-  return usuario?.rol === "ADMIN" ? <Outlet /> : <Navigate to="/" />;
+
+  // Solo se bloquean usuarios no logueados o no admin
+  if (!usuario) return <Navigate to="/login" />;
+  if (usuario.rolNombre !== "ADMIN") return <Navigate to="/" />;
+
+  return <Outlet />;
 };
+
