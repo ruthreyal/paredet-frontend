@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import "../styles/login.css";
+import "../styles/registro.css";
 import { FaUserPlus } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import registroService from "../services/registroService";
@@ -47,6 +47,27 @@ const Registro = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validaciones básicas del formulario
+    if (!formData.nombre.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
+      setMensaje("El nombre solo debe contener letras.");
+      return;
+    }
+
+    if (!formData.apellido.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)) {
+      setMensaje("El apellido solo debe contener letras.");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      setMensaje("Introduce un email válido.");
+      return;
+    }
+
+    if (formData.password.length < 8 || !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)) {
+      setMensaje("La contraseña debe tener al menos 8 caracteres, una letra y un número.");
+      return;
+    }
+
     if (formData.password !== formData.repetirPassword) {
       setMensaje("Las contraseñas no coinciden.");
       return;
@@ -75,6 +96,8 @@ const Registro = () => {
     } catch (error) {
       setMensaje("Error al registrar. Verifica los datos.");
     }
+
+    setTimeout(() => setMensaje(""), 4000);
   };
 
   return (
@@ -88,7 +111,7 @@ const Registro = () => {
         aria-labelledby="registro"
       >
         <h2 id="registro" className="section-title">Formulario de registro</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} aria-label="Formulario de registro de usuario">
           <UsuarioForm
             formData={formData}
             handleChange={handleChange}
@@ -105,11 +128,13 @@ const Registro = () => {
             setVerRepetir={setVerRepetir}
             handleChange={handleChange}
           />
+
           {mensaje && (
-            <div className="alert alert-danger mt-3" role="alert">
+            <div className="alerta-clara mt-3" role="status" aria-live="polite">
               {mensaje}
             </div>
           )}
+
           <button type="submit" className="btn btn-outline-dark w-100 mt-2">
             <FaUserPlus className="me-2" /> Registrarse
           </button>
@@ -120,4 +145,5 @@ const Registro = () => {
 };
 
 export default Registro;
+
 
