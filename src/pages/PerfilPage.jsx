@@ -5,7 +5,7 @@ import { FaSave, FaTrash } from "react-icons/fa";
 import { API_BASE_URL } from "../services/apiConfig";
 import UsuarioForm from "../components/UsuarioForm";
 import FormularioCambiarContraseña from "../components/FormularioCambiarContraseña";
-import "../styles/login.css";
+import "../styles/formularios.css";
 
 const PerfilPage = () => {
   const [usuario, setUsuario] = useState(null);
@@ -40,11 +40,13 @@ const PerfilPage = () => {
     usuarioService
       .getUsuarioPorEmail(email, token)
       .then(setUsuario)
-      .catch(() => {
-        setMensaje("Error al cargar los datos del usuario");
-        setTimeout(() => setMensaje(""), 3000);
-      });
+      .catch(() => mostrarMensaje("Error al cargar los datos del usuario"));
   }, [email, token]);
+
+  const mostrarMensaje = (texto) => {
+    setMensaje(texto);
+    setTimeout(() => setMensaje(""), 3000);
+  };
 
   const handleChange = (e) => {
     setUsuario((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -54,41 +56,32 @@ const PerfilPage = () => {
     e.preventDefault();
 
     if (!/^\d{9}$/.test(usuario.telefono)) {
-      setMensaje("El teléfono debe tener exactamente 9 dígitos.");
-      setTimeout(() => setMensaje(""), 3000);
-      return;
+      return mostrarMensaje("El teléfono debe tener exactamente 9 dígitos.");
     }
 
     if (usuario.codigoPostal && usuario.codigoPostal.length > 10) {
-      setMensaje("El código postal no puede tener más de 10 caracteres.");
-      setTimeout(() => setMensaje(""), 3000);
-      return;
+      return mostrarMensaje("El código postal no puede tener más de 10 caracteres.");
     }
 
     try {
       await axios.put(`${API_BASE_URL}/usuarios/email/${usuario.email}`, usuario, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setMensaje("Datos actualizados correctamente");
+      mostrarMensaje("Datos actualizados correctamente");
     } catch {
-      setMensaje("Error al actualizar los datos");
-    } finally {
-      setTimeout(() => setMensaje(""), 3000);
+      mostrarMensaje("Error al actualizar los datos");
     }
   };
 
   const handleCambiarPassword = async (e) => {
     e.preventDefault();
+
     if (!contrasenaActual || !nuevaPassword) {
-      setMensaje("Debes completar ambos campos de contraseña.");
-      setTimeout(() => setMensaje(""), 3000);
-      return;
+      return mostrarMensaje("Debes completar ambos campos de contraseña.");
     }
 
     if (nuevaPassword.length < 6) {
-      setMensaje("La nueva contraseña debe tener al menos 6 caracteres.");
-      setTimeout(() => setMensaje(""), 3000);
-      return;
+      return mostrarMensaje("La nueva contraseña debe tener al menos 6 caracteres.");
     }
 
     try {
@@ -97,18 +90,17 @@ const PerfilPage = () => {
         { actual: contrasenaActual, nueva: nuevaPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMensaje("Contraseña actualizada correctamente");
+      mostrarMensaje("Contraseña actualizada correctamente");
       setContrasenaActual("");
       setNuevaPassword("");
     } catch {
-      setMensaje("La contraseña actual no es correcta");
-    } finally {
-      setTimeout(() => setMensaje(""), 3000);
+      mostrarMensaje("La contraseña actual no es correcta");
     }
   };
 
   const handleEliminarCuenta = async () => {
     if (!window.confirm("¿Estás segura de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.")) return;
+
     try {
       await axios.delete(`${API_BASE_URL}/usuarios/email/${email}`, {
         headers: { Authorization: `Bearer ${token}` }
@@ -116,8 +108,7 @@ const PerfilPage = () => {
       localStorage.removeItem("token");
       window.location.href = "/";
     } catch {
-      setMensaje("Error al eliminar la cuenta");
-      setTimeout(() => setMensaje(""), 3000);
+      mostrarMensaje("Error al eliminar la cuenta");
     }
   };
 
@@ -126,11 +117,11 @@ const PerfilPage = () => {
   }
 
   return (
-    <main className="container login-container py-5">
-      <section className="login-box" style={{ maxWidth: "500px", width: "100%" }}>
+    <main className="container form-container py-5">
+      <section className="form-box" style={{ maxWidth: "500px", width: "100%" }}>
         <h2>Mi perfil</h2>
 
-        <form onSubmit={handleGuardar}>
+        <form onSubmit={handleGuardar} aria-label="Formulario de actualización de perfil">
           <UsuarioForm
             formData={usuario}
             handleChange={handleChange}
@@ -161,12 +152,16 @@ const PerfilPage = () => {
 
         <hr className="my-4" />
 
-        <button className="btn btn-outline-danger w-100" onClick={handleEliminarCuenta}>
+        <button
+          className="btn-claro-inverso"
+          onClick={handleEliminarCuenta}
+          aria-label="Eliminar cuenta"
+        >
           <FaTrash className="me-2" /> Eliminar cuenta
         </button>
 
         {mensaje && (
-          <div className="alert-elegante mt-3" role="alert">
+          <div className="alerta-clara mt-3" role="status" aria-live="polite">
             {mensaje}
           </div>
         )}
@@ -176,6 +171,7 @@ const PerfilPage = () => {
 };
 
 export default PerfilPage;
+
 
 
 
