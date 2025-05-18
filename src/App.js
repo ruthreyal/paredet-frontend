@@ -20,6 +20,9 @@ import EditarUsuario from "./pages/admin/EditarUsuario";
 import RecuperarPassword from "./pages/RecuperarPassword";
 import RestablecerPassword from "./pages/RestablecerPassword";
 import Dashboard from "./pages/admin/Dashboard";
+import EditarCategoria from "./pages/admin/EditarCategoria"
+import AdminCategorias from "./pages/admin/AdminCategorias";
+
 
 function App() {
   return (
@@ -32,6 +35,8 @@ function App() {
             <Route path="usuarios" element={<AdminUsuarios />} />
             <Route path="usuarios/crear" element={<UsuarioForm />} />
             <Route path="usuarios/editar/:email" element={<EditarUsuario />} />
+            <Route path="/admin/categorias/editar/:id" element={<EditarCategoria />} />
+            <Route path="categorias" element={<AdminCategorias />} />
           </Route>
 
           {/* Resto de la web con layout común */}
