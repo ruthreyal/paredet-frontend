@@ -104,52 +104,113 @@ const Navbar = () => {
         </ul>
       </nav>
 
-      {/* NAVBAR MOBILE */}
-      <nav className="navbar navbar-dark custom-navbar-mobile d-flex d-lg-none justify-content-between align-items-center px-3 py-2">
-        <button
-          className={`menu-toggle ${isOpen ? "open" : ""}`}
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
+      {/* CONTENEDOR NAVBAR + MENÚ */}
+      <div className="navbar-mobile-wrapper d-lg-none">
+        {/* NAVBAR MOBILE */}
+        <nav className="navbar navbar-dark custom-navbar-mobile d-flex justify-content-between align-items-center px-3 py-2">
+          <button
+            className={`menu-toggle ${isOpen ? "open" : ""}`}
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
 
-        <span className="logo-text text-white fw-bold text-uppercase mx-auto">
-          PAREDET
-        </span>
+          <Link
+            to="/"
+            className="logo-text text-white fw-bold text-uppercase mx-auto text-decoration-none"
+            onClick={() => isOpen && toggleMenu()}
+          >
+            PAREDET
+          </Link>
 
-        <Link to="/buscar" className="text-white fs-5">
-          <i className="bi bi-search"></i>
-        </Link>
-      </nav>
+          <Link to="/buscar" className="text-white fs-5">
+            <i className="bi bi-search"></i>
+          </Link>
+        </nav>
 
-      {/* MENÚ DESPLEGABLE MOBILE */}
-      <div className={`mobile-menu ${isOpen ? "show" : ""}`}>
-        <ul className="navbar-nav px-4 pt-3">
-          <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to="#" onClick={toggleMenu}>
-              Papeles Pintados
+        {/* MENÚ DESPLEGABLE MOBILE */}
+        <div className={`mobile-menu ${isOpen ? "show" : ""}`}>
+          <div className="mobile-menu-header d-flex justify-content-around align-items-center py-3 border-bottom">
+            {usuario ? (
+              <>
+                <Link to="/perfil" onClick={toggleMenu}>
+                  <i className="bi bi-person text-white fs-5"></i>
+                </Link>
+                <Link to="/pedidos" onClick={toggleMenu}>
+                  <i className="bi bi-box-seam text-white fs-5"></i>
+                </Link>
+                {usuario.rolNombre === "ADMIN" && (
+                  <Link to="/admin" onClick={toggleMenu}>
+                    <i className="bi bi-speedometer text-white fs-5"></i>
+                  </Link>
+                )}
+              </>
+            ) : (
+              <Link to="/login" onClick={toggleMenu}>
+                <i className="bi bi-person text-white fs-5"></i>
+              </Link>
+            )}
+
+            <Link to="/carrito" onClick={toggleMenu}>
+              <i className="bi bi-cart text-white fs-5"></i>
             </Link>
-          </li>
-          <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to="#" onClick={toggleMenu}>
-              Fotomurales
+            <Link to="/buscar" onClick={toggleMenu}>
+              <i className="bi bi-search text-white fs-5"></i>
             </Link>
-          </li>
-          <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to="#" onClick={toggleMenu}>
-              Colecciones
-            </Link>
-          </li>
-          <li className="nav-item mb-2">
-            <Link className="nav-link text-white" to="#" onClick={toggleMenu}>
-              La Empresa
-            </Link>
-          </li>
-        </ul>
+          </div>
+
+          <ul className="navbar-nav px-4 pt-3">
+            <li className="nav-item mb-2">
+              <Link
+                className="nav-link text-white"
+                to="/papeles-pintados"
+                onClick={toggleMenu}
+              >
+                Papeles Pintados
+              </Link>
+            </li>
+            <li className="nav-item mb-2">
+              <Link
+                className="nav-link text-white"
+                to="/fotomurales"
+                onClick={toggleMenu}
+              >
+                Fotomurales
+              </Link>
+            </li>
+            <li className="nav-item mb-2">
+              <Link
+                className="nav-link text-white"
+                to="/colecciones"
+                onClick={toggleMenu}
+              >
+                Colecciones
+              </Link>
+            </li>
+            <li className="nav-item mb-2">
+              <Link
+                className="nav-link text-white"
+                to="/empresa"
+                onClick={toggleMenu}
+              >
+                La Empresa
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
+
+      {/* FONDO TRANSPARENTE PARA CERRAR MENÚ */}
+      {isOpen && (
+        <div
+          className="mobile-menu-overlay"
+          onClick={toggleMenu}
+          aria-label="Cerrar menú"
+        ></div>
+      )}
     </>
   );
 };
