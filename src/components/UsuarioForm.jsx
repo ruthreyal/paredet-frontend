@@ -1,4 +1,5 @@
 import React from "react";
+import Select from "react-select";
 
 const UsuarioForm = ({
   formData,
@@ -6,9 +7,20 @@ const UsuarioForm = ({
   readonlyEmail,
   paisesConCiudades,
   isAdmin,
-  children
+  children,
 }) => {
-  if (!formData) return null;
+  const paises = Object.keys(paisesConCiudades).map((pais) => ({
+    label: pais,
+    value: pais,
+  }));
+
+  const ciudades =
+    formData.pais && paisesConCiudades[formData.pais]
+      ? paisesConCiudades[formData.pais].map((ciudad) => ({
+          label: ciudad,
+          value: ciudad,
+        }))
+      : [];
 
   return (
     <>
@@ -22,6 +34,7 @@ const UsuarioForm = ({
           required
           value={formData.nombre}
           onChange={handleChange}
+          aria-required="true"
         />
       </div>
 
@@ -79,44 +92,35 @@ const UsuarioForm = ({
       </div>
 
       <div className="mb-3">
-        <label htmlFor="ciudad">Ciudad *</label>
-        <input
-          id="ciudad"
-          name="ciudad"
-          type="text"
-          className="input-field"
-          required
-          value={formData.ciudad}
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="mb-3">
-        <label htmlFor="codigoPostal">Código postal *</label>
-        <input
-          id="codigoPostal"
-          name="codigoPostal"
-          type="text"
-          className="input-field"
-          required
-          value={formData.codigoPostal}
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="mb-3">
         <label htmlFor="pais">País *</label>
-        <input
+        <Select
           id="pais"
           name="pais"
-          type="text"
-          className="input-field"
-          required
-          value={formData.pais}
-          onChange={handleChange}
+          options={paises}
+          value={paises.find((p) => p.value === formData.pais)}
+          onChange={(selected) =>
+            handleChange({ target: { name: "pais", value: selected.value } })
+          }
+          placeholder="Selecciona un país"
+          isSearchable
         />
       </div>
 
+      <div className="mb-3">
+        <label htmlFor="ciudad">Ciudad *</label>
+        <Select
+          id="ciudad"
+          name="ciudad"
+          options={ciudades}
+          value={ciudades.find((c) => c.value === formData.ciudad)}
+          onChange={(selected) =>
+            handleChange({ target: { name: "ciudad", value: selected.value } })
+          }
+          placeholder="Selecciona una ciudad"
+          isSearchable
+          isDisabled={!formData.pais}
+        />
+      </div>
       {isAdmin && (
         <div className="mb-3">
           <label htmlFor="rol">Rol *</label>
@@ -140,7 +144,3 @@ const UsuarioForm = ({
 };
 
 export default UsuarioForm;
-
-
-
-
