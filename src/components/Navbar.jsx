@@ -18,14 +18,6 @@ const Navbar = () => {
     navigate("/");
   };
 
-  const handleMobileProfileClick = () => {
-    if (usuario) {
-      toggleProfileMenu();
-    } else {
-      navigate("/login");
-    }
-  };
-
   return (
     <>
       {/* NAVBAR DESKTOP */}
@@ -120,7 +112,7 @@ const Navbar = () => {
 
           <Link
             to="/"
-            className="logo-text text-white fw-bold text-uppercase mx-auto text-decoration-none"
+            className="logo-text fw-bold text-uppercase mx-auto text-decoration-none"
             onClick={() => isOpen && toggleMenu()}
           >
             PAREDET
@@ -133,35 +125,71 @@ const Navbar = () => {
 
         {/* MENÚ DESPLEGABLE MOBILE */}
         <div className={`mobile-menu ${isOpen ? "show" : ""}`}>
-          <div className="mobile-menu-header d-flex justify-content-around align-items-center py-3 border-bottom">
+          {/* Fila superior del menú desplegable */}
+          <div className="mobile-icons-row">
             {usuario ? (
-              <>
-                <Link to="/perfil" onClick={toggleMenu}>
-                  <i className="bi bi-person text-white fs-5"></i>
-                </Link>
-                <Link to="/pedidos" onClick={toggleMenu}>
-                  <i className="bi bi-box-seam text-white fs-5"></i>
-                </Link>
-                {usuario.rolNombre === "ADMIN" && (
-                  <Link to="/admin" onClick={toggleMenu}>
-                    <i className="bi bi-speedometer text-white fs-5"></i>
-                  </Link>
-                )}
-              </>
+              <span className="text-white fw-semibold">
+                ¡Hola, {usuario.nombre}!
+              </span>
             ) : (
               <Link to="/login" onClick={toggleMenu}>
                 <i className="bi bi-person text-white fs-5"></i>
               </Link>
             )}
-
             <Link to="/carrito" onClick={toggleMenu}>
               <i className="bi bi-cart text-white fs-5"></i>
             </Link>
-            <Link to="/buscar" onClick={toggleMenu}>
-              <i className="bi bi-search text-white fs-5"></i>
-            </Link>
           </div>
 
+          {/* Opciones adicionales si usuario logueado */}
+          {usuario && (
+            <div className="mobile-user-info px-4 py-2 border-bottom">
+              <ul className="list-unstyled mb-0">
+                <li>
+                  <Link
+                    to="/perfil"
+                    className="text-white d-block py-1"
+                    onClick={toggleMenu}
+                  >
+                    Mi perfil
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/pedidos"
+                    className="text-white d-block py-1"
+                    onClick={toggleMenu}
+                  >
+                    Mis pedidos
+                  </Link>
+                </li>
+                {usuario.rolNombre === "ADMIN" && (
+                  <li>
+                    <Link
+                      to="/admin"
+                      className="text-white d-block py-1"
+                      onClick={toggleMenu}
+                    >
+                      Panel de administración
+                    </Link>
+                  </li>
+                )}
+                <li>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      toggleMenu();
+                    }}
+                    className="btn btn-link text-white text-start py-1 px-0"
+                  >
+                    Cerrar sesión
+                  </button>
+                </li>
+              </ul>
+            </div>
+          )}
+
+          {/* Enlaces del menú */}
           <ul className="navbar-nav px-4 pt-3">
             <li className="nav-item mb-2">
               <Link

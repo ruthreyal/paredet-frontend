@@ -4,12 +4,13 @@
     font-family: var(--font-secundaria);
   }
   
-  /* Logo responsivo */
   .logo-text {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--color-principal);
-  }
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-principal); /* Tu dorado */
+  font-family: var(--font-principal); /* Opcional si quieres usar Playfair */
+}
+
   
   @media (max-width: 576px) {
     .logo-text {
@@ -176,6 +177,67 @@
   position: relative;
   z-index: 1000;
 }
+
+/* === BLOQUE USUARIO LOGUEADO EN MENÚ MÓVIL === */
+.mobile-user-info {
+  background-color: var(--color-negro);
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-user-info ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mobile-user-info a,
+.mobile-user-info button {
+  display: block;
+  padding: 0.4rem 0;
+  color: var(--color-secundario);
+  font-size: 0.95rem;
+  text-decoration: none;
+  font-family: var(--font-secundaria);
+}
+
+.mobile-user-info a:hover,
+.mobile-user-info button:hover {
+  color: var(--color-principal);
+  background-color: #2a2a2a;
+}
+
+.mobile-user-info button {
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* === MEJORA DE ALINEACIÓN DEL HEADER DEL MENÚ MÓVIL === */
+.mobile-icons-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--color-negro);
+}
+
+.mobile-icons-row i {
+  font-size: 1.4rem;
+  color: var(--color-secundario);
+}
+
+.mobile-icons-row span {
+  font-size: 1rem;
+  color: var(--color-secundario);
+  font-family: var(--font-secundaria);
+}
+
+
 
 
 
