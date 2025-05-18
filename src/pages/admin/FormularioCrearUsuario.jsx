@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import UsuarioForm from "../../components/UsuarioForm";
 import FormularioContraseñaNueva from "../../components/FormularioContraseñaNueva";
 import registroService from "../../services/registroService";
+import "../../styles/formularios.css";
 
 const FormularioCrearUsuario = ({ onUsuarioCreado, token }) => {
   const [formData, setFormData] = useState({
@@ -29,8 +30,39 @@ const FormularioCrearUsuario = ({ onUsuarioCreado, token }) => {
   const handleCrearUsuario = async (e) => {
     e.preventDefault();
 
+    // Validaciones de campos obligatorios
+    if (!formData.nombre.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
+      setMensaje("El nombre solo debe contener letras.");
+      return;
+    }
+
+    if (!formData.apellido.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)) {
+      setMensaje("El apellido solo debe contener letras.");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      setMensaje("Introduce un email válido.");
+      return;
+    }
+
+    if (formData.password.length < 8 || !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)) {
+      setMensaje("La contraseña debe tener al menos 8 caracteres, una letra y un número.");
+      return;
+    }
+
     if (formData.password !== formData.repetirPassword) {
-      setMensaje("Las contraseñas no coinciden");
+      setMensaje("Las contraseñas no coinciden.");
+      return;
+    }
+
+    if (!/^\d{9}$/.test(formData.telefono)) {
+      setMensaje("El teléfono debe tener exactamente 9 dígitos.");
+      return;
+    }
+
+    if (formData.codigoPostal && formData.codigoPostal.length > 10) {
+      setMensaje("El código postal no puede tener más de 10 caracteres.");
       return;
     }
 
@@ -44,7 +76,7 @@ const FormularioCrearUsuario = ({ onUsuarioCreado, token }) => {
       await registroService.registerConToken(payload, token);
       setMensaje("Usuario creado correctamente");
 
-      // limpiar campos
+      // Limpiar campos tras éxito
       setFormData({
         nombre: "",
         apellido: "",
@@ -65,16 +97,16 @@ const FormularioCrearUsuario = ({ onUsuarioCreado, token }) => {
       console.error("Error:", error.response?.data || error.message);
     }
 
-    setTimeout(() => setMensaje(""), 3000);
+    setTimeout(() => setMensaje(""), 4000);
   };
 
   return (
-    <form onSubmit={handleCrearUsuario} className="mb-4">
+    <form onSubmit={handleCrearUsuario} aria-label="Formulario para crear nuevo usuario" className="mb-4 formulario-panel-admin">
       <UsuarioForm
         formData={formData}
         handleChange={handleChange}
         readonlyEmail={false}
-        paisesConCiudades={[]}
+        paisesConCiudades={{}} // opcional si quieres mantenerlo vacío
         isAdmin={true}
       />
       <FormularioContraseñaNueva
@@ -86,8 +118,12 @@ const FormularioCrearUsuario = ({ onUsuarioCreado, token }) => {
         setVerRepetir={setVerRepetir}
         handleChange={handleChange}
       />
-      {mensaje && <p className="mt-2">{mensaje}</p>}
-      <button type="submit" className="btn-acceso mt-3">
+      {mensaje && (
+        <div className="alerta-clara mt-3" role="status" aria-live="polite">
+          {mensaje}
+        </div>
+      )}
+      <button type="submit" className="btn-gold mt-3 w-100">
         Guardar usuario
       </button>
     </form>
@@ -95,3 +131,4 @@ const FormularioCrearUsuario = ({ onUsuarioCreado, token }) => {
 };
 
 export default FormularioCrearUsuario;
+
