@@ -21,13 +21,14 @@ const AdminLayout = () => {
 
   // Rutas del panel de administración
   const rutasAdmin = [
-    { path: "/admin", label: "Dashboard" },
-    { path: "/admin/productos", label: "Productos" },
-    { path: "/admin/pedidos", label: "Pedidos" },
-    { path: "/admin/usuarios", label: "Usuarios" },
-    { path: "/admin/categorias", label: "Categorías" },
-    { path: "/", label: "Ir a la web" }
-  ];
+  { path: "/admin", label: "Dashboard" },
+  { path: "/admin/productos", label: "Productos" },
+  { path: "/admin/pedidos", label: "Pedidos" },
+  { path: "/admin/usuarios", label: "Usuarios" },
+  { path: "/admin/categorias", label: "Categorías" },
+  { path: "/admin/colecciones", label: "Colecciones" },
+  { path: "/", label: "Ir a la web" }
+];
 
   return (
     <div className="admin-container d-flex flex-column flex-lg-row">
