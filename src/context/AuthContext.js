@@ -1,32 +1,40 @@
 import { createContext, useState, useEffect } from "react";
 import usuarioService from "../services/usuarioService";
+import { useNavigate } from "react-router-dom";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [usuario, setUsuario] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
-  const [cargando, setCargando] = useState(true); // NUEVO
+  const [cargando, setCargando] = useState(true);
+  const navigate = useNavigate();
+
+  // ✅ Función para comprobar si el token ha caducado
+  const isTokenExpired = (token) => {
+    if (!token) return true;
+    try {
+      const { exp } = JSON.parse(atob(token.split(".")[1]));
+      return Date.now() >= exp * 1000;
+    } catch {
+      return true;
+    }
+  };
 
   useEffect(() => {
     const cargarUsuario = async () => {
-      if (token) {
+      if (token && !isTokenExpired(token)) {
         try {
           const email = JSON.parse(atob(token.split(".")[1])).sub;
-          console.log("Email extraído del token:", email);
-
           const data = await usuarioService.getUsuarioPorEmail(email, token);
-          console.log("Datos del usuario recibidos:", data);
-
           setUsuario(data);
         } catch (error) {
-          console.error("Error cargando usuario desde AuthContext", error);
-          logout();
+          logout(); // Si falla, salimos
         } finally {
           setCargando(false);
         }
       } else {
-        console.warn("No hay token disponible.");
+        logout(); // Token caducado o no presente
         setCargando(false);
       }
     };
@@ -43,6 +51,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     setToken(null);
     setUsuario(null);
+    navigate("/"); // ⬅️ Redirige a Home automáticamente
   };
 
   return (
@@ -52,7 +61,7 @@ const AuthProvider = ({ children }) => {
         token,
         login,
         logout,
-        cargando, // NUEVO
+        cargando,
         isAuthenticated: !!usuario,
       }}
     >
@@ -62,6 +71,7 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
+
 
 
 

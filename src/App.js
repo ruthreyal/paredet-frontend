@@ -22,7 +22,8 @@ import RestablecerPassword from "./pages/RestablecerPassword";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminCategorias from "./pages/admin/AdminCategorias";
 import AdminColecciones from "./pages/admin/AdminColecciones";
-
+import FormularioProducto from "./pages/admin/FormularioProducto";
+import AdminProductos from "./pages/admin/AdminProductos";
 
 function App() {
   return (
@@ -37,6 +38,15 @@ function App() {
             <Route path="usuarios/editar/:email" element={<EditarUsuario />} />
             <Route path="categorias" element={<AdminCategorias />} />
             <Route path="colecciones" element={<AdminColecciones />} />
+            <Route
+              path="productos/crear"
+              element={<FormularioProducto modo="crear" />}
+            />
+            <Route
+              path="productos/editar/:id"
+              element={<FormularioProducto modo="editar" />}
+            />
+            <Route path="productos" element={<AdminProductos />} />
           </Route>
 
           {/* Resto de la web con layout común */}
