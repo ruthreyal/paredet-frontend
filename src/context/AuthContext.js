@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
-import usuarioService from "../services/usuarioService";
 import { useNavigate } from "react-router-dom";
+import usuarioService from "../services/usuarioService";
 
 export const AuthContext = createContext();
 
@@ -10,7 +10,7 @@ const AuthProvider = ({ children }) => {
   const [cargando, setCargando] = useState(true);
   const navigate = useNavigate();
 
-  // ✅ Función para comprobar si el token ha caducado
+  // Comprueba si el token ha expirado
   const isTokenExpired = (token) => {
     if (!token) return true;
     try {
@@ -29,12 +29,12 @@ const AuthProvider = ({ children }) => {
           const data = await usuarioService.getUsuarioPorEmail(email, token);
           setUsuario(data);
         } catch (error) {
-          logout(); // Si falla, salimos
+          logout();
         } finally {
           setCargando(false);
         }
       } else {
-        logout(); // Token caducado o no presente
+        logout();
         setCargando(false);
       }
     };
@@ -51,7 +51,7 @@ const AuthProvider = ({ children }) => {
     localStorage.removeItem("token");
     setToken(null);
     setUsuario(null);
-    navigate("/"); // ⬅️ Redirige a Home automáticamente
+    navigate("/");
   };
 
   return (

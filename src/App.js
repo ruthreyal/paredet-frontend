@@ -27,8 +27,8 @@ import AdminProductos from "./pages/admin/AdminProductos";
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
           {/* RUTAS DE ADMIN CON SUBRUTAS */}
           <Route path="/admin" element={<AdminLayout />}>
@@ -78,8 +78,8 @@ function App() {
             }
           />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

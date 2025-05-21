@@ -1,9 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import "../styles/formularioProducto.css";
 
-const SubidaImagen = ({ onUploadSuccess }) => {
-  const [imagenPreview, setImagenPreview] = useState(null);
+const SubidaImagen = ({ onUploadSuccess, imagenActual }) => {
+  const [imagenPreview, setImagenPreview] = useState(imagenActual || null);
   const [subiendo, setSubiendo] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (imagenActual) {
+      setImagenPreview(imagenActual);
+    }
+  }, [imagenActual]);
 
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -29,7 +36,7 @@ const SubidaImagen = ({ onUploadSuccess }) => {
       const data = await response.json();
       if (data.secure_url) {
         setImagenPreview(data.secure_url);
-        onUploadSuccess(data.secure_url); // Devuelve la URL al padre
+        onUploadSuccess(data.secure_url);
       } else {
         setError("No se pudo subir la imagen");
       }
@@ -42,27 +49,23 @@ const SubidaImagen = ({ onUploadSuccess }) => {
   };
 
   return (
-    <div className="mb-3">
-      <label className="form-label">Imagen destacada:</label>
-      <input
-        type="file"
-        accept="image/*"
-        className="form-control"
-        onChange={handleFileChange}
-        aria-label="Subir imagen destacada"
-      />
-
-      {subiendo && <p>Subiendo imagen...</p>}
-      {error && <p className="error-text">{error}</p>}
+    <div className="contenedor-subida">
       {imagenPreview && (
-        <div className="mt-2">
-          <img
-            src={imagenPreview}
-            alt="Vista previa"
-            style={{ maxHeight: "200px", borderRadius: "8px" }}
-          />
+        <div className="imagen-destacada-container">
+          <p className="form-label">Imagen destacada:</p>
+          <img src={imagenPreview} alt="Imagen destacada" />
         </div>
       )}
+      <div className="subida-input">
+        {!imagenPreview && <p className="form-label">Imagen destacada:</p>}
+        <input
+          type="file"
+          accept="image/*"
+          className="form-control"
+          onChange={handleFileChange}
+          aria-label="Cambiar imagen destacada"
+        />
+      </div>
     </div>
   );
 };

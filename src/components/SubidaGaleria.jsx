@@ -1,6 +1,6 @@
-// src/components/SubidaGaleria.jsx
 import React, { useState, useEffect } from "react";
 import imagenProductoService from "../services/imagenProductoService";
+import "../styles/formularioProducto.css";
 
 const SubidaGaleria = ({ productoId }) => {
   const [imagenes, setImagenes] = useState([]);
@@ -8,11 +8,14 @@ const SubidaGaleria = ({ productoId }) => {
 
   useEffect(() => {
     if (productoId) {
-      imagenProductoService.getByProducto(productoId).then((res) => {
-        setImagenes(res.data);
-      });
+      cargarImagenes();
     }
   }, [productoId]);
+
+  const cargarImagenes = async () => {
+    const res = await imagenProductoService.getByProducto(productoId);
+    setImagenes(res.data);
+  };
 
   const subirImagen = async (e) => {
     const file = e.target.files[0];
@@ -26,10 +29,13 @@ const SubidaGaleria = ({ productoId }) => {
     formData.append("folder", "productos");
 
     try {
-      const res = await fetch("https://api.cloudinary.com/v1_1/dim2vr85b/image/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://api.cloudinary.com/v1_1/dim2vr85b/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
       const data = await res.json();
       if (data.secure_url) {
@@ -38,8 +44,7 @@ const SubidaGaleria = ({ productoId }) => {
           url: data.secure_url,
           destacada: false,
         });
-        const actualizadas = await imagenProductoService.getByProducto(productoId);
-        setImagenes(actualizadas.data);
+        cargarImagenes();
       }
     } catch (err) {
       console.error("Error al subir imagen:", err);
@@ -49,42 +54,40 @@ const SubidaGaleria = ({ productoId }) => {
   };
 
   const eliminarImagen = async (id) => {
+    const confirmar = window.confirm(
+      "¿Estás segura de que quieres eliminar esta imagen?"
+    );
+    if (!confirmar) return;
     await imagenProductoService.delete(id);
-    const actualizadas = await imagenProductoService.getByProducto(productoId);
-    setImagenes(actualizadas.data);
+    cargarImagenes();
   };
 
   return (
     <div className="mt-3">
       <label className="form-label">Galería de imágenes adicionales:</label>
-      <input type="file" accept="image/*" onChange={subirImagen} className="form-control mb-2" />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={subirImagen}
+        className="form-control mb-2"
+        aria-label="Subir imagen adicional"
+      />
 
       {subiendo && <p>Subiendo imagen...</p>}
 
-      <div className="d-flex flex-wrap gap-3">
+      <div className="galeria-grid">
         {imagenes.map((img) => (
-          <div key={img.id} style={{ position: "relative" }}>
-            <img
-              src={img.url}
-              alt="Imagen"
-              style={{ height: "100px", borderRadius: "8px", objectFit: "cover" }}
-            />
-            <button
-              type="button"
-              className="btn-eliminar"
-              style={{
-                position: "absolute",
-                top: "-5px",
-                right: "-5px",
-                borderRadius: "50%",
-                padding: "0 6px",
-                fontSize: "0.8rem",
-              }}
+          <div key={img.id} className="galeria-item">
+            <img src={img.url} alt="Imagen galería" />
+            <p
+              className="texto-eliminar"
               onClick={() => eliminarImagen(img.id)}
-              aria-label="Eliminar imagen"
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === "Enter" && eliminarImagen(img.id)}
             >
-              ×
-            </button>
+              Eliminar
+            </p>
           </div>
         ))}
       </div>
