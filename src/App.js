@@ -20,11 +20,15 @@ import EditarUsuario from "./pages/admin/EditarUsuario";
 import RecuperarPassword from "./pages/RecuperarPassword";
 import RestablecerPassword from "./pages/RestablecerPassword";
 import Dashboard from "./pages/admin/Dashboard";
+import AdminCategorias from "./pages/admin/AdminCategorias";
+import AdminColecciones from "./pages/admin/AdminColecciones";
+import FormularioProducto from "./pages/admin/FormularioProducto";
+import AdminProductos from "./pages/admin/AdminProductos";
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
+    <Router>
+      <AuthProvider>
         <Routes>
           {/* RUTAS DE ADMIN CON SUBRUTAS */}
           <Route path="/admin" element={<AdminLayout />}>
@@ -32,6 +36,17 @@ function App() {
             <Route path="usuarios" element={<AdminUsuarios />} />
             <Route path="usuarios/crear" element={<UsuarioForm />} />
             <Route path="usuarios/editar/:email" element={<EditarUsuario />} />
+            <Route path="categorias" element={<AdminCategorias />} />
+            <Route path="colecciones" element={<AdminColecciones />} />
+            <Route
+              path="productos/crear"
+              element={<FormularioProducto modo="crear" />}
+            />
+            <Route
+              path="productos/editar/:id"
+              element={<FormularioProducto modo="editar" />}
+            />
+            <Route path="productos" element={<AdminProductos />} />
           </Route>
 
           {/* Resto de la web con layout común */}
@@ -63,8 +78,8 @@ function App() {
             }
           />
         </Routes>
-      </Router>
-    </AuthProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

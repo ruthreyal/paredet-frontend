@@ -24,32 +24,54 @@
   text-align: center;
 }
 
+/* Botón dorado principal */
 .btn-gold {
   background-color: var(--color-principal);
-  color: var(--color-secundario);
+  color: var(--color-negro) !important;
   border: none;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1.3rem;
   font-weight: bold;
   border-radius: var(--border-radius);
   transition: background-color 0.3s ease;
 }
 
+
 .btn-gold:hover {
-  background-color: #b8903d;
+  background-color: #b88e3f;
 }
 
-.btn-dark {
+/* Botones de acciones en tabla */
+.btn-accion {
+  padding: 0.4rem 1rem;
+  font-size: 0.85rem;
+  border-radius: var(--border-radius);
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-editar {
+  background-color: var(--color-principal);
+  color: var(--color-negro);
+}
+
+.btn-editar:hover {
+  background-color: #b88e3f;
+}
+
+.btn-eliminar {
   background-color: var(--color-negro);
   color: var(--color-secundario);
   border: none;
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1.3rem;
   font-weight: bold;
   border-radius: var(--border-radius);
   transition: background-color 0.3s ease;
 }
 
-.btn-dark:hover {
-  background-color: #000000;
+.btn-eliminar:hover {
+  background-color: #000;
 }
 
 /* PARA ICONOS DENTRO DE INPUT (OJO CONTRASEÑA) */
@@ -86,6 +108,7 @@
   background-color: var(--color-principal);
   color: var(--color-negro);
 }
+
 
 
 

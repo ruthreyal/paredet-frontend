@@ -1,26 +1,34 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "../../styles/admin.css";
-import { useState } from "react";
 
 const AdminLayout = () => {
   const { logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
-  const [menuAbierto, setMenuAbierto] = useState(false);
-
   const handleCloseMenuIfMobile = () => {
     if (window.innerWidth < 992) {
       setMenuAbierto(false);
     }
   };
-  
+
+  // Rutas del panel de administración
+  const rutasAdmin = [
+  { path: "/admin", label: "Dashboard" },
+  { path: "/admin/productos", label: "Productos" },
+  { path: "/admin/pedidos", label: "Pedidos" },
+  { path: "/admin/usuarios", label: "Usuarios" },
+  { path: "/admin/categorias", label: "Categorías" },
+  { path: "/admin/colecciones", label: "Colecciones" },
+  { path: "/", label: "Ir a la web" }
+];
 
   return (
     <div className="admin-container d-flex flex-column flex-lg-row">
@@ -50,36 +58,13 @@ const AdminLayout = () => {
         <div>
           <h4 className="text-center mb-4 d-none d-lg-block">Panel Admin</h4>
           <ul className="nav flex-column">
-            <li>
-              <Link to="/admin" className="nav-link" onClick={handleCloseMenuIfMobile}>
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/productos" className="nav-link" onClick={handleCloseMenuIfMobile}>
-                Productos
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/pedidos" className="nav-link" onClick={handleCloseMenuIfMobile}>
-                Pedidos
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/usuarios" className="nav-link" onClick={handleCloseMenuIfMobile}>
-                Usuarios
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin/categorias" className="nav-link" onClick={handleCloseMenuIfMobile}>
-                Categorías
-              </Link>
-            </li>
-            <li>
-              <Link to="/" className="nav-link" onClick={handleCloseMenuIfMobile}>
-                Ir a la web
-              </Link>
-            </li>
+            {rutasAdmin.map(({ path, label }) => (
+              <li key={path}>
+                <Link to={path} className="nav-link" onClick={handleCloseMenuIfMobile}>
+                  {label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -99,3 +84,4 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
+

@@ -32,16 +32,6 @@
     background-color: #f1f1f1;
   }
   
-  /* Botón de editar */
-  .btn-editar {
-    background-color: #cba135;
-    color: white;
-  }
-  
-  .btn-editar:hover {
-    background-color: #a68129;
-  }
-
   @media (max-width: 768px) {
     .tabla-usuarios {
       display: block;
