@@ -17,7 +17,7 @@
   min-height: 450px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content:space-around;
 }
 
 /* MENSAJES O TEXTOS DE ENLACE (ej: ¿No tienes cuenta?) */
@@ -119,6 +119,20 @@
   vertical-align: middle;
   color: inherit; 
 }
+
+.form-success {
+  background-color: var(--color-fondo);
+  color: var(--color-principal);
+  border: 1px solid var(--color-principal);
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.95rem;
+  text-align: center;
+  margin-top: 1rem;
+  font-family: var(--font-secundaria);
+}
+
+
 
 
 

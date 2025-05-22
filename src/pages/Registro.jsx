@@ -29,14 +29,6 @@ const Registro = () => {
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const paisesConCiudades = {
-    España: ["Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao"],
-    Portugal: ["Lisboa", "Oporto", "Coímbra", "Braga"],
-    Francia: ["París", "Lyon", "Marsella", "Toulouse"],
-    Italia: ["Roma", "Milán", "Florencia", "Venecia"],
-    Inglaterra: ["Londres", "Manchester", "Birmingham", "Liverpool"],
-  };
-
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -154,7 +146,6 @@ const Registro = () => {
             formData={formData}
             handleChange={handleChange}
             readonlyEmail={false}
-            paisesConCiudades={paisesConCiudades}
             isAdmin={false}
             errors={errors}
           />

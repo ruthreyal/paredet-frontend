@@ -3,42 +3,66 @@ import authService from "../services/authService";
 import usuarioService from "../services/usuarioService";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
-import { FaUserPlus, FaLock, FaEye, FaEyeSlash } from "react-icons/fa";
+import {
+  FaUserPlus,
+  FaLock,
+  FaEye,
+  FaEyeSlash,
+  FaExclamationCircle,
+} from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
 
 const Login = () => {
-  const [emailInput, setEmailInput] = useState("");
-  const [password, setPassword] = useState("");
-  const [mensaje, setMensaje] = useState("");
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({});
   const [verPassword, setVerPassword] = useState(false);
+
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
 
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const validarFormulario = () => {
+    const nuevosErrores = {};
+
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      nuevosErrores.email = "Introduce un email válido.";
+    }
+
+    if (!formData.password.trim()) {
+      nuevosErrores.password = "La contraseña no puede estar vacía.";
+    }
+
+    return nuevosErrores;
+  };
+
   const handleLogin = async (e) => {
     e.preventDefault();
+    const nuevosErrores = validarFormulario();
+    if (Object.keys(nuevosErrores).length > 0) {
+      setErrors(nuevosErrores);
+      return;
+    }
+
     try {
-      const token = await authService.login(emailInput, password);
+      const token = await authService.login(formData.email, formData.password);
       login(token);
 
-      // Extraer email del token (sin sobrescribir el email del input)
       const payload = JSON.parse(atob(token.split(".")[1]));
-      const emailFromToken = payload.sub;
-
-      // Obtener datos del usuario desde el backend
       const usuario = await usuarioService.getUsuarioPorEmail(
-        emailFromToken,
+        payload.sub,
         token
       );
 
-      // Redirigir según el rol
       if (usuario.rolNombre === "ADMIN") {
         navigate("/admin");
       } else {
         navigate("/");
       }
     } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-      setMensaje("Credenciales incorrectas");
+      setErrors({ general: "Credenciales incorrectas" });
     }
   };
 
@@ -71,45 +95,63 @@ const Login = () => {
         <h2 id="tengo-cuenta" className="section-title">
           Tengo cuenta
         </h2>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} noValidate>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">
-              Email
+              Email <span aria-hidden="true">*</span>
             </label>
             <input
               id="email"
-              type="email"
+              name="email"
+              type="text"
+              inputMode="email"
+              autoComplete="email"
               className="input-field"
-              required
-              value={emailInput}
-              onChange={(e) => setEmailInput(e.target.value)}
+              value={formData.email}
+              onChange={handleChange}
+              aria-required="true"
             />
+            {errors.email && (
+              <div className="form-error" role="alert">
+                <FaExclamationCircle className="icono-error" /> {errors.email}
+              </div>
+            )}
           </div>
 
           <div className="mb-3 position-relative">
             <label htmlFor="password" className="form-label">
-              Contraseña
+              Contraseña <span aria-hidden="true">*</span>
             </label>
-            <input
-              id="password"
-              type={verPassword ? "text" : "password"}
-              className="input-field"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <span
-              onClick={() => setVerPassword(!verPassword)}
-              className="position-absolute top-50 end-0 translate-middle-y pe-3"
-              style={{ cursor: "pointer" }}
-            >
-              {verPassword ? <FaEye /> : <FaEyeSlash />}
-            </span>
+            <div className="input-icon-wrapper">
+              <input
+                id="password"
+                name="password"
+                type={verPassword ? "text" : "password"}
+                className="input-field"
+                value={formData.password}
+                onChange={handleChange}
+                aria-required="true"
+              />
+              <span
+                onClick={() => setVerPassword(!verPassword)}
+                className="position-absolute top-50 end-0 translate-middle-y pe-3"
+                style={{ cursor: "pointer" }}
+                aria-label="Mostrar u ocultar contraseña"
+              >
+                {verPassword ? <FaEye /> : <FaEyeSlash />}
+              </span>
+            </div>
+            {errors.password && (
+              <div className="form-error" role="alert">
+                <FaExclamationCircle className="icono-error" />{" "}
+                {errors.password}
+              </div>
+            )}
           </div>
 
-          {mensaje && (
-            <div className="alert alert-danger mt-2" role="alert">
-              {mensaje}
+          {errors.general && (
+            <div className="form-error mt-2 text-center" role="alert">
+              <FaExclamationCircle className="icono-error" /> {errors.general}
             </div>
           )}
 
@@ -117,7 +159,6 @@ const Login = () => {
             <button
               type="button"
               className="btn btn-link p-0"
-              role="link"
               onClick={() => navigate("/recuperar-password")}
             >
               ¿Olvidaste tu contraseña?
@@ -127,6 +168,7 @@ const Login = () => {
           <button type="submit" className="btn btn-outline-dark w-100 mt-2">
             <FaLock className="me-2" /> Entrar
           </button>
+
           <p className="register-prompt mt-3 d-md-none text-center">
             ¿No tienes cuenta?
             <span

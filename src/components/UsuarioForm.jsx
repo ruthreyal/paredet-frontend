@@ -1,24 +1,24 @@
 import React from "react";
 import Select from "react-select";
 import { FaExclamationCircle } from "react-icons/fa";
+import citiesData from "../data/cities.json";
 
 const UsuarioForm = ({
   formData,
   handleChange,
   readonlyEmail,
-  paisesConCiudades,
   isAdmin,
   children,
   errors,
 }) => {
-  const paises = Object.keys(paisesConCiudades).map((pais) => ({
+  const paises = Object.keys(citiesData).map((pais) => ({
     label: pais,
     value: pais,
   }));
 
   const ciudades =
-    formData.pais && paisesConCiudades[formData.pais]
-      ? paisesConCiudades[formData.pais].map((ciudad) => ({
+    formData.pais && citiesData[formData.pais]
+      ? citiesData[formData.pais].map((ciudad) => ({
           label: ciudad,
           value: ciudad,
         }))
@@ -85,6 +85,7 @@ const UsuarioForm = ({
           aria-required="true"
           value={formData.email}
           onChange={handleChange}
+          readOnly={readonlyEmail}
         />
         {errors?.email && (
           <div className="form-error" role="alert">
@@ -117,7 +118,7 @@ const UsuarioForm = ({
       </div>
 
       <div className="mb-3">
-        <label htmlFor="direccion">Dirección </label>
+        <label htmlFor="direccion">Dirección</label>
         <input
           id="direccion"
           name="direccion"
@@ -135,7 +136,7 @@ const UsuarioForm = ({
       </div>
 
       <div className="mb-3">
-        <label htmlFor="pais">País </label>
+        <label htmlFor="pais">País</label>
         <Select
           id="pais"
           name="pais"
@@ -146,6 +147,7 @@ const UsuarioForm = ({
           }
           placeholder="Selecciona un país"
           isSearchable
+          aria-label="País"
         />
         {errors?.pais && (
           <div className="form-error" role="alert">
@@ -156,7 +158,7 @@ const UsuarioForm = ({
       </div>
 
       <div className="mb-3">
-        <label htmlFor="ciudad">Ciudad </label>
+        <label htmlFor="ciudad">Ciudad</label>
         <Select
           id="ciudad"
           name="ciudad"
@@ -168,6 +170,7 @@ const UsuarioForm = ({
           placeholder="Selecciona una ciudad"
           isSearchable
           isDisabled={!formData.pais}
+          aria-label="Ciudad"
         />
         {errors?.ciudad && (
           <div className="form-error" role="alert">
@@ -176,6 +179,25 @@ const UsuarioForm = ({
           </div>
         )}
       </div>
+
+      <div className="mb-3">
+        <label htmlFor="codigoPostal">Código postal</label>
+        <input
+          id="codigoPostal"
+          name="codigoPostal"
+          type="text"
+          className="input-field"
+          value={formData.codigoPostal}
+          onChange={handleChange}
+        />
+        {errors?.codigoPostal && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.codigoPostal}
+          </div>
+        )}
+      </div>
+
       {isAdmin && (
         <div className="mb-3">
           <label htmlFor="rol">
@@ -193,9 +215,9 @@ const UsuarioForm = ({
             <option value="USER">Usuario</option>
             <option value="ADMIN">Administrador</option>
           </select>
-          <FaExclamationCircle className="icono-error" />
           {errors?.rol && (
             <div className="form-error" role="alert">
+              <FaExclamationCircle className="icono-error" />
               {errors.rol}
             </div>
           )}
