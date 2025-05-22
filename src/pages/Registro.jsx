@@ -19,7 +19,7 @@ const Registro = () => {
     pais: "",
     ciudad: "",
     codigoPostal: "",
-    rol: "USER"
+    rol: "USER",
   });
 
   const [mensaje, setMensaje] = useState("");
@@ -34,26 +34,45 @@ const Registro = () => {
     Portugal: ["Lisboa", "Oporto", "Coímbra", "Braga"],
     Francia: ["París", "Lyon", "Marsella", "Toulouse"],
     Italia: ["Roma", "Milán", "Florencia", "Venecia"],
-    Inglaterra: ["Londres", "Manchester", "Birmingham", "Liverpool"]
+    Inglaterra: ["Londres", "Manchester", "Birmingham", "Liverpool"],
   };
 
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.direccion.length > 100) {
+      setMensaje("La dirección no puede tener más de 100 caracteres.");
+      return;
+    }
 
-    // Validaciones básicas del formulario
-    if (!formData.nombre.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
+    if (formData.ciudad.length > 50) {
+      setMensaje("La ciudad no puede tener más de 50 caracteres.");
+      return;
+    }
+
+    if (formData.pais.length > 50) {
+      setMensaje("El país no puede tener más de 50 caracteres.");
+      return;
+    }
+
+    if (
+      !formData.nombre.trim() ||
+      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)
+    ) {
       setMensaje("El nombre solo debe contener letras.");
       return;
     }
 
-    if (!formData.apellido.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)) {
+    if (
+      !formData.apellido.trim() ||
+      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)
+    ) {
       setMensaje("El apellido solo debe contener letras.");
       return;
     }
@@ -63,8 +82,13 @@ const Registro = () => {
       return;
     }
 
-    if (formData.password.length < 8 || !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)) {
-      setMensaje("La contraseña debe tener al menos 8 caracteres, una letra y un número.");
+    if (
+      formData.password.length < 8 ||
+      !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)
+    ) {
+      setMensaje(
+        "La contraseña debe tener al menos 8 caracteres, una letra y un número."
+      );
       return;
     }
 
@@ -83,9 +107,15 @@ const Registro = () => {
       return;
     }
 
+    const existe = await registroService.emailExiste(formData.email);
+    if (existe) {
+      setMensaje("Ya existe una cuenta con este email.");
+      return;
+    }
+
     const usuarioARegistrar = {
       ...formData,
-      rol: { nombre: formData.rol }
+      rol: { nombre: formData.rol },
     };
     delete usuarioARegistrar.repetirPassword;
 
@@ -105,12 +135,18 @@ const Registro = () => {
       className="container d-flex justify-content-center align-items-center"
       style={{ minHeight: "80vh", paddingTop: "3rem", paddingBottom: "3rem" }}
     >
-      <section className="form-box d-flex flex-column justify-content-between"
+      <section
+        className="form-box d-flex flex-column justify-content-between"
         style={{ maxWidth: "500px", width: "100%" }}
         aria-labelledby="registro"
       >
-        <h2 id="registro" className="section-title">Formulario de registro</h2>
-        <form onSubmit={handleSubmit} aria-label="Formulario de registro de usuario">
+        <h2 id="registro" className="section-title">
+          Formulario de registro
+        </h2>
+        <form
+          onSubmit={handleSubmit}
+          aria-label="Formulario de registro de usuario"
+        >
           <UsuarioForm
             formData={formData}
             handleChange={handleChange}
@@ -144,5 +180,3 @@ const Registro = () => {
 };
 
 export default Registro;
-
-

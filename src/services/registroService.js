@@ -22,11 +22,20 @@ const registerConToken = async (usuarioData, token) => {
   return response.data.token;
 };
 
+const emailExiste = async (email) => {
+  const response = await axios.get(`${API_BASE_URL}/usuarios/email-existe`, {
+    params: { email }
+  });
+  return response.data;
+};
+
 const registroService = {
   registerPublic,
-  registerConToken
+  registerConToken,
+  emailExiste 
 };
 
 export default registroService;
+
 
 
