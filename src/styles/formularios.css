@@ -92,6 +92,23 @@
   }
 }
 
+.input-icon-wrapper {
+  position: relative;
+}
+
+.input-icon-wrapper input {
+  padding-right: 2.5rem; 
+}
+
+.input-icon-wrapper span {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-59%) !important;
+  cursor: pointer;
+}
+
+
 
 
   

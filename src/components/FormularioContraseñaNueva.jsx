@@ -13,7 +13,7 @@ const FormularioContraseñaNueva = ({
   return (
     <>
       <div className="mb-3 position-relative">
-        <label htmlFor="password">Contraseña *</label>
+        <label htmlFor="password">Contraseña <span aria-hidden="true">*</span></label>
         <div className="input-icon-wrapper">
           <input
             id="password"
@@ -21,6 +21,7 @@ const FormularioContraseñaNueva = ({
             type={verPassword ? "text" : "password"}
             className="input-field"
             required
+            aria-required="true"
             value={password}
             onChange={handleChange}
           />
@@ -28,13 +29,13 @@ const FormularioContraseñaNueva = ({
             onClick={() => setVerPassword(!verPassword)}
             aria-label="Mostrar u ocultar contraseña"
           >
-            {verPassword ? <FaEyeSlash /> : <FaEye />}
+            {verPassword ? <FaEye /> : <FaEyeSlash /> }
           </span>
         </div>
       </div>
 
       <div className="mb-3 position-relative">
-        <label htmlFor="repetirPassword">Repetir contraseña *</label>
+        <label htmlFor="repetirPassword">Repetir contraseña <span aria-hidden="true">*</span></label>
         <div className="input-icon-wrapper">
           <input
             id="repetirPassword"
@@ -42,6 +43,7 @@ const FormularioContraseñaNueva = ({
             type={verRepetir ? "text" : "password"}
             className="input-field"
             required
+            aria-required="true"
             value={repetirPassword}
             onChange={handleChange}
           />
@@ -49,7 +51,7 @@ const FormularioContraseñaNueva = ({
             onClick={() => setVerRepetir(!verRepetir)}
             aria-label="Mostrar u ocultar contraseña"
           >
-            {verRepetir ? <FaEyeSlash /> : <FaEye />}
+            {verRepetir ? <FaEye /> : <FaEyeSlash />}
           </span>
         </div>
       </div>
