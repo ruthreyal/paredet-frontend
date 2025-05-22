@@ -1,5 +1,7 @@
 import React from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
+
 
 const FormularioContraseñaNueva = ({
   password,
@@ -8,12 +10,15 @@ const FormularioContraseñaNueva = ({
   setVerPassword,
   verRepetir,
   setVerRepetir,
-  handleChange
+  handleChange,
+  errors
 }) => {
   return (
     <>
       <div className="mb-3 position-relative">
-        <label htmlFor="password">Contraseña <span aria-hidden="true">*</span></label>
+        <label htmlFor="password">
+          Contraseña <span aria-hidden="true">*</span>
+        </label>
         <div className="input-icon-wrapper">
           <input
             id="password"
@@ -29,13 +34,18 @@ const FormularioContraseñaNueva = ({
             onClick={() => setVerPassword(!verPassword)}
             aria-label="Mostrar u ocultar contraseña"
           >
-            {verPassword ? <FaEye /> : <FaEyeSlash /> }
+            {verPassword ? <FaEye /> : <FaEyeSlash />}
           </span>
         </div>
+        {errors?.password && (
+          <div className="form-error" role="alert"><FaExclamationCircle className="icono-error" />{errors.password}</div>
+        )}
       </div>
 
       <div className="mb-3 position-relative">
-        <label htmlFor="repetirPassword">Repetir contraseña <span aria-hidden="true">*</span></label>
+        <label htmlFor="repetirPassword">
+          Repetir contraseña <span aria-hidden="true">*</span>
+        </label>
         <div className="input-icon-wrapper">
           <input
             id="repetirPassword"
@@ -54,9 +64,13 @@ const FormularioContraseñaNueva = ({
             {verRepetir ? <FaEye /> : <FaEyeSlash />}
           </span>
         </div>
+        {errors?.repetirPassword && (
+          <div className="form-error" role="alert"><FaExclamationCircle className="icono-error" />{errors.repetirPassword}</div>
+        )}
       </div>
     </>
   );
 };
 
 export default FormularioContraseñaNueva;
+

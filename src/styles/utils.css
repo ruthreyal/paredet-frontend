@@ -74,24 +74,6 @@
   background-color: #000;
 }
 
-/* PARA ICONOS DENTRO DE INPUT (OJO CONTRASEÑA) */
-.input-icon-wrapper {
-  position: relative;
-}
-
-.input-icon-wrapper input {
-  padding-right: 2.5rem;
-}
-
-.input-icon-wrapper span {
-  position: absolute;
-  top: 50%;
-  right: 1rem;
-  transform: translateY(-9%) !important;
-  cursor: pointer;
-  color: var(--color-texto);
-}
-
 .btn-claro-inverso {
   background-color: transparent;
   color: var(--color-principal);

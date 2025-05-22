@@ -13,10 +13,10 @@ const FormularioCambiarContraseña = ({
 }) => {
   return (
     <form onSubmit={handleSubmit}>
-      <h5 className="mb-3">Cambiar contraseña</h5>
+      <h5 className="mb-3">Cambiar contraseña <span aria-hidden="true">*</span></h5>
 
       <div className="mb-3 position-relative">
-        <label htmlFor="contrasenaActual">Contraseña actual</label>
+        <label htmlFor="contrasenaActual">Contraseña actual <span aria-hidden="true">*</span></label>
         <div className="input-icon-wrapper">
           <input
             id="contrasenaActual"
@@ -24,6 +24,7 @@ const FormularioCambiarContraseña = ({
             type={verActual ? "text" : "password"}
             className="input-field"
             required
+            aria-required="true"
             value={contrasenaActual}
             onChange={handleChange}
           />
@@ -31,7 +32,7 @@ const FormularioCambiarContraseña = ({
             onClick={() => setVerActual(!verActual)}
             aria-label="Mostrar u ocultar contraseña actual"
           >
-            {verActual ? <FaEyeSlash /> : <FaEye />}
+            {verActual ? <FaEye /> : <FaEyeSlash /> }
           </span>
         </div>
       </div>
@@ -45,6 +46,7 @@ const FormularioCambiarContraseña = ({
             type={verNueva ? "text" : "password"}
             className="input-field"
             required
+            aria-required="true"
             minLength={6}
             value={nuevaPassword}
             onChange={handleChange}
@@ -53,7 +55,7 @@ const FormularioCambiarContraseña = ({
             onClick={() => setVerNueva(!verNueva)}
             aria-label="Mostrar u ocultar nueva contraseña"
           >
-            {verNueva ? <FaEyeSlash /> : <FaEye />}
+            {verNueva ? <FaEye /> : <FaEyeSlash /> }
           </span>
         </div>
       </div>
