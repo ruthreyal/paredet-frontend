@@ -22,7 +22,7 @@ const Registro = () => {
     rol: "USER",
   });
 
-  const [mensaje, setMensaje] = useState("");
+  const [errors, setErrors] = useState({});
   const [verPassword, setVerPassword] = useState(false);
   const [verRepetir, setVerRepetir] = useState(false);
 
@@ -44,72 +44,77 @@ const Registro = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (formData.direccion.length > 100) {
-      setMensaje("La dirección no puede tener más de 100 caracteres.");
-      return;
-    }
-
-    if (formData.ciudad.length > 50) {
-      setMensaje("La ciudad no puede tener más de 50 caracteres.");
-      return;
-    }
-
-    if (formData.pais.length > 50) {
-      setMensaje("El país no puede tener más de 50 caracteres.");
-      return;
-    }
+  const validarFormulario = async () => {
+    const nuevosErrores = {};
 
     if (
       !formData.nombre.trim() ||
       !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)
     ) {
-      setMensaje("El nombre solo debe contener letras.");
-      return;
+      nuevosErrores.nombre = "El nombre solo debe contener letras.";
     }
 
     if (
       !formData.apellido.trim() ||
       !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)
     ) {
-      setMensaje("El apellido solo debe contener letras.");
-      return;
+      nuevosErrores.apellido = "El apellido solo debe contener letras.";
     }
 
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setMensaje("Introduce un email válido.");
-      return;
+      nuevosErrores.email = "Introduce un email válido.";
+    } else {
+      const existe = await registroService.emailExiste(formData.email);
+      if (existe) {
+        nuevosErrores.email = "Ya existe una cuenta con este email.";
+      }
     }
 
     if (
       formData.password.length < 8 ||
       !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)
     ) {
-      setMensaje(
-        "La contraseña debe tener al menos 8 caracteres, una letra y un número."
-      );
-      return;
+      nuevosErrores.password =
+        "La contraseña debe tener al menos 8 caracteres, una letra y un número.";
     }
 
     if (formData.password !== formData.repetirPassword) {
-      setMensaje("Las contraseñas no coinciden.");
-      return;
+      nuevosErrores.repetirPassword = "Las contraseñas no coinciden.";
     }
 
     if (!/^\d{9}$/.test(formData.telefono)) {
-      setMensaje("El teléfono debe tener exactamente 9 dígitos.");
-      return;
+      nuevosErrores.telefono =
+        "El teléfono debe tener exactamente 9 dígitos numéricos.";
     }
 
-    if (formData.codigoPostal && formData.codigoPostal.length > 10) {
-      setMensaje("El código postal no puede tener más de 10 caracteres.");
-      return;
+    if (formData.direccion.length > 100) {
+      nuevosErrores.direccion =
+        "La dirección no puede tener más de 100 caracteres.";
     }
 
-    const existe = await registroService.emailExiste(formData.email);
-    if (existe) {
-      setMensaje("Ya existe una cuenta con este email.");
+    if (formData.ciudad.length > 50) {
+      nuevosErrores.ciudad = "La ciudad no puede tener más de 50 caracteres.";
+    }
+
+    if (formData.pais.length > 50) {
+      nuevosErrores.pais = "El país no puede tener más de 50 caracteres.";
+    }
+
+    if (formData.codigoPostal.length > 10) {
+      nuevosErrores.codigoPostal =
+        "El código postal no puede tener más de 10 caracteres.";
+    }
+
+    return nuevosErrores;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const nuevosErrores = await validarFormulario();
+
+    if (Object.keys(nuevosErrores).length > 0) {
+      setErrors(nuevosErrores);
+      console.log("Errores generados:", nuevosErrores);
       return;
     }
 
@@ -124,10 +129,8 @@ const Registro = () => {
       login(token);
       navigate("/");
     } catch (error) {
-      setMensaje("Error al registrar. Verifica los datos.");
+      setErrors({ general: "Error al registrar. Verifica los datos." });
     }
-
-    setTimeout(() => setMensaje(""), 4000);
   };
 
   return (
@@ -153,7 +156,9 @@ const Registro = () => {
             readonlyEmail={false}
             paisesConCiudades={paisesConCiudades}
             isAdmin={false}
+            errors={errors}
           />
+
           <FormularioContraseñaNueva
             password={formData.password}
             repetirPassword={formData.repetirPassword}
@@ -162,13 +167,8 @@ const Registro = () => {
             verRepetir={verRepetir}
             setVerRepetir={setVerRepetir}
             handleChange={handleChange}
+            errors={errors}
           />
-
-          {mensaje && (
-            <div className="alerta-clara mt-3" role="status" aria-live="polite">
-              {mensaje}
-            </div>
-          )}
 
           <button type="submit" className="btn btn-outline-dark w-100 mt-2">
             <FaUserPlus className="me-2" /> Registrarse

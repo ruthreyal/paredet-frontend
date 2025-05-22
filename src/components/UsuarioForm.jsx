@@ -1,5 +1,6 @@
 import React from "react";
 import Select from "react-select";
+import { FaExclamationCircle } from "react-icons/fa";
 
 const UsuarioForm = ({
   formData,
@@ -8,6 +9,7 @@ const UsuarioForm = ({
   paisesConCiudades,
   isAdmin,
   children,
+  errors,
 }) => {
   const paises = Object.keys(paisesConCiudades).map((pais) => ({
     label: pais,
@@ -25,7 +27,9 @@ const UsuarioForm = ({
   return (
     <>
       <div className="mb-3">
-        <label htmlFor="nombre">Nombre <span aria-hidden="true">*</span></label>
+        <label htmlFor="nombre">
+          Nombre <span aria-hidden="true">*</span>
+        </label>
         <input
           id="nombre"
           name="nombre"
@@ -36,10 +40,18 @@ const UsuarioForm = ({
           onChange={handleChange}
           aria-required="true"
         />
+        {errors?.nombre && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.nombre}
+          </div>
+        )}
       </div>
 
       <div className="mb-3">
-        <label htmlFor="apellido">Apellido <span aria-hidden="true">*</span></label>
+        <label htmlFor="apellido">
+          Apellido <span aria-hidden="true">*</span>
+        </label>
         <input
           id="apellido"
           name="apellido"
@@ -50,25 +62,42 @@ const UsuarioForm = ({
           value={formData.apellido}
           onChange={handleChange}
         />
+        {errors?.apellido && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.apellido}
+          </div>
+        )}
       </div>
 
       <div className="mb-3">
-        <label htmlFor="email">Email <span aria-hidden="true">*</span></label>
+        <label htmlFor="email">
+          Email <span aria-hidden="true">*</span>
+        </label>
         <input
           id="email"
           name="email"
-          type="email"
+          type="text"
+          inputMode="email"
+          autoComplete="email"
           className="input-field"
           required
           aria-required="true"
           value={formData.email}
           onChange={handleChange}
-          readOnly={readonlyEmail}
         />
+        {errors?.email && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.email}
+          </div>
+        )}
       </div>
 
       <div className="mb-3">
-        <label htmlFor="telefono">Teléfono <span aria-hidden="true">*</span></label>
+        <label htmlFor="telefono">
+          Teléfono <span aria-hidden="true">*</span>
+        </label>
         <input
           id="telefono"
           name="telefono"
@@ -79,6 +108,12 @@ const UsuarioForm = ({
           value={formData.telefono}
           onChange={handleChange}
         />
+        {errors?.telefono && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.telefono}
+          </div>
+        )}
       </div>
 
       <div className="mb-3">
@@ -91,6 +126,12 @@ const UsuarioForm = ({
           value={formData.direccion}
           onChange={handleChange}
         />
+        {errors?.direccion && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.direccion}
+          </div>
+        )}
       </div>
 
       <div className="mb-3">
@@ -106,6 +147,12 @@ const UsuarioForm = ({
           placeholder="Selecciona un país"
           isSearchable
         />
+        {errors?.pais && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.pais}
+          </div>
+        )}
       </div>
 
       <div className="mb-3">
@@ -122,10 +169,18 @@ const UsuarioForm = ({
           isSearchable
           isDisabled={!formData.pais}
         />
+        {errors?.ciudad && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.ciudad}
+          </div>
+        )}
       </div>
       {isAdmin && (
         <div className="mb-3">
-          <label htmlFor="rol">Rol <span aria-hidden="true">*</span></label>
+          <label htmlFor="rol">
+            Rol <span aria-hidden="true">*</span>
+          </label>
           <select
             id="rol"
             name="rol"
@@ -133,10 +188,17 @@ const UsuarioForm = ({
             value={formData.rol}
             onChange={handleChange}
             required
+            aria-required="true"
           >
             <option value="USER">Usuario</option>
             <option value="ADMIN">Administrador</option>
           </select>
+          <FaExclamationCircle className="icono-error" />
+          {errors?.rol && (
+            <div className="form-error" role="alert">
+              {errors.rol}
+            </div>
+          )}
         </div>
       )}
 

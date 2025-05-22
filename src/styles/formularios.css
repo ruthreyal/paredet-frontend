@@ -108,6 +108,20 @@
   cursor: pointer;
 }
 
+.form-error {
+  color: #850b05;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.icono-error {
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  color: inherit; 
+}
+
+
+
 
 
 
