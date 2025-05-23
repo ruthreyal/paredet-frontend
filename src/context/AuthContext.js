@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import usuarioService from "../services/usuarioService";
 
 export const AuthContext = createContext();
@@ -9,8 +9,8 @@ const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token") || null);
   const [cargando, setCargando] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Comprueba si el token ha expirado
   const isTokenExpired = (token) => {
     if (!token) return true;
     try {
@@ -29,18 +29,40 @@ const AuthProvider = ({ children }) => {
           const data = await usuarioService.getUsuarioPorEmail(email, token);
           setUsuario(data);
         } catch (error) {
-          logout();
+          localStorage.removeItem("token");
+          setToken(null);
+          setUsuario(null);
+          navigate("/");
         } finally {
           setCargando(false);
         }
       } else {
-        logout();
+        const rutasPermitidasSinToken = [
+          "/restablecer-password",
+          "/recuperar-password"
+        ];
+
+        const rutaActual = location.pathname;
+        const accesoPermitido = rutasPermitidasSinToken.some((ruta) =>
+          rutaActual.startsWith(ruta)
+        );
+
+        if (!accesoPermitido) {
+          localStorage.removeItem("token");
+          setToken(null);
+          setUsuario(null);
+          navigate("/");
+        } else {
+          setToken(null);
+          setUsuario(null);
+        }
+
         setCargando(false);
       }
     };
 
     cargarUsuario();
-  }, [token]);
+  }, [token, location, navigate]);
 
   const login = (nuevoToken) => {
     localStorage.setItem("token", nuevoToken);
@@ -71,6 +93,7 @@ const AuthProvider = ({ children }) => {
 };
 
 export default AuthProvider;
+
 
 
 
