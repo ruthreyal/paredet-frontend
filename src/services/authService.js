@@ -1,92 +1,23 @@
-import { createContext, useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import usuarioService from "../services/usuarioService";
+import axios from "axios";
+import { API_BASE_URL } from "./apiConfig";
 
-export const AuthContext = createContext();
-
-const AuthProvider = ({ children }) => {
-  const [usuario, setUsuario] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
-  const [cargando, setCargando] = useState(true);
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const isTokenExpired = (token) => {
-    if (!token) return true;
-    try {
-      const { exp } = JSON.parse(atob(token.split(".")[1]));
-      return Date.now() >= exp * 1000;
-    } catch {
-      return true;
-    }
-  };
-
-  useEffect(() => {
-    const cargarUsuario = async () => {
-      if (token && !isTokenExpired(token)) {
-        try {
-          const email = JSON.parse(atob(token.split(".")[1])).sub;
-          const data = await usuarioService.getUsuarioPorEmail(email, token);
-          setUsuario(data);
-        } catch (error) {
-          logout();
-        } finally {
-          setCargando(false);
-        }
-      } else {
-        const rutasPermitidasSinToken = [
-          "/restablecer-password",
-          "/recuperar-password"
-        ];
-
-        // Permite acceso a rutas públicas sin redirigir a home
-        const rutaActual = location.pathname;
-        const accesoPermitido = rutasPermitidasSinToken.some((ruta) =>
-          rutaActual.startsWith(ruta)
-        );
-
-        if (!accesoPermitido) {
-          logout();
-        } else {
-          setToken(null);
-          setUsuario(null);
-        }
-
-        setCargando(false);
-      }
-    };
-
-    cargarUsuario();
-  }, [token, location]);
-
-  const login = (nuevoToken) => {
-    localStorage.setItem("token", nuevoToken);
-    setToken(nuevoToken);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("token");
-    setToken(null);
-    setUsuario(null);
-    navigate("/");
-  };
-
-  return (
-    <AuthContext.Provider
-      value={{
-        usuario,
-        token,
-        login,
-        logout,
-        cargando,
-        isAuthenticated: !!usuario,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+const login = async (email, password) => {
+  const response = await axios.post(`${API_BASE_URL}/auth/login`, { email, password });
+  return response.data.token;
 };
 
-export default AuthProvider;
+const solicitarRecuperacion = (email) => {
+  return axios.post(`${API_BASE_URL}/auth/recuperar`, { email });
+};
 
+const restablecerPassword = (token, password) => {
+  return axios.post(`${API_BASE_URL}/auth/restablecer`, { token, password });
+};
 
+const authService = {
+  login,
+  solicitarRecuperacion,
+  restablecerPassword,
+};
+
+export default authService;
