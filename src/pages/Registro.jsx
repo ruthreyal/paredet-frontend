@@ -151,6 +151,8 @@ const Registro = () => {
             readonlyEmail={false}
             isAdmin={false}
             errors={errors}
+            onSubmit={handleSubmit}
+            noValidate
           />
 
           <FormularioContraseñaNueva
