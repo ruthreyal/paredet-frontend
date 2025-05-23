@@ -218,8 +218,7 @@
 /* === MEJORA DE ALINEACIÓN DEL HEADER DEL MENÚ MÓVIL === */
 .mobile-icons-row {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-around;
   gap: 3rem;
   padding: 1.2rem 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
