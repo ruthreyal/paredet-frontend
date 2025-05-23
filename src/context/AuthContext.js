@@ -38,6 +38,9 @@ const AuthProvider = ({ children }) => {
         }
       } else {
         const rutasPermitidasSinToken = [
+          "/",
+          "/login",
+          "/registro",
           "/restablecer-password",
           "/recuperar-password"
         ];
