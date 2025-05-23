@@ -28,18 +28,6 @@ const Registro = () => {
 
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-
-<<<<<<< HEAD
-  const paisesConCiudades = {
-    España: ["Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao"],
-    Portugal: ["Lisboa", "Oporto", "Coímbra", "Braga"],
-    Francia: ["París", "Lyon", "Marsella", "Toulouse"],
-    Italia: ["Roma", "Milán", "Florencia", "Venecia"],
-    Inglaterra: ["Londres", "Manchester", "Birmingham", "Liverpool"],
-  };
-
-=======
->>>>>>> dev
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
@@ -113,78 +101,17 @@ const Registro = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-<<<<<<< HEAD
-    if (formData.direccion.length > 100) {
-      setMensaje("La dirección no puede tener más de 100 caracteres.");
-      return;
-    }
-
-    if (formData.ciudad.length > 50) {
-      setMensaje("La ciudad no puede tener más de 50 caracteres.");
-      return;
-    }
-
-    if (formData.pais.length > 50) {
-      setMensaje("El país no puede tener más de 50 caracteres.");
-      return;
-    }
-
-    if (
-      !formData.nombre.trim() ||
-      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)
-    ) {
-      setMensaje("El nombre solo debe contener letras.");
-      return;
-    }
-
-    if (
-      !formData.apellido.trim() ||
-      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)
-    ) {
-      setMensaje("El apellido solo debe contener letras.");
-      return;
-    }
-
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setMensaje("Introduce un email válido.");
-      return;
-    }
-
-    if (
-      formData.password.length < 8 ||
-      !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)
-    ) {
-      setMensaje(
-        "La contraseña debe tener al menos 8 caracteres, una letra y un número."
-      );
-      return;
-    }
-
-    if (formData.password !== formData.repetirPassword) {
-      setMensaje("Las contraseñas no coinciden.");
-      return;
-    }
-
-    if (!/^\d{9}$/.test(formData.telefono)) {
-      setMensaje("El teléfono debe tener exactamente 9 dígitos.");
-      return;
-    }
-
-    if (formData.codigoPostal && formData.codigoPostal.length > 10) {
-      setMensaje("El código postal no puede tener más de 10 caracteres.");
-=======
     const nuevosErrores = await validarFormulario();
 
     if (Object.keys(nuevosErrores).length > 0) {
       setErrors(nuevosErrores);
       console.log("Errores generados:", nuevosErrores);
->>>>>>> dev
       return;
     }
 
     const existe = await registroService.emailExiste(formData.email);
     if (existe) {
-      setMensaje("Ya existe una cuenta con este email.");
+      setErrors("Ya existe una cuenta con este email.");
       return;
     }
 
