@@ -109,12 +109,6 @@ const Registro = () => {
       return;
     }
 
-    const existe = await registroService.emailExiste(formData.email);
-    if (existe) {
-      setErrors("Ya existe una cuenta con este email.");
-      return;
-    }
-
     const usuarioARegistrar = {
       ...formData,
       rol: { nombre: formData.rol },
@@ -126,7 +120,11 @@ const Registro = () => {
       login(token);
       navigate("/");
     } catch (error) {
-      setErrors({ general: "Error al registrar. Verifica los datos." });
+      if (error.response && error.response.data?.mensaje) {
+        setErrors({ general: error.response.data.mensaje });
+      } else {
+        setErrors({ general: "Error al registrar. Verifica los datos." });
+      }
     }
   };
 

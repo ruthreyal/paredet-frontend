@@ -3,6 +3,8 @@ import authService from "../services/authService";
 import usuarioService from "../services/usuarioService";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
+import registroService from "../services/registroService";
+
 import {
   FaUserPlus,
   FaLock,
@@ -40,6 +42,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     const nuevosErrores = validarFormulario();
     if (Object.keys(nuevosErrores).length > 0) {
       setErrors(nuevosErrores);
@@ -47,6 +50,13 @@ const Login = () => {
     }
 
     try {
+      // Usamos el servicio de registro para comprobar si el email existe
+      const existe = await registroService.emailExiste(formData.email);
+      if (!existe) {
+        setErrors({ email: "No existe ninguna cuenta con este email." });
+        return;
+      }
+
       const token = await authService.login(formData.email, formData.password);
       login(token);
 
@@ -62,7 +72,7 @@ const Login = () => {
         navigate("/");
       }
     } catch (error) {
-      setErrors({ general: "Credenciales incorrectas" });
+      setErrors({ password: "La contraseña es incorrecta." });
     }
   };
 
