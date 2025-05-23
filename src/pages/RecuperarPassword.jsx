@@ -38,6 +38,7 @@ const RecuperarPassword = () => {
 
       await authService.solicitarRecuperacion(email);
       setMensaje("Enlace de recuperación enviado al correo indicado.");
+setTimeout(() => setMensaje(""), 3000);
       setErrors({});
 
       setTimeout(() => setMensaje(""), 3000);
