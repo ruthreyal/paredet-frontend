@@ -39,7 +39,8 @@ const AuthProvider = ({ children }) => {
       } else {
         const rutasPermitidasSinToken = [
           "/restablecer-password",
-          "/recuperar-password"
+          "/recuperar-password",
+          "/login"
         ];
 
         const rutaActual = location.pathname;
