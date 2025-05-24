@@ -7,6 +7,7 @@ import { AuthContext } from "../context/AuthContext";
 import UsuarioForm from "../components/UsuarioForm";
 import FormularioContraseñaNueva from "../components/FormularioContraseñaNueva";
 
+
 const Registro = () => {
   const [formData, setFormData] = useState({
     nombre: "",
