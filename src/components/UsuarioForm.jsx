@@ -85,11 +85,7 @@ const UsuarioForm = ({
           aria-required="true"
           value={formData.email}
           onChange={handleChange}
-<<<<<<< Updated upstream
           readOnly={readonlyEmail}
-=======
-          readOnly={readonlyEmail} 
->>>>>>> Stashed changes
         />
         {errors?.email && (
           <div className="form-error" role="alert">

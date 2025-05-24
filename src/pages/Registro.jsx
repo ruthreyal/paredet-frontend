@@ -30,10 +30,6 @@ const Registro = () => {
 
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,
