@@ -8,7 +8,7 @@ import FormularioCambiarContraseña from "../components/FormularioCambiarContras
 import "../styles/formularios.css";
 import paisesConCiudades from "../data/cities.json";
 import FormularioCambiarEmail from "../components/FormularioCambiarEmail";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { FaChevronDown } from "react-icons/fa";
 
 const PerfilPage = () => {
   const [usuario, setUsuario] = useState(null);

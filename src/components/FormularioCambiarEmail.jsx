@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../services/apiConfig";
 import Alerta from "./Alerta";
-import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 
