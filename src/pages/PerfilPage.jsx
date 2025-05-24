@@ -6,6 +6,9 @@ import { API_BASE_URL } from "../services/apiConfig";
 import UsuarioForm from "../components/UsuarioForm";
 import FormularioCambiarContraseña from "../components/FormularioCambiarContraseña";
 import "../styles/formularios.css";
+import paisesConCiudades from "../data/cities.json";
+import FormularioCambiarEmail from "../components/FormularioCambiarEmail";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const PerfilPage = () => {
   const [usuario, setUsuario] = useState(null);
@@ -14,6 +17,8 @@ const PerfilPage = () => {
   const [nuevaPassword, setNuevaPassword] = useState("");
   const [verActual, setVerActual] = useState(false);
   const [verNueva, setVerNueva] = useState(false);
+  const [mostrarFormEmail, setMostrarFormEmail] = useState(false);
+  const [mostrarFormPass, setMostrarFormPass] = useState(false);
 
   const token = localStorage.getItem("token");
   let email = null;
@@ -26,14 +31,6 @@ const PerfilPage = () => {
   } catch {
     console.error("Error al extraer email del token.");
   }
-
-  const paisesConCiudades = {
-    España: ["Madrid", "Barcelona", "Valencia", "Sevilla", "Bilbao"],
-    Portugal: ["Lisboa", "Oporto", "Coímbra", "Braga"],
-    Francia: ["París", "Lyon", "Marsella", "Toulouse"],
-    Italia: ["Roma", "Milán", "Florencia", "Venecia"],
-    Inglaterra: ["Londres", "Manchester", "Birmingham", "Liverpool"]
-  };
 
   useEffect(() => {
     if (!email || !token) return;
@@ -60,13 +57,19 @@ const PerfilPage = () => {
     }
 
     if (usuario.codigoPostal && usuario.codigoPostal.length > 10) {
-      return mostrarMensaje("El código postal no puede tener más de 10 caracteres.");
+      return mostrarMensaje(
+        "El código postal no puede tener más de 10 caracteres."
+      );
     }
 
     try {
-      await axios.put(`${API_BASE_URL}/usuarios/email/${usuario.email}`, usuario, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await axios.put(
+        `${API_BASE_URL}/usuarios/email/${usuario.email}`,
+        usuario,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       mostrarMensaje("Datos actualizados correctamente");
     } catch {
       mostrarMensaje("Error al actualizar los datos");
@@ -81,7 +84,9 @@ const PerfilPage = () => {
     }
 
     if (nuevaPassword.length < 6) {
-      return mostrarMensaje("La nueva contraseña debe tener al menos 6 caracteres.");
+      return mostrarMensaje(
+        "La nueva contraseña debe tener al menos 6 caracteres."
+      );
     }
 
     try {
@@ -99,11 +104,16 @@ const PerfilPage = () => {
   };
 
   const handleEliminarCuenta = async () => {
-    if (!window.confirm("¿Estás segura de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.")) return;
+    if (
+      !window.confirm(
+        "¿Estás segura de que deseas eliminar tu cuenta? Esta acción no se puede deshacer."
+      )
+    )
+      return;
 
     try {
       await axios.delete(`${API_BASE_URL}/usuarios/email/${email}`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
       localStorage.removeItem("token");
       window.location.href = "/";
@@ -118,10 +128,16 @@ const PerfilPage = () => {
 
   return (
     <main className="container form-container py-5">
-      <section className="form-box" style={{ maxWidth: "500px", width: "100%" }}>
+      <section
+        className="form-box"
+        style={{ maxWidth: "500px", width: "100%" }}
+      >
         <h2>Mi perfil</h2>
 
-        <form onSubmit={handleGuardar} aria-label="Formulario de actualización de perfil">
+        <form
+          onSubmit={handleGuardar}
+          aria-label="Formulario de actualización de perfil"
+        >
           <UsuarioForm
             formData={usuario}
             handleChange={handleChange}
@@ -135,22 +151,52 @@ const PerfilPage = () => {
 
         <hr className="my-4" />
 
-        <FormularioCambiarContraseña
-          contrasenaActual={contrasenaActual}
-          nuevaPassword={nuevaPassword}
-          verActual={verActual}
-          setVerActual={setVerActual}
-          verNueva={verNueva}
-          setVerNueva={setVerNueva}
-          handleChange={(e) => {
-            const { name, value } = e.target;
-            if (name === "contrasenaActual") setContrasenaActual(value);
-            if (name === "nuevaPassword") setNuevaPassword(value);
-          }}
-          handleSubmit={handleCambiarPassword}
-        />
+        <button
+          className="btn-claro-inverso w-100 mb-2 d-flex justify-content-between align-items-center"
+          onClick={() => setMostrarFormPass(!mostrarFormPass)}
+          aria-expanded={mostrarFormPass}
+          aria-controls="form-cambiar-pass"
+        >
+          <span>Cambiar contraseña</span>
+          <FaChevronDown
+            className={`triangulo-animado ${mostrarFormPass ? "rotado" : ""}`}
+          />
+        </button>
+
+        {mostrarFormPass && (
+          <FormularioCambiarContraseña
+            contrasenaActual={contrasenaActual}
+            nuevaPassword={nuevaPassword}
+            verActual={verActual}
+            setVerActual={setVerActual}
+            verNueva={verNueva}
+            setVerNueva={setVerNueva}
+            handleChange={(e) => {
+              const { name, value } = e.target;
+              if (name === "contrasenaActual") setContrasenaActual(value);
+              if (name === "nuevaPassword") setNuevaPassword(value);
+            }}
+            handleSubmit={handleCambiarPassword}
+          />
+        )}
 
         <hr className="my-4" />
+
+        <button
+          className="btn-claro-inverso w-100 mb-2 d-flex justify-content-between align-items-center"
+          onClick={() => setMostrarFormEmail(!mostrarFormEmail)}
+          aria-expanded={mostrarFormEmail}
+          aria-controls="form-cambiar-email"
+        >
+          <span>Cambiar email</span>
+          <FaChevronDown
+            className={`triangulo-animado ${mostrarFormEmail ? "rotado" : ""}`}
+          />
+        </button>
+
+        {mostrarFormEmail && (
+          <FormularioCambiarEmail emailActual={usuario.email} token={token} />
+        )}
 
         <button
           className="btn-claro-inverso"
@@ -171,8 +217,3 @@ const PerfilPage = () => {
 };
 
 export default PerfilPage;
-
-
-
-
-

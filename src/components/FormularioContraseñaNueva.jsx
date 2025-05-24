@@ -29,6 +29,7 @@ const FormularioContraseñaNueva = ({
             aria-required="true"
             value={password}
             onChange={handleChange}
+            autoComplete="current-password"
           />
           <span
             onClick={() => setVerPassword(!verPassword)}
@@ -56,6 +57,7 @@ const FormularioContraseñaNueva = ({
             aria-required="true"
             value={repetirPassword}
             onChange={handleChange}
+            autoComplete="current-password"
           />
           <span
             onClick={() => setVerRepetir(!verRepetir)}

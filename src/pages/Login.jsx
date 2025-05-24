@@ -132,6 +132,7 @@ const Login = () => {
             <label htmlFor="password" className="form-label">
               Contraseña <span aria-hidden="true">*</span>
             </label>
+<<<<<<< Updated upstream
             <div className="input-icon-wrapper">
               <input
                 id="password"
@@ -157,6 +158,24 @@ const Login = () => {
                 {errors.password}
               </div>
             )}
+=======
+            <input
+              id="password"
+              type={verPassword ? "text" : "password"}
+              className="input-field"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="current-password"
+            />
+            <span
+              onClick={() => setVerPassword(!verPassword)}
+              className="position-absolute top-50 end-0 translate-middle-y pe-3"
+              style={{ cursor: "pointer" }}
+            >
+              {verPassword ? <FaEye /> : <FaEyeSlash />}
+            </span>
+>>>>>>> Stashed changes
           </div>
 
           {errors.general && (

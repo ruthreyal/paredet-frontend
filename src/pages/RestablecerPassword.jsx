@@ -71,6 +71,7 @@ const RestablecerPassword = () => {
   };
 
   return (
+<<<<<<< Updated upstream
     <main
       className="container login container"
       style={{ minHeight: "80vh", paddingTop: "3rem", paddingBottom: "3rem" }}
@@ -117,6 +118,39 @@ const RestablecerPassword = () => {
         </form>
       </section>
     </main>
+=======
+    <div className="container mt-5">
+      <h2>Establecer nueva contraseña</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-3">
+          <label>Nueva contraseña</label>
+          <input
+            type="password"
+            className="form-control"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            autoComplete="current-password"
+          />
+        </div>
+        <div className="mb-3">
+          <label>Confirmar contraseña</label>
+          <input
+            type="password"
+            className="form-control"
+            required
+            value={confirmar}
+            onChange={(e) => setConfirmar(e.target.value)}
+            autoComplete="current-password"
+          />
+        </div>
+        <button className="btn btn-outline-dark" type="submit">
+          Guardar nueva contraseña
+        </button>
+      </form>
+      {mensaje && <div className="alert alert-info mt-3">{mensaje}</div>}
+    </div>
+>>>>>>> Stashed changes
   );
 };
 

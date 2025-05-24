@@ -6,6 +6,8 @@ import registroService from "../services/registroService";
 import { AuthContext } from "../context/AuthContext";
 import UsuarioForm from "../components/UsuarioForm";
 import FormularioContraseñaNueva from "../components/FormularioContraseñaNueva";
+import paisesConCiudades from "../data/cities.json";
+
 
 const Registro = () => {
   const [formData, setFormData] = useState({
@@ -28,6 +30,10 @@ const Registro = () => {
 
   const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   const handleChange = (e) => {
     setFormData((prev) => ({
       ...prev,

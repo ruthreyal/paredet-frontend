@@ -27,6 +27,7 @@ const FormularioCambiarContraseña = ({
             aria-required="true"
             value={contrasenaActual}
             onChange={handleChange}
+            autoComplete="current-password"
           />
           <span
             onClick={() => setVerActual(!verActual)}
@@ -50,6 +51,7 @@ const FormularioCambiarContraseña = ({
             minLength={6}
             value={nuevaPassword}
             onChange={handleChange}
+            autoComplete="current-password"
           />
           <span
             onClick={() => setVerNueva(!verNueva)}
