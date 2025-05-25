@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import UsuarioForm from "../../components/UsuarioForm";
 import FormularioContraseñaNueva from "../../components/FormularioContraseñaNueva";
 import registroService from "../../services/registroService";
+import usuarioService from "../../services/usuarioService";
 import "../../styles/formularios.css";
 
-const FormularioCrearUsuario = ({ onUsuarioCreado, token }) => {
+const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar, token }) => {
+  const esEdicion = Boolean(usuarioInicial);
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellido: "",
@@ -16,119 +19,181 @@ const FormularioCrearUsuario = ({ onUsuarioCreado, token }) => {
     ciudad: "",
     codigoPostal: "",
     pais: "",
-    rol: "USER"
+    rol: "USER",
   });
 
   const [verPassword, setVerPassword] = useState(false);
   const [verRepetir, setVerRepetir] = useState(false);
-  const [mensaje, setMensaje] = useState("");
+  const [errors, setErrors] = useState({});
+  const [mostrarPassword, setMostrarPassword] = useState(false);
+
+  useEffect(() => {
+    if (usuarioInicial) {
+      setFormData({
+        ...usuarioInicial,
+        rol: usuarioInicial.rolNombre || "USER",
+        password: "",
+        repetirPassword: "",
+      });
+    }
+  }, [usuarioInicial]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleCrearUsuario = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    const nuevosErrores = {};
 
-    // Validaciones de campos obligatorios
+    // Validaciones generales
     if (!formData.nombre.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
-      setMensaje("El nombre solo debe contener letras.");
-      return;
+      nuevosErrores.nombre = "El nombre solo debe contener letras.";
     }
 
     if (!formData.apellido.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)) {
-      setMensaje("El apellido solo debe contener letras.");
-      return;
+      nuevosErrores.apellido = "El apellido solo debe contener letras.";
     }
 
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      setMensaje("Introduce un email válido.");
-      return;
-    }
+      nuevosErrores.email = "Introduce un email válido.";
+    } else {
+      try {
+        const existe = await registroService.emailExiste(formData.email);
+        if (!esEdicion && existe) {
+          nuevosErrores.email = "Ya existe una cuenta con este email.";
+        }
 
-    if (formData.password.length < 8 || !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)) {
-      setMensaje("La contraseña debe tener al menos 8 caracteres, una letra y un número.");
-      return;
-    }
-
-    if (formData.password !== formData.repetirPassword) {
-      setMensaje("Las contraseñas no coinciden.");
-      return;
+        if (esEdicion && formData.email !== usuarioInicial.email && existe) {
+          nuevosErrores.email = "Ya existe una cuenta con este email.";
+        }
+      } catch {
+        nuevosErrores.email = "Error al comprobar el email.";
+      }
     }
 
     if (!/^\d{9}$/.test(formData.telefono)) {
-      setMensaje("El teléfono debe tener exactamente 9 dígitos.");
-      return;
+      nuevosErrores.telefono = "El teléfono debe tener exactamente 9 dígitos.";
     }
 
     if (formData.codigoPostal && formData.codigoPostal.length > 10) {
-      setMensaje("El código postal no puede tener más de 10 caracteres.");
+      nuevosErrores.codigoPostal = "El código postal no puede tener más de 10 caracteres.";
+    }
+
+    if (!esEdicion || mostrarPassword) {
+      if (
+        formData.password.length < 8 ||
+        !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)
+      ) {
+        nuevosErrores.password = "La contraseña debe tener al menos 8 caracteres, una letra y un número.";
+      }
+
+      if (formData.password !== formData.repetirPassword) {
+        nuevosErrores.repetirPassword = "Las contraseñas no coinciden.";
+      }
+    }
+
+    if (Object.keys(nuevosErrores).length > 0) {
+      setErrors(nuevosErrores);
       return;
     }
 
+    setErrors({});
+
     const payload = {
       ...formData,
-      rol: { nombre: formData.rol }
+      rol: { nombre: formData.rol },
     };
     delete payload.repetirPassword;
 
     try {
-      await registroService.registerConToken(payload, token);
-      setMensaje("Usuario creado correctamente");
+      if (esEdicion) {
+        await usuarioService.actualizarUsuario(usuarioInicial.email, payload, token);
+        setErrors({ exito: "Usuario actualizado correctamente." });
+      } else {
+        await registroService.registerConToken(payload, token);
+        setErrors({ exito: "Usuario creado correctamente." });
+      }
 
-      // Limpiar campos tras éxito
-      setFormData({
-        nombre: "",
-        apellido: "",
-        email: "",
-        password: "",
-        repetirPassword: "",
-        telefono: "",
-        direccion: "",
-        ciudad: "",
-        codigoPostal: "",
-        pais: "",
-        rol: "USER"
-      });
-
-      if (onUsuarioCreado) onUsuarioCreado();
+      if (onUsuarioGuardado) onUsuarioGuardado();
     } catch (error) {
-      setMensaje("Error al crear el usuario");
+      setErrors({ general: "Error al guardar el usuario." });
       console.error("Error:", error.response?.data || error.message);
     }
 
-    setTimeout(() => setMensaje(""), 4000);
+    setTimeout(() => setErrors({}), 4000);
   };
 
   return (
-    <form onSubmit={handleCrearUsuario} aria-label="Formulario para crear nuevo usuario" className="mb-4 formulario-panel-admin">
-      <UsuarioForm
-        formData={formData}
-        handleChange={handleChange}
-        readonlyEmail={false}
-        paisesConCiudades={{}} // opcional si quieres mantenerlo vacío
-        isAdmin={true}
-      />
-      <FormularioContraseñaNueva
-        password={formData.password}
-        repetirPassword={formData.repetirPassword}
-        verPassword={verPassword}
-        setVerPassword={setVerPassword}
-        verRepetir={verRepetir}
-        setVerRepetir={setVerRepetir}
-        handleChange={handleChange}
-      />
-      {mensaje && (
-        <div className="alerta-clara mt-3" role="status" aria-live="polite">
-          {mensaje}
-        </div>
-      )}
-      <button type="submit" className="btn-gold mt-3 w-100">
-        Guardar usuario
-      </button>
-    </form>
+    <section className="form-box formulario-panel-admin">
+      <div className="header-flex mb-5">
+        <h2 className="section-title mb-0">{esEdicion ? "Perfil" : "Registro"}</h2>
+        {onCancelar && (
+          <button
+            type="button"
+            onClick={onCancelar}
+            className="btn btn-outline-dark w-40 mt-2"
+            aria-label="Cancelar"
+          >
+            Cancelar
+          </button>
+        )}
+      </div>
+
+      <form onSubmit={handleSubmit} aria-label="Formulario usuario" className="mb-4 formulario-panel-admin">
+        <UsuarioForm
+          formData={formData}
+          handleChange={handleChange}
+          readonlyEmail={false}
+          paisesConCiudades={{}}
+          isAdmin={true}
+          errors={errors}
+        />
+
+        {esEdicion && (
+          <p
+            className="cambiar-password-toggle"
+            onClick={() => setMostrarPassword(!mostrarPassword)}
+            aria-expanded={mostrarPassword}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setMostrarPassword(!mostrarPassword)}
+          >
+            {mostrarPassword ? "Ocultar contraseña ▲" : "Cambiar contraseña ▼"}
+          </p>
+        )}
+
+        {(!esEdicion || mostrarPassword) && (
+          <FormularioContraseñaNueva
+            password={formData.password}
+            repetirPassword={formData.repetirPassword}
+            verPassword={verPassword}
+            setVerPassword={setVerPassword}
+            verRepetir={verRepetir}
+            setVerRepetir={setVerRepetir}
+            handleChange={handleChange}
+            errors={errors}
+          />
+        )}
+
+        {errors.general && (
+          <div className="alerta-clara mt-3" role="status" aria-live="polite">
+            {errors.general}
+          </div>
+        )}
+
+        {errors.exito && (
+          <div className="alerta-exito mt-3" role="status" aria-live="polite">
+            {errors.exito}
+          </div>
+        )}
+
+        <button type="submit" className="btn btn-outline-dark w-100 mt-2">
+          {esEdicion ? "Guardar cambios" : "Guardar usuario"}
+        </button>
+      </form>
+    </section>
   );
 };
 
 export default FormularioCrearUsuario;
-

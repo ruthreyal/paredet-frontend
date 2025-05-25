@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import usuarioService from "../../services/usuarioService";
 import "../../styles/adminUsuarios.css";
-import { useNavigate } from "react-router-dom";
 import FormularioCrearUsuario from "./FormularioCrearUsuario";
 
 const AdminUsuarios = () => {
@@ -10,22 +9,23 @@ const AdminUsuarios = () => {
   const [loading, setLoading] = useState(true);
   const [busqueda, setBusqueda] = useState("");
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [usuarioEditar, setUsuarioEditar] = useState(null);
 
   const token = localStorage.getItem("token");
-  const navigate = useNavigate();
+
+  const cargarUsuarios = async () => {
+    try {
+      const data = await usuarioService.getTodosUsuarios(token);
+      setUsuarios(data);
+    } catch (error) {
+      setMensaje("Error al cargar usuarios");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUsuarios = async () => {
-      try {
-        const data = await usuarioService.getTodosUsuarios(token);
-        setUsuarios(data);
-      } catch (error) {
-        setMensaje("Error al cargar usuarios");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchUsuarios();
+    cargarUsuarios();
   }, [token]);
 
   const usuariosFiltrados = usuarios.filter((usuario) =>
@@ -33,76 +33,90 @@ const AdminUsuarios = () => {
     usuario.email.toLowerCase().includes(busqueda.toLowerCase())
   );
 
+  const cerrarFormulario = () => {
+    setMostrarFormulario(false);
+    setUsuarioEditar(null);
+  };
+
   return (
     <div className="admin-usuarios-container">
-      <div className="d-flex justify-content-between align-items-center mb-3">
-        <h2 className="section-title">Gestión de Usuarios</h2>
-        <button
-          className="btn-acceso"
-          onClick={() => setMostrarFormulario(!mostrarFormulario)}
-          aria-label="Crear nuevo usuario"
-        >
-          {mostrarFormulario ? "Cancelar" : "+ Crear usuario"}
-        </button>
-      </div>
+      <h1 className="section-title text-center mb-5">Gestión de Usuarios</h1>
 
-      {mostrarFormulario && (
+      {mostrarFormulario || usuarioEditar ? (
         <FormularioCrearUsuario
           token={token}
-          onUsuarioCreado={async () => {
-            const data = await usuarioService.getTodosUsuarios(token);
-            setUsuarios(data);
-            setMostrarFormulario(false);
+          usuarioInicial={usuarioEditar}
+          onCancelar={cerrarFormulario}
+          onUsuarioGuardado={async () => {
+            await cargarUsuarios();
+            cerrarFormulario();
+            setMensaje("Usuario guardado correctamente");
+            setTimeout(() => setMensaje(""), 3000);
           }}
         />
-      )}
-
-      <input
-        type="text"
-        placeholder="Buscar por nombre o email"
-        className="input-field mb-3"
-        value={busqueda}
-        onChange={(e) => setBusqueda(e.target.value)}
-        aria-label="Buscar usuario"
-      />
-
-      {loading ? (
-        <p>Cargando usuarios...</p>
-      ) : usuariosFiltrados.length === 0 ? (
-        <p>No hay usuarios registrados</p>
       ) : (
-        <table className="tabla-usuarios">
-          <thead>
-            <tr>
-              <th scope="col">Nombre</th>
-              <th scope="col" className="d-none d-md-table-cell">Apellido</th>
-              <th scope="col">Email</th>
-              <th scope="col">Rol</th>
-            </tr>
-          </thead>
-          <tbody>
-            {usuariosFiltrados.map((usuario) => (
-              <tr
-                key={usuario.id}
-                onClick={() => navigate(`/admin/usuarios/editar/${usuario.email}`)}
-                style={{ cursor: "pointer" }}
-                aria-label={`Editar usuario ${usuario.nombre}`}
-              >
-                <td>{usuario.nombre}</td>
-                <td className="d-none d-md-table-cell">{usuario.apellido}</td>
-                <td>{usuario.email}</td>
-                <td>{usuario.rolNombre}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <>
+          <div className="d-flex justify-content-between align-items-center mb-5" style={{ gap: "1rem" }}>
+            <input
+              type="text"
+              placeholder="Buscar por nombre o email"
+              className="input-field mb-0"
+              style={{ flex: "1", maxWidth: "400px" }}
+              value={busqueda}
+              onChange={(e) => setBusqueda(e.target.value)}
+              aria-label="Buscar usuario"
+            />
+            <button
+              className="btn btn-outline-dark w-40 mt-0"
+              onClick={() => setMostrarFormulario(true)}
+              aria-label="Crear nuevo usuario"
+            >
+              + Crear usuario
+            </button>
+          </div>
+
+          {loading ? (
+            <p>Cargando usuarios...</p>
+          ) : usuariosFiltrados.length === 0 ? (
+            <p>No hay usuarios registrados</p>
+          ) : (
+            <table className="tabla-usuarios">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th className="d-none d-md-table-cell">Apellido</th>
+                  <th>Email</th>
+                  <th>Rol</th>
+                </tr>
+              </thead>
+              <tbody>
+                {usuariosFiltrados.map((usuario) => (
+                  <tr
+                    key={usuario.id}
+                    onClick={() => setUsuarioEditar(usuario)}
+                    style={{ cursor: "pointer" }}
+                    aria-label={`Editar usuario ${usuario.nombre}`}
+                  >
+                    <td>{usuario.nombre}</td>
+                    <td className="d-none d-md-table-cell">{usuario.apellido}</td>
+                    <td>{usuario.email}</td>
+                    <td>{usuario.rolNombre}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </>
       )}
 
-      {mensaje && <p className="mt-3">{mensaje}</p>}
+      {mensaje && (
+        <div className="alerta-exito mt-4" role="status" aria-live="polite">
+          {mensaje}
+        </div>
+      )}
     </div>
   );
 };
 
 export default AdminUsuarios;
-
 
