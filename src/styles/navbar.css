@@ -1,48 +1,52 @@
 /* Estilo base para navbar */
 .navbar {
-    background-color: var(--color-negro);
-    font-family: var(--font-secundaria);
-  }
-  
-  .logo-text {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--color-principal); /* Tu dorado */
-  font-family: var(--font-principal); /* Opcional si quieres usar Playfair */
+  background-color: var(--color-negro);
+  font-family: var(--font-secundaria);
 }
 
-  
-  @media (max-width: 576px) {
-    .logo-text {
-      font-size: 1.2rem;
-    }
-  
-    .navbar .nav-link {
-      font-size: 0.9rem;
-      padding: 0.4rem 0.6rem;
-    }
-  
-    .navbar-nav {
-      gap: 0.5rem !important;
-    }
-  
-    .bi-person,
-    .bi-cart,
-    .bi-search {
-      font-size: 1.1rem !important;
-    }
-  }
-  
-  @media (max-width: 991.98px) {
-    .logo-text {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-    }
+.navbar-nav .nav-link {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.logo-text {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-principal);
+  font-family: var(--font-principal);
+}
+
+@media (max-width: 576px) {
+  .logo-text {
+    font-size: 1.2rem;
   }
 
- /* Estilo personalizado para menú de perfil */
+  .navbar .nav-link {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.6rem;
+  }
+
+  .navbar-nav {
+    gap: 0.5rem !important;
+  }
+
+  .bi-person,
+  .bi-cart,
+  .bi-search {
+    font-size: 1.1rem !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .logo-text {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+}
+
+/* Estilo personalizado para menú de perfil */
 .dropdown-menu-oscuro {
   background-color: var(--color-negro) !important;
   border: none;
@@ -235,6 +239,7 @@
   color: var(--color-secundario);
   font-family: var(--font-secundaria);
 }
+
 
 
 

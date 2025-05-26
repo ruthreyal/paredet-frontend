@@ -24,12 +24,12 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 shadow-sm d-none d-lg-flex justify-content-between align-items-center sticky-top">
         <ul className="navbar-nav d-flex justify-content-evenly flex-grow-1">
           <li className="nav-item">
-            <Link className="nav-link" to="#">
+            <Link className="nav-link" to="/productos?tipo=papel-pintado">
               Papeles Pintados
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="#">
+            <Link className="nav-link" to="/productos?tipo=fotomural">
               Fotomurales
             </Link>
           </li>
@@ -194,18 +194,14 @@ const Navbar = () => {
             <li className="nav-item mb-2">
               <Link
                 className="nav-link text-white"
-                to="/papeles-pintados"
+                to="/productos?tipo=papel-pintado"
                 onClick={toggleMenu}
               >
                 Papeles Pintados
               </Link>
             </li>
             <li className="nav-item mb-2">
-              <Link
-                className="nav-link text-white"
-                to="/fotomurales"
-                onClick={toggleMenu}
-              >
+              <Link className="nav-link text-white" to="/productos?tipo=fotomural">
                 Fotomurales
               </Link>
             </li>

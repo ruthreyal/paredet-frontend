@@ -16,7 +16,7 @@ import Registro from "./pages/Registro";
 import PerfilPage from "./pages/PerfilPage";
 import RecuperarPassword from "./pages/RecuperarPassword";
 import RestablecerPassword from "./pages/RestablecerPassword";
-
+import Producto from "./pages/Productos";
 import AdminLayout from "./pages/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminUsuarios from "./pages/admin/AdminUsuarios";
@@ -53,6 +53,7 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="registro" element={<Registro />} />
             <Route path="perfil" element={<PerfilPage />} />
+            <Route path="/productos" element={<Producto />} />
             <Route path="recuperar-password" element={<RecuperarPassword />} />
             <Route path="restablecer-password" element={<RestablecerPassword />} />
           </Route>
