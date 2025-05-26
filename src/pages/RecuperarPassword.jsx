@@ -19,33 +19,44 @@ const RecuperarPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMensaje(""); // Limpia mensaje anterior
     const nuevosErrores = validar();
+
     if (Object.keys(nuevosErrores).length > 0) {
       setErrors(nuevosErrores);
-      setMensaje("");
       return;
     }
 
     try {
+      console.log("📩 Comprobando si existe el email:", email);
       const existe = await registroService.emailExiste(email);
+
       if (!existe) {
         setErrors({
           email: "El email no corresponde a ningún usuario registrado.",
         });
-        setMensaje("");
         return;
       }
 
-      await authService.solicitarRecuperacion(email);
-      setMensaje("Enlace de recuperación enviado al correo indicado.");
-setTimeout(() => setMensaje(""), 3000);
-      setErrors({});
+      console.log("✅ Email válido, enviando solicitud de recuperación...");
 
+      await authService.solicitarRecuperacion(email);
+
+      setMensaje("Enlace de recuperación enviado al correo indicado.");
+      setErrors({});
       setTimeout(() => setMensaje(""), 3000);
+
     } catch (error) {
-      console.error("Error al solicitar recuperación:", error);
-      setMensaje("Ha ocurrido un error al procesar la solicitud.");
-    }
+  console.error("❌ Error al solicitar recuperación:", error);
+
+  const mensajeError =
+    error.response?.data?.error || 
+    error.response?.data?.mensaje || 
+    "Ha ocurrido un error al procesar la solicitud.";
+
+  setMensaje(mensajeError);
+}
+
   };
 
   return (
@@ -70,8 +81,7 @@ setTimeout(() => setMensaje(""), 3000);
             <input
               id="email"
               name="email"
-              type="text"
-              inputMode="email"
+              type="email"
               autoComplete="email"
               className="input-field"
               value={email}
@@ -101,3 +111,4 @@ setTimeout(() => setMensaje(""), 3000);
 };
 
 export default RecuperarPassword;
+

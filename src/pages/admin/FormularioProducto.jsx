@@ -5,6 +5,7 @@ import coleccionService from "../../services/coleccionService";
 import categoriaService from "../../services/categoriaService";
 import SubidaImagen from "../../components/SubidaImagen";
 import SubidaGaleria from "../../components/SubidaGaleria";
+import { FaExclamationCircle } from "react-icons/fa";
 import "../../styles/formularioProducto.css";
 import "../../styles/utils.css";
 
@@ -12,6 +13,8 @@ const FormularioProducto = ({ modo = "crear" }) => {
   const navigate = useNavigate();
   const { id } = useParams();
   const token = localStorage.getItem("token");
+  const [originalNombre, setOriginalNombre] = useState("");
+  const [originalReferencia, setOriginalReferencia] = useState("");
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -32,6 +35,7 @@ const FormularioProducto = ({ modo = "crear" }) => {
   const [colecciones, setColecciones] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [mensaje, setMensaje] = useState("");
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     const cargarListas = async () => {
@@ -48,6 +52,8 @@ const FormularioProducto = ({ modo = "crear" }) => {
     if (modo === "editar" && id) {
       productoService.getProductoById(id).then((resp) => {
         setFormData(resp.data);
+        setOriginalNombre(resp.data.nombre);
+        setOriginalReferencia(resp.data.referencia);
       });
     }
   }, [modo, id]);
@@ -57,24 +63,119 @@ const FormularioProducto = ({ modo = "crear" }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const validarFormulario = async () => {
+    const nuevosErrores = {};
+
+    if (!formData.nombre.trim()) {
+      nuevosErrores.nombre = "El nombre es obligatorio.";
+    } else if (formData.nombre.length > 255) {
+      nuevosErrores.nombre = "El nombre no puede superar los 255 caracteres.";
+    } else if (modo === "crear" || formData.nombre !== originalNombre) {
+      const existe = await productoService.nombreExiste(formData.nombre);
+      if (existe.data) {
+        nuevosErrores.nombre = "Ya existe un producto con este nombre.";
+      }
+    }
+
+    if (!formData.referencia.trim()) {
+      nuevosErrores.referencia = "La referencia es obligatoria.";
+    } else if (formData.referencia.length > 100) {
+      nuevosErrores.referencia =
+        "La referencia no puede superar los 100 caracteres.";
+    } else if (modo === "crear" || formData.referencia !== originalReferencia) {
+      const existeRef = await productoService.referenciaExiste(
+        formData.referencia
+      );
+      if (existeRef.data) {
+        nuevosErrores.referencia = "Ya existe un producto con esta referencia.";
+      }
+    }
+
+    if (!formData.categoriaId) {
+      nuevosErrores.categoriaId = "La categoría es obligatoria.";
+    }
+
+    if (!formData.coleccionId) {
+      nuevosErrores.coleccionId = "La colección es obligatoria.";
+    }
+
+    if (formData.precio <= 0) {
+      nuevosErrores.precio = "El precio debe ser mayor que 0.";
+    }
+
+    if (formData.stock < 0) {
+      nuevosErrores.stock = "El stock no puede ser negativo.";
+    }
+
+    if (formData.peso < 0) {
+      nuevosErrores.peso = "El peso no puede ser negativo.";
+    }
+
+    if (formData.descripcion.length > 1000) {
+      nuevosErrores.descripcion =
+        "La descripción no puede superar los 1000 caracteres.";
+    }
+
+    return nuevosErrores;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("ENVIANDO FORM:", formData); // 👈 Añade esto
+    const nuevosErrores = await validarFormulario();
+
+    if (Object.keys(nuevosErrores).length > 0) {
+      setErrors(nuevosErrores);
+      return;
+    }
+
+    const productoParaEnviar = {
+      ...formData,
+      categoriaId: formData.categoriaId || null,
+      coleccionId: formData.coleccionId || null,
+    };
 
     try {
       if (modo === "crear") {
-        await productoService.createProducto(formData, token);
+        await productoService.createProducto(productoParaEnviar, token);
       } else {
-        await productoService.updateProducto(id, formData, token);
+        await productoService.updateProducto(id, productoParaEnviar, token);
       }
 
-      console.log("GUARDADO OK");
       setMensaje("Producto guardado correctamente");
       setTimeout(() => navigate("/admin/productos"), 1500);
     } catch (error) {
-      console.error("Error al guardar", error); // 👈 Verifica si entra aquí
+      if (error.response?.status === 400 && error.response?.data?.mensaje) {
+        setErrors({ general: error.response.data.mensaje });
+      } else {
+        setErrors({ general: "Error inesperado. Intenta más tarde." });
+      }
+      console.error("Error al guardar", error);
     }
   };
+
+  const handleEliminar = async () => {
+    const confirmar = window.confirm(
+      "¿Estás segura de que deseas eliminar este producto?"
+    );
+    if (!confirmar) return;
+
+    try {
+      await productoService.deleteProducto(id, token);
+      navigate("/admin/productos");
+    } catch (error) {
+      console.error("Error al eliminar producto", error);
+      setErrors({
+        general: "No se pudo eliminar el producto. Intenta más tarde.",
+      });
+    }
+  };
+
+  const renderError = (campo) =>
+    errors[campo] && (
+      <div className="form-error" role="alert">
+        <FaExclamationCircle className="icono-error" /> {errors[campo]}
+      </div>
+    );
 
   return (
     <div className="admin-usuarios-container">
@@ -88,127 +189,143 @@ const FormularioProducto = ({ modo = "crear" }) => {
         </p>
       )}
 
-      <form onSubmit={handleSubmit} className="formulario-creacion">
-        <label htmlFor="nombre">Nombre:</label>
+      {errors.general && (
+        <div className="form-error mb-2" role="alert">
+          <FaExclamationCircle className="icono-error" /> {errors.general}
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="formulario-creacion" noValidate>
+        <label htmlFor="nombre">Nombre *</label>
         <input
           id="nombre"
           name="nombre"
-          maxLength={50}
           value={formData.nombre}
           onChange={handleChange}
+          className="input-field"
           required
-          className="form-control mb-2"
+          aria-required="true"
         />
+        {renderError("nombre")}
 
-        <label htmlFor="descripcion">Descripción:</label>
+        <label htmlFor="descripcion">Descripción</label>
         <textarea
           id="descripcion"
           name="descripcion"
-          maxLength={250}
           value={formData.descripcion}
           onChange={handleChange}
+          className="input-field"
           rows={3}
-          className="form-control mb-2"
         />
+        {renderError("descripcion")}
 
-        <label htmlFor="referencia">Referencia:</label>
+        <label htmlFor="referencia">Referencia *</label>
         <input
           id="referencia"
           name="referencia"
-          maxLength={25}
           value={formData.referencia}
           onChange={handleChange}
+          className="input-field"
           required
-          className="form-control mb-2"
+          aria-required="true"
         />
+        {renderError("referencia")}
 
-        <label htmlFor="formato">Formato:</label>
+        <label htmlFor="formato">Formato</label>
         <input
           id="formato"
           name="formato"
-          maxLength={50}
           value={formData.formato}
           onChange={handleChange}
-          className="form-control mb-2"
+          className="input-field"
         />
 
-        <label htmlFor="tipoAplicacion">Tipo de aplicación:</label>
+        <label htmlFor="tipoAplicacion">Tipo de aplicación</label>
         <input
           id="tipoAplicacion"
           name="tipoAplicacion"
-          maxLength={50}
           value={formData.tipoAplicacion}
           onChange={handleChange}
-          className="form-control mb-2"
+          className="input-field"
         />
 
-        <label htmlFor="peso">Peso (kg):</label>
+        <label htmlFor="peso">Peso (kg)</label>
         <input
           id="peso"
-          type="number"
           name="peso"
+          type="number"
+          step="0.1"
+          min="0"
           value={formData.peso}
           onChange={handleChange}
-          min={0}
-          step={0.1}
-          required
-          className="form-control mb-2"
+          className="input-field"
         />
+        {renderError("peso")}
 
-        <label htmlFor="familia">Familia:</label>
+        <label htmlFor="familia">Familia</label>
         <input
           id="familia"
           name="familia"
-          maxLength={50}
           value={formData.familia}
           onChange={handleChange}
-          className="form-control mb-2"
+          className="input-field"
         />
 
-        <label htmlFor="precio">Precio (€):</label>
+        <label htmlFor="precio">Precio (€) *</label>
         <input
           id="precio"
-          type="number"
           name="precio"
+          type="number"
+          step="0.01"
+          min="0"
           value={formData.precio}
           onChange={handleChange}
-          min={0}
-          step="0.01"
           required
-          className="form-control mb-2"
+          className="input-field"
+          aria-required="true"
         />
+        {renderError("precio")}
 
-        <label htmlFor="precioRecomendado">Precio recomendado (€):</label>
+        <label htmlFor="precioRecomendado">Precio recomendado (€)</label>
         <input
           id="precioRecomendado"
-          type="number"
           name="precioRecomendado"
+          type="number"
+          step="0.01"
+          min="0"
           value={formData.precioRecomendado}
           onChange={handleChange}
-          min={0}
-          step="0.01"
-          className="form-control mb-2"
+          className="input-field"
         />
 
-        <label htmlFor="stock">Stock disponible:</label>
+        <label htmlFor="stock">Stock disponible *</label>
         <input
           id="stock"
-          type="number"
           name="stock"
+          type="number"
+          min="0"
           value={formData.stock}
           onChange={handleChange}
-          min={0}
           required
-          className="form-control mb-2"
+          className="input-field"
+          aria-required="true"
         />
+        {renderError("stock")}
 
-        <label htmlFor="categoriaId">Categoría:</label>
+        <label htmlFor="categoriaId">
+          Categoría{" "}
+          <span aria-hidden="true" style={{ color: "red" }}>
+            *
+          </span>
+        </label>
         <select
           id="categoriaId"
           name="categoriaId"
-          value={formData.categoriaId}
+          value={formData.categoriaId || ""}
           onChange={handleChange}
-          className="form-control mb-2"
+          className="input-field"
+          aria-required="true"
+          required
         >
           <option value="">Seleccione una</option>
           {categorias.map((cat) => (
@@ -217,14 +334,22 @@ const FormularioProducto = ({ modo = "crear" }) => {
             </option>
           ))}
         </select>
+        {renderError("categoriaId")}
 
-        <label htmlFor="coleccionId">Colección:</label>
+        <label htmlFor="coleccionId">
+          Colección{" "}
+          <span aria-hidden="true" style={{ color: "red" }}>
+            *
+          </span>
+        </label>
         <select
           id="coleccionId"
           name="coleccionId"
-          value={formData.coleccionId}
+          value={formData.coleccionId || ""}
           onChange={handleChange}
-          className="form-control mb-2"
+          className="input-field"
+          aria-required="true"
+          required
         >
           <option value="">Seleccione una</option>
           {colecciones.map((col) => (
@@ -233,6 +358,7 @@ const FormularioProducto = ({ modo = "crear" }) => {
             </option>
           ))}
         </select>
+        {renderError("coleccionId")}
 
         <SubidaImagen
           imagenActual={formData.imagenUrl}
@@ -242,33 +368,18 @@ const FormularioProducto = ({ modo = "crear" }) => {
         />
 
         {modo === "editar" && id && <SubidaGaleria productoId={id} />}
-        {modo === "editar" && (
-          <div className="fila-botones-form mt-4">
-            <button type="submit" className="btn-gold">
-              Guardar cambios
-            </button>
 
-            <button
-              type="button"
-              className="btn-eliminar"
-              onClick={async () => {
-                const confirmar = window.confirm(
-                  "¿Estás segura de que deseas eliminar este producto?"
-                );
-                if (confirmar) {
-                  try {
-                    await productoService.deleteProducto(id, token);
-                    navigate("/admin/productos");
-                  } catch (err) {
-                    console.error("Error al eliminar producto:", err);
-                  }
-                }
-              }}
-            >
+        <div className="fila-botones-form mt-4">
+          <button type="submit" className="btn btn-outline-dark w-40 mt-2">
+            {modo === "crear" ? "Crear producto" : "Guardar cambios"}
+          </button>
+
+          {modo === "editar" && (
+            <button type="button" className="btn-gold" onClick={handleEliminar}>
               Eliminar producto
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </form>
     </div>
   );

@@ -10,6 +10,7 @@ const AuthProvider = ({ children }) => {
   const [cargando, setCargando] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const [mensajeLogout, setMensajeLogout] = useState("");
 
   const isTokenExpired = (token) => {
     if (!token) return true;
@@ -72,6 +73,29 @@ const AuthProvider = ({ children }) => {
     setToken(nuevoToken);
   };
 
+  useEffect(() => {
+  let timeout;
+
+  if (token && !isTokenExpired(token)) {
+    const { exp } = JSON.parse(atob(token.split(".")[1]));
+    const tiempoRestante = exp * 1000 - Date.now();
+
+    timeout = setTimeout(() => {
+  localStorage.removeItem("token");
+  setToken(null);
+  setUsuario(null);
+  setMensajeLogout("Tu sesión ha caducado. Por favor, vuelve a iniciar sesión.");
+  navigate("/");
+}, tiempoRestante);
+
+  }
+
+  return () => {
+    if (timeout) clearTimeout(timeout);
+  };
+}, [token, navigate]);
+
+
   const logout = () => {
     localStorage.removeItem("token");
     setToken(null);
@@ -81,15 +105,18 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{
-        usuario,
-        token,
-        login,
-        logout,
-        cargando,
-        isAuthenticated: !!usuario,
-      }}
-    >
+  value={{
+    usuario,
+    token,
+    login,
+    logout,
+    cargando,
+    isAuthenticated: !!usuario,
+    mensajeLogout,
+    setMensajeLogout
+  }}
+>
+
       {children}
     </AuthContext.Provider>
   );

@@ -32,12 +32,27 @@ const deleteProducto = (id, token) =>
     },
   });
 
+  // Verificar si el nombre ya existe
+const nombreExiste = (nombre) =>
+  axios.get(`${API_BASE_URL}/productos/existe-nombre`, {
+    params: { nombre },
+  });
+
+// Verificar si la referencia ya existe
+const referenciaExiste = (referencia) =>
+  axios.get(`${API_BASE_URL}/productos/existe-referencia`, {
+    params: { referencia },
+  });
+
+
 const productoService = {
   getProductos,
   getProductoById,
   createProducto,
   updateProducto,
-  deleteProducto, 
+  deleteProducto,
+  nombreExiste,
+  referenciaExiste, 
 };
 
 export default productoService;

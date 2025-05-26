@@ -1,4 +1,4 @@
-// src/components/AutoRedirect.jsx
+
 import { useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";

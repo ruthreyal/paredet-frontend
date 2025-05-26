@@ -94,6 +94,16 @@
   }
 }
 
+.fila-clicable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.fila-clicable:hover {
+  background-color: #f2f2f2;
+}
+
+
 
 
   

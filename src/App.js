@@ -2,12 +2,14 @@ import "./styles/variables.css";
 import "./styles/base.css";
 import "./styles/utils.css";
 import "./styles/login.css";
+
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Layout from "./components/Layout";
 
 import AuthProvider from "./context/AuthContext";
+import { PrivateRouteAdmin } from "./routes/PrivateRouteAdmin";
 
+import Layout from "./components/Layout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Registro from "./pages/Registro";
@@ -30,26 +32,22 @@ function App() {
     <Router>
       <AuthProvider>
         <Routes>
-          {/* RUTAS DE ADMIN CON SUBRUTAS */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="usuarios" element={<AdminUsuarios />} />
-            <Route path="usuarios/crear" element={<UsuarioForm />} />
-            <Route path="usuarios/editar/:email" element={<EditarUsuario />} />
-            <Route path="categorias" element={<AdminCategorias />} />
-            <Route path="colecciones" element={<AdminColecciones />} />
-            <Route path="productos" element={<AdminProductos />} />
-            <Route
-              path="productos/crear"
-              element={<FormularioProducto modo="crear" />}
-            />
-            <Route
-              path="productos/editar/:id"
-              element={<FormularioProducto modo="editar" />}
-            />
+          {/* RUTAS DE ADMIN PROTEGIDAS */}
+          <Route path="/admin" element={<PrivateRouteAdmin />}>
+            <Route element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="usuarios" element={<AdminUsuarios />} />
+              <Route path="usuarios/crear" element={<UsuarioForm />} />
+              <Route path="usuarios/editar/:email" element={<EditarUsuario />} />
+              <Route path="categorias" element={<AdminCategorias />} />
+              <Route path="colecciones" element={<AdminColecciones />} />
+              <Route path="productos" element={<AdminProductos />} />
+              <Route path="productos/crear" element={<FormularioProducto modo="crear" />} />
+              <Route path="productos/editar/:id" element={<FormularioProducto modo="editar" />} />
+            </Route>
           </Route>
 
-          {/* RUTAS GENERALES CON LAYOUT */}
+          {/* RUTAS GENERALES */}
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
             <Route path="login" element={<Login />} />
@@ -65,4 +63,5 @@ function App() {
 }
 
 export default App;
+
 

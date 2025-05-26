@@ -40,26 +40,20 @@ const AdminProductos = () => {
               <th>Nombre</th>
               <th>Referencia</th>
               <th>Precio</th>
-              <th className="text-end">Acciones</th>
             </tr>
           </thead>
           <tbody>
             {productos.map((producto) => (
-              <tr key={producto.id}>
+              <tr
+                key={producto.id}
+                onClick={() =>
+                  navigate(`/admin/productos/editar/${producto.id}`)
+                }
+                className="fila-clicable"
+              >
                 <td>{producto.nombre}</td>
                 <td>{producto.referencia}</td>
                 <td>{producto.precio.toFixed(2)} €</td>
-                <td className="text-end">
-                  <button
-                    className="btn-accion btn-editar"
-                    onClick={() =>
-                      navigate(`/admin/productos/editar/${producto.id}`)
-                    }
-                  >
-                    Editar
-                  </button>
-                  {/* Aquí puedes añadir botón eliminar si lo deseas */}
-                </td>
               </tr>
             ))}
           </tbody>
@@ -70,4 +64,3 @@ const AdminProductos = () => {
 };
 
 export default AdminProductos;
-
