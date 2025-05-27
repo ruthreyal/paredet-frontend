@@ -97,6 +97,9 @@ const Navbar = () => {
                     <Link to="/perfil">Mi perfil</Link>
                   </li>
                   <li>
+                    <Link to="/favoritos">Favoritos</Link>
+                  </li>
+                  <li>
                     <Link to="/pedidos">Mis pedidos</Link>
                   </li>
                   {usuario.rolNombre === "ADMIN" && (
@@ -129,11 +132,10 @@ const Navbar = () => {
           </li>
         </ul>
       </nav>
-
       {/* CONTENEDOR NAVBAR + MENÚ */}
       <div className="navbar-mobile-wrapper d-lg-none">
         {/* NAVBAR MOBILE */}
-        <nav className="navbar navbar-dark custom-navbar-mobile d-flex justify-content-between align-items-center px-3 py-2">
+        <nav className="navbar navbar-dark custom-navbar-mobile d-flex justify-content-between align-items-center px-4 py-3">
           <button
             className={`menu-toggle ${isOpen ? "open" : ""}`}
             onClick={toggleMenu}
@@ -159,12 +161,17 @@ const Navbar = () => {
 
         {/* MENÚ DESPLEGABLE MOBILE */}
         <div className={`mobile-menu ${isOpen ? "show" : ""}`}>
-          {/* Fila superior del menú desplegable */}
           <div className="mobile-icons-row">
             {usuario ? (
-              <span className="text-white fw-semibold">
-                ¡Hola, {usuario.nombre}!
-              </span>
+              <button
+                className="mobile-toggle-usuario text-white"
+                onClick={toggleProfileMenu}
+                aria-expanded={isProfileMenuOpen}
+                aria-controls="submenu-usuario"
+              >
+                ¡Hola, {usuario.nombre}!{" "}
+                <i className="bi bi-caret-down-fill"></i>
+              </button>
             ) : (
               <Link to="/login" onClick={toggleMenu}>
                 <i className="bi bi-person text-white fs-5"></i>
@@ -175,55 +182,62 @@ const Navbar = () => {
             </Link>
           </div>
 
-          {/* Opciones adicionales si usuario logueado */}
-          {usuario && (
-            <div className="mobile-user-info px-4 py-2 border-bottom">
-              <ul className="list-unstyled mb-0">
+          {/* SUBMENÚ USUARIO */}
+          {usuario && isProfileMenuOpen && (
+            <ul className="submenu-desplegable list-unstyled ps-5 mt-2">
+              <li>
+                <Link
+                  to="/perfil"
+                  className="text-white d-block py-1"
+                  onClick={toggleMenu}
+                >
+                  Mi perfil
+                </Link>
+              </li>
+              <li>
+                <li>
+                <Link
+                  to="/favoritos"
+                  className="text-white d-block py-1"
+                  onClick={toggleMenu}
+                >
+                  Favoritos
+                </Link>
+              </li>
+                <Link
+                  to="/pedidos"
+                  className="text-white d-block py-1"
+                  onClick={toggleMenu}
+                >
+                  Mis pedidos
+                </Link>
+              </li>
+              {usuario.rolNombre === "ADMIN" && (
                 <li>
                   <Link
-                    to="/perfil"
+                    to="/admin"
                     className="text-white d-block py-1"
                     onClick={toggleMenu}
                   >
-                    Mi perfil
+                    Panel de administración
                   </Link>
                 </li>
-                <li>
-                  <Link
-                    to="/pedidos"
-                    className="text-white d-block py-1"
-                    onClick={toggleMenu}
-                  >
-                    Mis pedidos
-                  </Link>
-                </li>
-                {usuario.rolNombre === "ADMIN" && (
-                  <li>
-                    <Link
-                      to="/admin"
-                      className="text-white d-block py-1"
-                      onClick={toggleMenu}
-                    >
-                      Panel de administración
-                    </Link>
-                  </li>
-                )}
-                <li>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      toggleMenu();
-                    }}
-                    className="btn btn-link text-white text-start py-1 px-0"
-                  >
-                    Cerrar sesión
-                  </button>
-                </li>
-              </ul>
-            </div>
+              )}
+              <li>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    toggleMenu();
+                  }}
+                  className="btn btn-link text-white text-start py-1 px-0"
+                >
+                  Cerrar sesión
+                </button>
+              </li>
+            </ul>
           )}
 
-          {/* Enlaces del menú */}
+          {/* Enlaces principales */}
           <ul className="navbar-nav px-4 pt-3">
             <li className="nav-item mb-2">
               <Link
@@ -253,10 +267,7 @@ const Navbar = () => {
                 Colecciones
               </button>
               {showColecciones && (
-                <ul
-                  id="submenu-colecciones"
-                  className="list-unstyled ps-3 mt-2"
-                >
+                <ul className="submenu-desplegable list-unstyled ps-5 mt-2">
                   <li>
                     <Link
                       to="/colecciones/arber"
@@ -296,7 +307,6 @@ const Navbar = () => {
                 </ul>
               )}
             </li>
-
             <li className="nav-item mb-2">
               <Link
                 className="nav-link text-white"
@@ -308,16 +318,16 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-      </div>
 
-      {/* FONDO TRANSPARENTE PARA CERRAR MENÚ */}
-      {isOpen && (
-        <div
-          className="mobile-menu-overlay"
-          onClick={toggleMenu}
-          aria-label="Cerrar menú"
-        ></div>
-      )}
+        {/* FONDO TRANSPARENTE PARA CERRAR MENÚ */}
+        {isOpen && (
+          <div
+            className="mobile-menu-overlay"
+            onClick={toggleMenu}
+            aria-label="Cerrar menú"
+          ></div>
+        )}
+      </div>
     </>
   );
 };

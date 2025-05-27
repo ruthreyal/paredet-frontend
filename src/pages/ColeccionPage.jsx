@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import {jwtDecode} from "jwt-decode";
 import productoService from "../services/productoService";
 import imagenProductoService from "../services/imagenProductoService";
+import favoritoService from "../services/favoritoService";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import "../styles/productos.css";
 
 const COLECCIONES = {
@@ -16,9 +19,13 @@ const Coleccion = () => {
   const { nombre } = useParams();
   const [productos, setProductos] = useState([]);
   const [orden, setOrden] = useState("relevancia");
+  const [favoritos, setFavoritos] = useState([]);
+
+  const token = localStorage.getItem("token");
+  const usuarioId = token ? jwtDecode(token).sub : null;
 
   useEffect(() => {
-    const fetchProductos = async () => {
+    const fetchDatos = async () => {
       try {
         const res = await productoService.getProductos();
         const idColeccion = COLECCIONES[nombre.toLowerCase()];
@@ -27,9 +34,7 @@ const Coleccion = () => {
         const productosConImagen = await Promise.all(
           filtrados.map(async (producto) => {
             try {
-              const resImg = await imagenProductoService.getByProducto(
-                producto.id
-              );
+              const resImg = await imagenProductoService.getByProducto(producto.id);
               const imagenes = resImg.data;
               return {
                 ...producto,
@@ -42,13 +47,19 @@ const Coleccion = () => {
         );
 
         setProductos(productosConImagen);
+
+        if (usuarioId) {
+          const favoritosRes = await favoritoService.getByUsuario(usuarioId);
+          const idsFavoritos = favoritosRes.data.map((f) => f.productoId);
+          setFavoritos(idsFavoritos);
+        }
       } catch (error) {
-        console.error("Error al obtener productos:", error);
+        console.error("Error al obtener datos:", error);
       }
     };
 
-    fetchProductos();
-  }, [nombre]);
+    fetchDatos();
+  }, [nombre, usuarioId]);
 
   const ordenarProductos = (productos) => {
     switch (orden) {
@@ -60,6 +71,26 @@ const Coleccion = () => {
         return [...productos].sort((a, b) => a.nombre.localeCompare(b.nombre));
       default:
         return productos;
+    }
+  };
+
+  const handleFavorito = async (productoId) => {
+    if (!usuarioId) {
+      alert("Debes iniciar sesión para añadir a favoritos.");
+      return;
+    }
+
+    try {
+      const yaEsFavorito = favoritos.includes(productoId);
+      if (yaEsFavorito) {
+        await favoritoService.eliminar(usuarioId, productoId);
+        setFavoritos(favoritos.filter((id) => id !== productoId));
+      } else {
+        await favoritoService.crear({ usuarioId, productoId });
+        setFavoritos([...favoritos, productoId]);
+      }
+    } catch (error) {
+      console.error("Error al actualizar favorito:", error);
     }
   };
 
@@ -95,8 +126,16 @@ const Coleccion = () => {
                 alt={producto.nombre}
                 className="imagen-producto"
               />
-              <button className="btn-favorito" aria-label="Añadir a favoritos">
-                ❤
+              <button
+                className="btn-favorito"
+                onClick={() => handleFavorito(producto.id)}
+                aria-label={`Añadir ${producto.nombre} a favoritos`}
+              >
+                {favoritos.includes(producto.id) ? (
+                  <FaHeart />
+                ) : (
+                  <FaRegHeart />
+                )}
               </button>
             </div>
             <h3>{producto.nombre}</h3>
@@ -110,3 +149,4 @@ const Coleccion = () => {
 };
 
 export default Coleccion;
+
