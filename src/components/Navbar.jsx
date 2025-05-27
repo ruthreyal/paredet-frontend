@@ -8,6 +8,8 @@ const Navbar = () => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
   const { usuario, logout } = useContext(AuthContext);
   const navigate = useNavigate();
+  const [showColecciones, setShowColecciones] = useState(false);
+  const toggleColecciones = () => setShowColecciones(!showColecciones);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleProfileMenu = () => setIsProfileMenuOpen(!isProfileMenuOpen);
@@ -21,7 +23,7 @@ const Navbar = () => {
   return (
     <>
       {/* NAVBAR DESKTOP */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 shadow-sm d-none d-lg-flex justify-content-between align-items-center sticky-top">
+      <nav className="navbar navbar-expand-lg navbar-dark px-4 shadow-sm d-none d-lg-flex justify-content-between align-items-center sticky-top">
         <ul className="navbar-nav d-flex justify-content-evenly flex-grow-1">
           <li className="nav-item">
             <Link className="nav-link" to="/productos?tipo=papel-pintado">
@@ -33,18 +35,50 @@ const Navbar = () => {
               Fotomurales
             </Link>
           </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="#">
+          <li className="nav-item dropdown">
+            <div
+              className="nav-link dropdown-toggle"
+              role="button"
+              id="coleccionesDropdown"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
               Colecciones
-            </Link>
+            </div>
+            <ul
+              className="dropdown-menu dropdown-menu-oscuro"
+              aria-labelledby="coleccionesDropdown"
+            >
+              <li>
+                <Link className="dropdown-item" to="/colecciones/arber">
+                  Arber
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/colecciones/rumi">
+                  Rumi
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/colecciones/indigo">
+                  Indigo
+                </Link>
+              </li>
+              <li>
+                <Link className="dropdown-item" to="/colecciones/georgia">
+                  Georgia
+                </Link>
+              </li>
+            </ul>
           </li>
+
           <li className="nav-item">
             <Link className="nav-link" to="#">
               La Empresa
             </Link>
           </li>
         </ul>
-        <ul className="navbar-nav align-items-center gap-3 ms-3">
+        <ul className="herramientas navbar-nav align-items-center gap-3 ms-3">
           {usuario ? (
             <li className="nav-item dropdown">
               <div className="d-flex align-items-center">
@@ -201,7 +235,10 @@ const Navbar = () => {
               </Link>
             </li>
             <li className="nav-item mb-2">
-              <Link className="nav-link text-white" to="/productos?tipo=fotomural">
+              <Link
+                className="nav-link text-white"
+                to="/productos?tipo=fotomural"
+              >
                 Fotomurales
               </Link>
             </li>

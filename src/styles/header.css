@@ -24,7 +24,7 @@
 }
 
 .slogan {
-  font-size: 0.9rem;
+  font-size: 1.5rem;
   color: var(--color-principal);
   font-family: var(--font-secundaria);
 }
@@ -47,6 +47,10 @@
   .header-container {
     display: none;
   }
+}
+
+h1{
+  font-size: 2rem !important;
 }
 
 

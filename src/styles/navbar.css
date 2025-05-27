@@ -2,10 +2,11 @@
 .navbar {
   background-color: var(--color-negro);
   font-family: var(--font-secundaria);
+  display: flex;
 }
 
 .navbar-nav .nav-link {
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 500;
 }
 
@@ -58,6 +59,7 @@
   top: 100%;
   right: 0;
   z-index: 1000;
+  transform: translateY(4px);
 }
 
 .dropdown-menu-oscuro li {
@@ -70,7 +72,7 @@
   padding: 0.5rem 1rem;
   display: block;
   font-family: var(--font-secundaria);
-  font-size: 0.95rem;
+  font-size: 1.3rem;
 }
 
 .dropdown-menu-oscuro a:hover {
@@ -87,7 +89,7 @@
   width: 100%;
   text-align: left;
   font-family: var(--font-secundaria);
-  font-size: 0.95rem;
+  font-size: 1.3rem;
   cursor: pointer;
 }
 
@@ -238,6 +240,12 @@
   font-size: 1rem;
   color: var(--color-secundario);
   font-family: var(--font-secundaria);
+}
+
+.herramientas{
+  width: 30%;
+  justify-content: space-around;
+  padding-right: 35px;
 }
 
 
