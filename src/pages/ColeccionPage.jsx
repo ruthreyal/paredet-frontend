@@ -1,34 +1,54 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import productoService from "../services/productoService";
+import imagenProductoService from "../services/imagenProductoService";
 import "../styles/productos.css";
 
-const Producto = () => {
+const COLECCIONES = {
+  arber: "09b90179-3f19-48a6-8da9-6406910c7276",
+  rumi: "19fb4f34-50c3-4026-a2a2-f6b020c7ac7f",
+  indigo: "2e3f457c-4261-4bb1-84bc-8e964ae0b1da",
+  kalinka: "d7f36f1f-c6e4-4845-adbb-fcbc9f91c363",
+  georgia: "eaac8fdf-3e3e-4b10-bd94-3065574b6de8",
+};
+
+const Coleccion = () => {
+  const { nombre } = useParams();
   const [productos, setProductos] = useState([]);
   const [orden, setOrden] = useState("relevancia");
-  const [searchParams] = useSearchParams();
-
-  const CATEGORIAS = {
-    "papel-pintado": "60b75e42-81be-4134-a929-8720423f3b23",
-    fotomural: "c6d9fe55-60a0-4c0f-aef3-27c3f7f57747",
-  };
-
-  const tipo = searchParams.get("tipo");
 
   useEffect(() => {
     const fetchProductos = async () => {
       try {
         const res = await productoService.getProductos();
-        const idCategoria = CATEGORIAS[tipo];
-        const filtrados = res.data.filter(p => p.categoriaId === idCategoria);
-        setProductos(filtrados);
+        const idColeccion = COLECCIONES[nombre.toLowerCase()];
+        const filtrados = res.data.filter((p) => p.coleccionId === idColeccion);
+
+        const productosConImagen = await Promise.all(
+          filtrados.map(async (producto) => {
+            try {
+              const resImg = await imagenProductoService.getByProducto(
+                producto.id
+              );
+              const imagenes = resImg.data;
+              return {
+                ...producto,
+                imagenGaleria: imagenes.length > 0 ? imagenes[0].url : null,
+              };
+            } catch {
+              return { ...producto, imagenGaleria: null };
+            }
+          })
+        );
+
+        setProductos(productosConImagen);
       } catch (error) {
         console.error("Error al obtener productos:", error);
       }
     };
 
     fetchProductos();
-  }, [tipo]);
+  }, [nombre]);
 
   const ordenarProductos = (productos) => {
     switch (orden) {
@@ -46,10 +66,10 @@ const Producto = () => {
   const productosOrdenados = ordenarProductos(productos);
 
   return (
-    <div className="contenedor-productos">
+    <main className="contenedor-productos cuadrada">
       <div className="filtro-orden">
         <h2 className="titulo-pagina">
-          {tipo === "papel-pintado" ? "Papel pintado" : "Fotomurales"}
+          {nombre.charAt(0).toUpperCase() + nombre.slice(1)}
         </h2>
         <div>
           <label htmlFor="orden">Ordenar por:</label>
@@ -68,17 +88,14 @@ const Producto = () => {
 
       <div className="grid-productos">
         {productosOrdenados.map((producto) => (
-          <div key={producto.id} className="card-producto">
+          <div key={producto.id} className="card-producto sin-animacion">
             <div className="imagen-wrapper">
               <img
-                src={producto.imagenUrl}
+                src={producto.imagenGaleria || "/placeholder.jpg"}
                 alt={producto.nombre}
                 className="imagen-producto"
               />
-              <button
-                className="btn-favorito"
-                aria-label="Añadir a favoritos"
-              >
+              <button className="btn-favorito" aria-label="Añadir a favoritos">
                 ❤
               </button>
             </div>
@@ -88,9 +105,8 @@ const Producto = () => {
           </div>
         ))}
       </div>
-    </div>
+    </main>
   );
 };
 
-export default Producto;
-
+export default Coleccion;
