@@ -16,7 +16,6 @@
 }
 
 .logo-header {
-  font-size: 1.5rem;
   font-weight: 600;
   letter-spacing: 2px;
   color: var(--color-principal);
@@ -24,7 +23,7 @@
 }
 
 .slogan {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: var(--color-principal);
   font-family: var(--font-secundaria);
 }
@@ -50,7 +49,7 @@
 }
 
 h1{
-  font-size: 2rem !important;
+  font-size: 1.5rem !important;
 }
 
 
