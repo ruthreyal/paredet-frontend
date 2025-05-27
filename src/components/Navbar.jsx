@@ -238,19 +238,65 @@ const Navbar = () => {
               <Link
                 className="nav-link text-white"
                 to="/productos?tipo=fotomural"
+                onClick={toggleMenu}
               >
                 Fotomurales
               </Link>
             </li>
             <li className="nav-item mb-2">
-              <Link
-                className="nav-link text-white"
-                to="/colecciones"
-                onClick={toggleMenu}
+              <button
+                className="nav-link text-white btn btn-link p-0"
+                onClick={toggleColecciones}
+                aria-expanded={showColecciones}
+                aria-controls="submenu-colecciones"
               >
                 Colecciones
-              </Link>
+              </button>
+              {showColecciones && (
+                <ul
+                  id="submenu-colecciones"
+                  className="list-unstyled ps-3 mt-2"
+                >
+                  <li>
+                    <Link
+                      to="/colecciones/arber"
+                      className="text-white d-block py-1"
+                      onClick={toggleMenu}
+                    >
+                      Arber
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/colecciones/rumi"
+                      className="text-white d-block py-1"
+                      onClick={toggleMenu}
+                    >
+                      Rumi
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/colecciones/indigo"
+                      className="text-white d-block py-1"
+                      onClick={toggleMenu}
+                    >
+                      Indigo
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/colecciones/georgia"
+                      className="text-white d-block py-1"
+                      onClick={toggleMenu}
+                    >
+                      Georgia
+                    </Link>
+                  </li>
+                </ul>
+              )}
             </li>
+
             <li className="nav-item mb-2">
               <Link
                 className="nav-link text-white"

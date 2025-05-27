@@ -202,7 +202,7 @@
   display: block;
   padding: 0.4rem 0;
   color: var(--color-secundario);
-  font-size: 0.95rem;
+  font-size: 1.3rem;
   text-decoration: none;
   font-family: var(--font-secundaria);
 }
@@ -237,7 +237,7 @@
 }
 
 .mobile-icons-row span {
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: var(--color-secundario);
   font-family: var(--font-secundaria);
 }
@@ -247,6 +247,43 @@
   justify-content: space-around;
   padding-right: 40px;
 }
+
+#submenu-colecciones {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+#submenu-colecciones li {
+  padding: 0.3rem 0;
+}
+
+#submenu-colecciones a {
+  color: var(--color-secundario);
+  font-size: 1.3rem;
+  text-decoration: none;
+  display: block;
+  font-family: var(--font-secundaria);
+}
+
+#submenu-colecciones a:hover {
+  color: var(--color-principal);
+  background-color: #2a2a2a;
+  border-radius: 4px;
+}
+
+/* Animación de entrada suave */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 
 
 
