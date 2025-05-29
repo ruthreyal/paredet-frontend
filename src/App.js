@@ -27,6 +27,7 @@ import AdminColecciones from "./pages/admin/AdminColecciones";
 import FormularioProducto from "./pages/admin/FormularioProducto";
 import AdminProductos from "./pages/admin/AdminProductos";
 import ColeccionPage from "./pages/ColeccionPage";
+import Favoritos from "./pages/Favoritos";
 
 function App() {
   return (
@@ -56,6 +57,7 @@ function App() {
             <Route path="perfil" element={<PerfilPage />} />
             <Route path="/productos" element={<Producto />} />
             <Route path="/colecciones/:nombre" element={<ColeccionPage />} />
+            <Route path="/favoritos" element={<Favoritos />} />
             <Route path="recuperar-password" element={<RecuperarPassword />} />
             <Route path="restablecer-password" element={<RestablecerPassword />} />
           </Route>

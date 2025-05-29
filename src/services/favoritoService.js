@@ -24,11 +24,18 @@ const favoritoService = {
   },
 
   eliminar: async (usuarioId, productoId, token) => {
-    await axios.delete(`${API_BASE_URL}/favoritos`, {
-      params: { usuarioId, productoId },
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    await axios.post(
+      `${API_BASE_URL}/favoritos/eliminar`,
+      { usuarioId, productoId },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   },
 };
 
 export default favoritoService;
+

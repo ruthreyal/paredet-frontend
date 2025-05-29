@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import productoService from "../services/productoService";
 import imagenProductoService from "../services/imagenProductoService";
 import favoritoService from "../services/favoritoService";
@@ -15,14 +15,15 @@ const COLECCIONES = {
   georgia: "eaac8fdf-3e3e-4b10-bd94-3065574b6de8",
 };
 
-const Coleccion = () => {
+const ColeccionPage = () => {
   const { nombre } = useParams();
   const [productos, setProductos] = useState([]);
   const [orden, setOrden] = useState("relevancia");
   const [favoritos, setFavoritos] = useState([]);
 
   const token = localStorage.getItem("token");
-  const usuarioId = token ? jwtDecode(token).sub : null;
+  const decoded = token ? jwtDecode(token) : null;
+  const usuarioId = decoded?.id || null;
 
   useEffect(() => {
     const fetchDatos = async () => {
@@ -49,8 +50,8 @@ const Coleccion = () => {
         setProductos(productosConImagen);
 
         if (usuarioId) {
-          const favoritosRes = await favoritoService.getByUsuario(usuarioId);
-          const idsFavoritos = favoritosRes.data.map((f) => f.productoId);
+          const favoritosRes = await favoritoService.obtenerPorUsuario(usuarioId, token);
+          const idsFavoritos = favoritosRes.map((f) => String(f.productoId));
           setFavoritos(idsFavoritos);
         }
       } catch (error) {
@@ -59,7 +60,7 @@ const Coleccion = () => {
     };
 
     fetchDatos();
-  }, [nombre, usuarioId]);
+  }, [nombre, usuarioId, token]);
 
   const ordenarProductos = (productos) => {
     switch (orden) {
@@ -80,14 +81,16 @@ const Coleccion = () => {
       return;
     }
 
+    const idStr = String(productoId);
+    const yaEsFavorito = favoritos.includes(idStr);
+
     try {
-      const yaEsFavorito = favoritos.includes(productoId);
       if (yaEsFavorito) {
-        await favoritoService.eliminar(usuarioId, productoId);
-        setFavoritos(favoritos.filter((id) => id !== productoId));
+        await favoritoService.eliminar(usuarioId, idStr, token);
+        setFavoritos(favoritos.filter((id) => id !== idStr));
       } else {
-        await favoritoService.crear({ usuarioId, productoId });
-        setFavoritos([...favoritos, productoId]);
+        await favoritoService.agregar(usuarioId, idStr, token);
+        setFavoritos([...favoritos, idStr]);
       }
     } catch (error) {
       console.error("Error al actualizar favorito:", error);
@@ -108,6 +111,7 @@ const Coleccion = () => {
             id="orden"
             value={orden}
             onChange={(e) => setOrden(e.target.value)}
+            aria-label="Ordenar productos por"
           >
             <option value="relevancia">Relevancia</option>
             <option value="precio-asc">Precio: más baratos primero</option>
@@ -118,35 +122,39 @@ const Coleccion = () => {
       </div>
 
       <div className="grid-productos">
-        {productosOrdenados.map((producto) => (
-          <div key={producto.id} className="card-producto sin-animacion">
-            <div className="imagen-wrapper">
-              <img
-                src={producto.imagenGaleria || "/placeholder.jpg"}
-                alt={producto.nombre}
-                className="imagen-producto"
-              />
-              <button
-                className="btn-favorito"
-                onClick={() => handleFavorito(producto.id)}
-                aria-label={`Añadir ${producto.nombre} a favoritos`}
-              >
-                {favoritos.includes(producto.id) ? (
-                  <FaHeart />
-                ) : (
-                  <FaRegHeart />
-                )}
-              </button>
+        {productosOrdenados.map((producto) => {
+          const idStr = String(producto.id);
+          const esFavorito = favoritos.includes(idStr);
+
+          return (
+            <div key={producto.id} className="card-producto sin-animacion">
+              <div className="imagen-wrapper">
+                <img
+                  src={producto.imagenGaleria || "/placeholder.jpg"}
+                  alt={producto.nombre}
+                  className="imagen-producto"
+                />
+                <button
+                  className="btn-favorito"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleFavorito(producto.id);
+                  }}
+                  aria-label={`${esFavorito ? "Quitar de" : "Añadir a"} favoritos`}
+                >
+                  {esFavorito ? <FaHeart /> : <FaRegHeart />}
+                </button>
+              </div>
+              <h3>{producto.nombre}</h3>
+              <p>{producto.coleccion?.nombre}</p>
+              <p className="precio">{producto.precio} €</p>
             </div>
-            <h3>{producto.nombre}</h3>
-            <p>{producto.coleccion?.nombre}</p>
-            <p className="precio">{producto.precio} €</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </main>
   );
 };
 
-export default Coleccion;
+export default ColeccionPage;
 
