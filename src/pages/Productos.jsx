@@ -5,6 +5,8 @@ import productoService from "../services/productoService";
 import favoritoService from "../services/favoritoService";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import "../styles/productos.css";
+import { Link } from "react-router-dom";
+
 
 const Producto = () => {
   const [productos, setProductos] = useState([]);
@@ -84,7 +86,7 @@ const Producto = () => {
   const productosOrdenados = ordenarProductos(productos);
 
   return (
-    <main className="contenedor-productos cuadrada">
+    <main className="contenedor-productos">
       <div className="filtro-orden">
         <h2 className="titulo-pagina">
           {tipo === "papel-pintado" ? "Papel pintado" : "Fotomurales"}
@@ -111,7 +113,7 @@ const Producto = () => {
           const esFavorito = favoritos.includes(idStr);
 
           return (
-            <div key={producto.id} className="card-producto">
+            <Link to={`/producto/${producto.id}`} key={producto.id} className="card-producto">
               <div className="imagen-wrapper">
                 <img
                   src={producto.imagenUrl || "/placeholder.jpg"}
@@ -122,6 +124,7 @@ const Producto = () => {
                   className="btn-favorito"
                   onClick={(e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     handleFavorito(producto.id);
                   }}
                   aria-label={`${esFavorito ? "Quitar de" : "Añadir a"} favoritos`}
@@ -132,7 +135,8 @@ const Producto = () => {
               <h3>{producto.nombre}</h3>
               <p>{producto.coleccion?.nombre}</p>
               <p className="precio">{producto.precio} €</p>
-            </div>
+            </Link>
+
           );
         })}
       </div>

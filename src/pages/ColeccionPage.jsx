@@ -6,6 +6,7 @@ import imagenProductoService from "../services/imagenProductoService";
 import favoritoService from "../services/favoritoService";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import "../styles/productos.css";
+import { Link } from "react-router-dom";
 
 const COLECCIONES = {
   arber: "09b90179-3f19-48a6-8da9-6406910c7276",
@@ -127,7 +128,7 @@ const ColeccionPage = () => {
           const esFavorito = favoritos.includes(idStr);
 
           return (
-            <div key={producto.id} className="card-producto sin-animacion">
+            <Link to={`/producto/${producto.id}`} key={producto.id} className="card-producto">
               <div className="imagen-wrapper">
                 <img
                   src={producto.imagenGaleria || "/placeholder.jpg"}
@@ -138,6 +139,7 @@ const ColeccionPage = () => {
                   className="btn-favorito"
                   onClick={(e) => {
                     e.stopPropagation();
+                    e.preventDefault();
                     handleFavorito(producto.id);
                   }}
                   aria-label={`${esFavorito ? "Quitar de" : "Añadir a"} favoritos`}
@@ -148,7 +150,7 @@ const ColeccionPage = () => {
               <h3>{producto.nombre}</h3>
               <p>{producto.coleccion?.nombre}</p>
               <p className="precio">{producto.precio} €</p>
-            </div>
+            </Link>
           );
         })}
       </div>

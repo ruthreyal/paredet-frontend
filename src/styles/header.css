@@ -10,23 +10,18 @@
 }
 
 .header-logo {
-  width: 100px;
+  width: 60px;
   height: auto;
   margin-bottom: 0.5rem;
 }
 
 .logo-header {
   font-weight: 600;
-  letter-spacing: 2px;
+  letter-spacing: 15px;
   color: var(--color-principal);
   font-family: var(--font-principal);
 }
 
-.slogan {
-  font-size: 1.1rem;
-  color: var(--color-principal);
-  font-family: var(--font-secundaria);
-}
 
 @media (max-width: 576px) {
   .header-logo {
@@ -49,7 +44,7 @@
 }
 
 h1{
-  font-size: 1.2rem !important;
+  font-size: 1.3rem !important;
 }
 
 

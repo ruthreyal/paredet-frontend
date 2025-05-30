@@ -45,15 +45,13 @@
   min-width: 160px;
 }
 
-/* Grid de tarjetas de producto */
 .grid-productos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
   width: 100%;
 }
 
-/* Tarjeta de producto */
 .card-producto {
   background-color: var(--color-secundario);
   border-radius: var(--border-radius);
@@ -71,7 +69,7 @@
 /* Marco que oculta parte de la imagen */
 .imagen-wrapper {
   width: 100%;
-  height: 600px;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   position: relative;
   display: flex;
@@ -79,7 +77,7 @@
   justify-content: flex-start;
 }
 
-/* Imagen con desplazamiento interno */
+/* Imagen con desplazamiento */
 .imagen-producto {
   width: 120%;
   height: 100%;
@@ -88,6 +86,10 @@
   transition: transform 2s ease;
   border-bottom: 1px solid #eee;
   display: block;
+}
+
+.card-producto:hover .imagen-producto {
+  transform: translateX(-20%);
 }
 
 .card-producto:hover .imagen-producto {
@@ -127,11 +129,6 @@
   font-style: italic;
 }
 
-/* Estilo solo para colecciones: hace que la imagen sea cuadrada */
-.cuadrada .imagen-wrapper {
-  aspect-ratio: 1 / 1;
-  height: auto;
-}
 
 /* Corazón favoritos */
 .btn-favorito {
@@ -236,6 +233,23 @@
 
 .btn-favorito svg {
   pointer-events: none;
+}
+
+.cuadrada .imagen-wrapper {
+  aspect-ratio: 1 / 1;
+  height: auto;
+}
+
+.card-producto {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.card-producto h3,
+.card-producto p,
+.card-producto .precio {
+  text-decoration: none !important;
+  color: inherit !important;
 }
 
 

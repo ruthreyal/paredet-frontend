@@ -11,7 +11,6 @@ const Header = () => {
         <img src={logo} alt="Logo de Paredet" className="header-logo" />
         <h1 className="logo-header">PAREDET</h1>
       </Link>
-      <p className="slogan">DISEÑO, ESTILO Y TENDENCIAS</p>
     </header>
 
   );
