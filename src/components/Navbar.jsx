@@ -126,9 +126,27 @@ const Navbar = () => {
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="#">
-              <i className="bi bi-search"></i>
-            </Link>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const search = e.target.search.value.trim();
+                if (search) {
+                  navigate(`/buscar?q=${encodeURIComponent(search)}`);
+                }
+              }}
+              className="d-flex align-items-center"
+            >
+              <input
+                type="text"
+                name="search"
+                placeholder="Buscar..."
+                className="form-control me-2"
+                aria-label="Buscar productos"
+              />
+              <button type="submit" className="btn btn-outline-light">
+                <i className="bi bi-search"></i>
+              </button>
+            </form>
           </li>
         </ul>
       </nav>
@@ -196,14 +214,14 @@ const Navbar = () => {
               </li>
               <li>
                 <li>
-                <Link
-                  to="/favoritos"
-                  className="text-white d-block py-1"
-                  onClick={toggleMenu}
-                >
-                  Favoritos
-                </Link>
-              </li>
+                  <Link
+                    to="/favoritos"
+                    className="text-white d-block py-1"
+                    onClick={toggleMenu}
+                  >
+                    Favoritos
+                  </Link>
+                </li>
                 <Link
                   to="/pedidos"
                   className="text-white d-block py-1"

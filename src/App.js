@@ -29,6 +29,7 @@ import AdminProductos from "./pages/admin/AdminProductos";
 import ColeccionPage from "./pages/ColeccionPage";
 import Favoritos from "./pages/Favoritos";
 import PDP from "./components/PDP";
+import BusquedaPage from "./pages/BusquedaPage"
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
             <Route path="/colecciones/:nombre" element={<ColeccionPage />} />
             <Route path="/favoritos" element={<Favoritos />} />
             <Route path="/producto/:id" element={<PDP />} />
+            <Route path="/buscar" element={<BusquedaPage />} />
             <Route path="recuperar-password" element={<RecuperarPassword />} />
             <Route path="restablecer-password" element={<RestablecerPassword />} />
           </Route>
