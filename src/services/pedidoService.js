@@ -20,8 +20,17 @@ const getTodosPedidos = async (token) => {
   return response.data;
 };
 
+const getVentasMesActual = (token) =>
+  axios.get(`${API_URL}/ventas/mes-actual`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+
 export default {
   getMisPedidos,
   getTodosPedidos,
+  getVentasMesActual
 };
 

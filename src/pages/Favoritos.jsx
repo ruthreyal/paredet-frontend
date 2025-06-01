@@ -5,6 +5,9 @@ import productoService from "../services/productoService";
 import imagenProductoService from "../services/imagenProductoService";
 import { useNavigate } from "react-router-dom";
 import AlertaToast from "../components/AlertaToast";
+import { API_BASE_URL } from "../services/apiConfig";
+import { CarritoContext } from "../context/CarritoContext";
+import { useContext } from "react";
 
 import "../styles/favoritos.css";
 
@@ -18,23 +21,24 @@ const Favoritos = () => {
   const decoded = token ? jwtDecode(token) : null;
   const usuarioId = decoded?.id || null;
 
-
   const handleEliminarFavorito = async (productoId) => {
-  const element = document.getElementById(`favorito-${productoId}`);
-  if (element) {
-    element.classList.add("fade-out");
+    const element = document.getElementById(`favorito-${productoId}`);
+    if (element) {
+      element.classList.add("fade-out");
 
-    setTimeout(async () => {
-      try {
-        await favoritoService.eliminar(usuarioId, productoId, token);
-        setProductos((prev) => prev.filter((p) => p.id !== productoId));
-      } catch (error) {
-        console.error("Error al eliminar favorito:", error.response?.data || error.message);
-      }
-    }, 400);
-  }
-};
-
+      setTimeout(async () => {
+        try {
+          await favoritoService.eliminar(usuarioId, productoId, token);
+          setProductos((prev) => prev.filter((p) => p.id !== productoId));
+        } catch (error) {
+          console.error(
+            "Error al eliminar favorito:",
+            error.response?.data || error.message
+          );
+        }
+      }, 400);
+    }
+  };
 
   useEffect(() => {
     const fetchFavoritos = async () => {
@@ -87,6 +91,40 @@ const Favoritos = () => {
     fetchFavoritos();
   }, [usuarioId, token]);
 
+  const { cargarCarrito } = useContext(CarritoContext);
+
+  const handleAddToCart = async (productoId, cantidad = 1) => {
+    if (!token) {
+      alert("Debes iniciar sesión para añadir productos al carrito.");
+      return;
+    }
+
+    const payload = { productoId, cantidad };
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/carrito/add`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Error al añadir producto al carrito");
+      }
+
+      if (cargarCarrito) await cargarCarrito();
+      alert("Producto añadido al carrito");
+    } catch (error) {
+      console.error("Error en handleAddToCart:", error);
+      alert("Hubo un error. Inténtalo de nuevo.");
+    }
+  };
+
   return (
     <>
       <main className="contenedor-productos-favoritos">
@@ -99,7 +137,7 @@ const Favoritos = () => {
             {productos.map((producto) => (
               <div
                 key={producto.id}
-                id={`favorito-${producto.id}`} 
+                id={`favorito-${producto.id}`}
                 className="item-favorito row align-items-center p-3 shadow-sm rounded mb-3"
                 role="button"
                 tabIndex={0}
@@ -139,9 +177,7 @@ const Favoritos = () => {
                     className="btn btn-outline-secondary btn-sm"
                     onClick={(e) => {
                       e.stopPropagation();
-                      alert(
-                        "Funcionalidad de añadir al carrito aún no disponible."
-                      );
+                      handleAddToCart(producto.id);
                     }}
                   >
                     Añadir al carrito

@@ -17,7 +17,7 @@ const AdminPedidos = () => {
       try {
         const data = await pedidoService.getTodosPedidos(token);
         setPedidos(data);
-      } catch (err) {
+      } catch {
         setError("Error al cargar los pedidos.");
       }
     };
@@ -26,26 +26,36 @@ const AdminPedidos = () => {
   }, []);
 
   return (
-    <div className="contenedor-productos">
-      <h2>Todos los Pedidos (Admin)</h2>
-      {error && <p>{error}</p>}
+    <main className="contenedor-productos">
+      <h2 className="section-title">Todos los Pedidos</h2>
+      {error && <p role="alert">{error}</p>}
       {pedidos.length === 0 ? (
         <p>No hay pedidos en el sistema.</p>
       ) : (
-        <ul>
+        <ul aria-label="Lista de pedidos">
           {pedidos.map((pedido) => (
             <li key={pedido.id}>
-              <strong>Usuario:</strong> {pedido.usuario?.email} <br />
-              <strong>Fecha:</strong> {new Date(pedido.fechaCreacion).toLocaleString()} <br />
-              <strong>Estado:</strong> {pedido.estado} <br />
-              <strong>Total:</strong> {pedido.total.toFixed(2)} €
+              <p>
+                <strong>Usuario:</strong> {pedido.usuario?.email}
+              </p>
+              <p>
+                <strong>Fecha:</strong>{" "}
+                {new Date(pedido.fechaCreacion).toLocaleDateString()}
+              </p>
+              <p>
+                <strong>Estado:</strong> {pedido.estado}
+              </p>
+              <p>
+                <strong>Total:</strong> {pedido.total.toFixed(2)} €
+              </p>
               <hr />
             </li>
           ))}
         </ul>
       )}
-    </div>
+    </main>
   );
 };
 
 export default AdminPedidos;
+

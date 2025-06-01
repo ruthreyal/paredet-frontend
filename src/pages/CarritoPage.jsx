@@ -18,7 +18,7 @@ const CarritoPage = () => {
     return (
       <div className="container py-5 text-center">
         <h2 className="mb-4">Tu carrito está vacío</h2>
-        <Link to="/productos" className="btn btn-outline-dark">
+        <Link to="/" className="btn btn-outline-dark">
           Volver a la tienda
         </Link>
       </div>

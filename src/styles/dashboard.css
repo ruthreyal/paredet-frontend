@@ -4,13 +4,25 @@
   
   .dashboard-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 1.5rem;
-    margin-top: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .dashboard-ventas{
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    max-width: 250px;
+    margin: 2rem auto;
+    
   }
   
   .dashboard-card {
-    background-color: white;
+    background-color: #ffffff;
     padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
@@ -27,5 +39,9 @@
     font-size: 2rem;
     font-weight: bold;
     color: var(--color-principal);
+  }
+
+  .button{
+    margin:3rem;
   }
   

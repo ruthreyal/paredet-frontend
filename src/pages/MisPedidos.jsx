@@ -36,10 +36,17 @@ const MisPedidos = () => {
         <ul>
           {pedidos.map((pedido) => (
             <li key={pedido.id}>
-             <strong>Fecha:</strong> {pedido.fechaCreacion ? new Date(pedido.fechaCreacion).toLocaleString() : "Sin fecha"}
-             <br />
+              <strong>Fecha:</strong>{" "}
+              {pedido.fechaCreacion
+                ? new Date(pedido.fechaCreacion).toLocaleDateString()
+                : "Sin fecha"}
+              <br />
               <strong>Estado:</strong> {pedido.estado} <br />
-              <strong>Total:</strong> {typeof pedido.total === "number" ? pedido.total.toFixed(2) : "N/D"} €
+              <strong>Total:</strong>{" "}
+              {typeof pedido.total === "number"
+                ? pedido.total.toFixed(2)
+                : "N/D"}{" "}
+              €
               <hr />
             </li>
           ))}
@@ -50,5 +57,3 @@ const MisPedidos = () => {
 };
 
 export default MisPedidos;
-
-
