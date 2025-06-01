@@ -6,7 +6,7 @@
 }
 
 .navbar-nav .nav-link {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -75,7 +75,7 @@
   padding: 0.5rem 1rem;
   display: block;
   font-family: var(--font-secundaria);
-  font-size: 1.3rem;
+  font-size: 1rem;
 }
 
 .dropdown-menu-oscuro a:hover {
@@ -92,7 +92,7 @@
   width: 100%;
   text-align: left;
   font-family: var(--font-secundaria);
-  font-size: 1.3rem;
+  font-size: 1rem;
   cursor: pointer;
 }
 

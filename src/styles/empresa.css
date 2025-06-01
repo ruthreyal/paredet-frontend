@@ -1,0 +1,50 @@
+.empresa-container {
+  padding: 2rem;
+  max-width: 900px;
+  margin: 0 auto;
+  font-family: var(--font-principal, Arial, sans-serif);
+  color: var(--color-texto, #333);
+}
+
+.empresa-info h1 {
+  font-size: 2.2rem;
+  color: var(--color-principal, #c89d2d);
+  margin-bottom: 1rem;
+}
+
+.empresa-info p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.empresa-contacto {
+  margin-top: 3rem;
+}
+
+.empresa-contacto h2 {
+  font-size: 1.8rem;
+  color: var(--color-secundario, #444);
+  margin-bottom: 1rem;
+}
+
+.empresa-contacto ul {
+  list-style: none;
+  padding: 0;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.empresa-contacto li strong {
+  color: #000;
+}
+
+.empresa-contacto a {
+  color: #c89d2d;
+  text-decoration: none;
+}
+
+.empresa-contacto a:hover {
+  text-decoration: underline;
+}
+

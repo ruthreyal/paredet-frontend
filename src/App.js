@@ -34,6 +34,7 @@ import BusquedaPage from "./pages/BusquedaPage";
 import CarritoPage from "./pages/CarritoPage";
 import MisPedidos from "./pages/MisPedidos";
 import AdminPedidos from "./pages/admin/AdminPedidos";
+import Empresa from "./pages/Empresa";
 
 function App() {
   return (
@@ -79,6 +80,7 @@ function App() {
               <Route path="/buscar" element={<BusquedaPage />} />
               <Route path="/carrito" element={<CarritoPage />} />
               <Route path="/pedidos" element={<MisPedidos />} />
+              <Route path="/empresa" element={<Empresa />} />
               <Route
                 path="recuperar-password"
                 element={<RecuperarPassword />}
