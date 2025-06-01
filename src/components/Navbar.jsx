@@ -177,13 +177,17 @@ const Navbar = () => {
           <Link
             to="/"
             className="logo-text fw-bold text-uppercase mx-auto text-decoration-none"
-            onClick={() => isOpen && toggleMenu()}
           >
             PAREDET
           </Link>
 
-          <Link to="/buscar" className="text-white fs-5">
-            <i className="bi bi-search"></i>
+          <Link to="/carrito" className="text-white position-relative fs-5">
+            <i className="bi bi-cart"></i>
+            {totalCarrito > 0 && (
+              <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
+                {totalCarrito}
+              </span>
+            )}
           </Link>
         </nav>
 
@@ -205,20 +209,29 @@ const Navbar = () => {
                 <i className="bi bi-person text-white fs-5"></i>
               </Link>
             )}
-            <Link
-              to="/carrito"
-              onClick={toggleMenu}
-              className="position-relative"
-            >
-              <i className="bi bi-cart text-white fs-5"></i>
-              {totalCarrito > 0 && (
-                <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
-                  {totalCarrito}
-                </span>
-              )}
-            </Link>
           </div>
-
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              const search = e.target.search.value.trim();
+              if (search) {
+                navigate(`/buscar?q=${encodeURIComponent(search)}`);
+                toggleMenu();
+              }
+            }}
+            className="mobile-search-form d-flex align-items-center gap-2 px-4 pb-3"
+          >
+            <input
+              type="text"
+              name="search"
+              placeholder="Buscar..."
+              className="form-control"
+              aria-label="Buscar productos"
+            />
+            <button type="submit" className="btn btn-outline-light">
+              <i className="bi bi-search"></i>
+            </button>
+          </form>
           {/* SUBMENÚ USUARIO */}
           {usuario && isProfileMenuOpen && (
             <ul className="submenu-desplegable list-unstyled ps-5 mt-2">
@@ -250,6 +263,7 @@ const Navbar = () => {
                   Mis pedidos
                 </Link>
               </li>
+
               {usuario.rolNombre === "ADMIN" && (
                 <li>
                   <Link

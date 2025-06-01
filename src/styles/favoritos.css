@@ -93,7 +93,7 @@
 }
 
 @media (max-width: 768px) {
-  .contenedor-productos {
+  .contenedor-productos-favoritos {
     width: 100%;
     padding: 1rem;
   }
@@ -101,16 +101,29 @@
   .item-favorito {
     flex-direction: column;
     text-align: center;
+    align-items: center;
     border-radius: 0;
+    padding: 1.5rem 1rem;
   }
 
   .item-favorito img {
-    margin: 0 auto 1rem auto;
-    width: 150px;
+    width: 60%;
+    max-width: 200px;
+    height: auto;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius);
+    object-fit: cover;
+  }
+
+  .item-favorito .col-md-2,
+  .item-favorito .col-md-7,
+  .item-favorito .col-md-3 {
+    width: 100%;
   }
 
   .item-favorito .btn {
     width: 100%;
   }
 }
+
 

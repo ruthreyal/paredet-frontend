@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import productoService from "../services/productoService";
 import "../styles/home.css";
 
-
 const Home = () => {
   const { mensajeLogout, setMensajeLogout } = useContext(AuthContext);
   const [textoActivo, setTextoActivo] = useState(0);
@@ -19,6 +18,8 @@ const Home = () => {
   }, [mensajeLogout, setMensajeLogout]);
 
   useEffect(() => {
+    if (sliderProductos.length === 0) return;
+
     const intervalo = setInterval(() => {
       setAnimando(true);
       setTimeout(() => {
@@ -26,8 +27,9 @@ const Home = () => {
         setAnimando(false);
       }, 300);
     }, 3500);
+
     return () => clearInterval(intervalo);
-  }, []);
+  }, [sliderProductos.length]);
 
   useEffect(() => {
     const cargarProductos = async () => {
@@ -36,6 +38,7 @@ const Home = () => {
         const productos = response.data;
 
         setSliderProductos(productos.slice(0, 3));
+        setTextoActivo(0); 
         setProductos(productos.slice(0, 4));
       } catch (error) {
         console.error("Error al cargar productos", error);
@@ -53,16 +56,16 @@ const Home = () => {
         </div>
       )}
 
-      {sliderProductos.length > 0 && (
+      {sliderProductos.length > 0 && sliderProductos[textoActivo] && (
         <section
           className="hero-slider"
           aria-label="Imagen destacada"
           style={{
-            backgroundImage: `url(${sliderProductos[textoActivo].imagenUrl})`,
+            backgroundImage: `url(${sliderProductos[textoActivo]?.imagenUrl})`,
           }}
           onClick={() => {
-            const id = sliderProductos[textoActivo].id;
-            window.location.href = `/producto/${id}`;
+            const id = sliderProductos[textoActivo]?.id;
+            if (id) window.location.href = `/producto/${id}`;
           }}
         >
           <div className="slider-overlay">

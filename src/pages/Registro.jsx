@@ -7,7 +7,6 @@ import { AuthContext } from "../context/AuthContext";
 import UsuarioForm from "../components/UsuarioForm";
 import FormularioContraseñaNueva from "../components/FormularioContraseñaNueva";
 
-
 const Registro = () => {
   const [formData, setFormData] = useState({
     nombre: "",
@@ -39,21 +38,21 @@ const Registro = () => {
   const validarFormulario = async () => {
     const nuevosErrores = {};
 
-    if (
-      !formData.nombre.trim() ||
-      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)
-    ) {
+    if (!formData.nombre.trim()) {
+      nuevosErrores.nombre = "El nombre es obligatorio.";
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
       nuevosErrores.nombre = "El nombre solo debe contener letras.";
     }
 
-    if (
-      !formData.apellido.trim() ||
-      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)
-    ) {
+    if (!formData.apellido.trim()) {
+      nuevosErrores.apellido = "El apellido es obligatorio.";
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)) {
       nuevosErrores.apellido = "El apellido solo debe contener letras.";
     }
 
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    if (!formData.email.trim()) {
+      nuevosErrores.email = "El email es obligatorio.";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       nuevosErrores.email = "Introduce un email válido.";
     } else {
       const existe = await registroService.emailExiste(formData.email);
@@ -62,19 +61,15 @@ const Registro = () => {
       }
     }
 
-    if (
-      formData.password.length < 8 ||
-      !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)
-    ) {
-      nuevosErrores.password =
-        "La contraseña debe tener al menos 8 caracteres, una letra y un número.";
-    }
-
-    if (formData.password !== formData.repetirPassword) {
+    if (!formData.repetirPassword) {
+      nuevosErrores.repetirPassword = "Debes repetir la contraseña.";
+    } else if (formData.password !== formData.repetirPassword) {
       nuevosErrores.repetirPassword = "Las contraseñas no coinciden.";
     }
 
-    if (!/^\d{9}$/.test(formData.telefono)) {
+    if (!formData.telefono.trim()) {
+      nuevosErrores.telefono = "El teléfono es obligatorio.";
+    } else if (!/^\d{9}$/.test(formData.telefono)) {
       nuevosErrores.telefono =
         "El teléfono debe tener exactamente 9 dígitos numéricos.";
     }
@@ -145,6 +140,7 @@ const Registro = () => {
         <form
           onSubmit={handleSubmit}
           aria-label="Formulario de registro de usuario"
+          noValidate
         >
           <UsuarioForm
             formData={formData}

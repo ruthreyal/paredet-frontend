@@ -11,7 +11,7 @@ const CarritoPage = () => {
     calcularTotal,
     finalizarCompra,
     mensajeCompra,
-    setMensajeCompra
+    setMensajeCompra,
   } = useContext(CarritoContext);
 
   if (carrito.length === 0 && !mensajeCompra) {
@@ -27,10 +27,13 @@ const CarritoPage = () => {
 
   return (
     <div className="container py-5">
-      <h2 className="mb-4">Mi Carrito</h2>
+      <h2 className="mb-4 text-center">Resumen de tu compra</h2>
 
       {mensajeCompra && (
-        <div className="alert alert-success alert-dismissible fade show" role="alert">
+        <div
+          className="alert alert-success alert-dismissible fade show"
+          role="alert"
+        >
           {mensajeCompra}
           <button
             type="button"
@@ -46,7 +49,7 @@ const CarritoPage = () => {
         <>
           <div className="table-responsive">
             <table className="table align-middle text-center">
-              <thead>
+              <thead className="d-none d-md-table-header-group">
                 <tr>
                   <th>Producto</th>
                   <th>Nombre</th>
@@ -60,6 +63,7 @@ const CarritoPage = () => {
                 {carrito.map((item) => (
                   <tr key={item.id}>
                     <td>
+                      <div className="mobile-label">Producto</div>
                       <img
                         src={item.producto?.imagenUrl || "/placeholder.jpg"}
                         alt={item.producto?.nombre}
@@ -67,15 +71,20 @@ const CarritoPage = () => {
                           width: "60px",
                           height: "60px",
                           objectFit: "cover",
+                          borderRadius: "6px",
+                          border: "1px solid #ddd",
                         }}
                       />
                     </td>
-                    <td>{item.producto?.nombre}</td>
+
                     <td>
-                      <div className="d-flex justify-content-center align-items-center gap-2">
+                      <strong>{item.producto?.nombre}</strong>
+                      <div className="d-flex justify-content-start align-items-center gap-2 mt-2">
                         <button
                           className="btn btn-sm btn-outline-secondary"
-                          onClick={() => actualizarCantidad(item.id, item.cantidad - 1)}
+                          onClick={() =>
+                            actualizarCantidad(item.id, item.cantidad - 1)
+                          }
                           disabled={item.cantidad === 1}
                         >
                           -
@@ -83,21 +92,29 @@ const CarritoPage = () => {
                         <span>{item.cantidad}</span>
                         <button
                           className="btn btn-sm btn-outline-secondary"
-                          onClick={() => actualizarCantidad(item.id, item.cantidad + 1)}
+                          onClick={() =>
+                            actualizarCantidad(item.id, item.cantidad + 1)
+                          }
                         >
                           +
                         </button>
                       </div>
-                    </td>
-                    <td>{item.producto?.precio?.toFixed(2)} €</td>
-                    <td>{(item.producto?.precio * item.cantidad).toFixed(2)} €</td>
-                    <td>
-                      <button
-                        className="btn btn-sm btn-danger"
-                        onClick={() => eliminarDelCarrito(item.id)}
-                      >
-                        <i className="bi bi-trash"></i>
-                      </button>
+
+                      <div className="detalles-precio mt-2">
+                        <div>
+                          Precio unitario: {item.producto?.precio?.toFixed(2)} €
+                        </div>
+                        <div>
+                          Subtotal:{" "}
+                          {(item.producto?.precio * item.cantidad).toFixed(2)} €
+                        </div>
+                        <button
+                          className="btn btn-sm btn-danger mt-2"
+                          onClick={() => eliminarDelCarrito(item.id)}
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -106,7 +123,9 @@ const CarritoPage = () => {
           </div>
 
           <div className="text-end mt-4">
-            <h4>Total: <strong>{calcularTotal().toFixed(2)} €</strong></h4>
+            <h4>
+              Total: <strong>{calcularTotal().toFixed(2)} €</strong>
+            </h4>
             <button onClick={finalizarCompra} className="btn btn-warning mt-2">
               Finalizar compra
             </button>
@@ -118,4 +137,3 @@ const CarritoPage = () => {
 };
 
 export default CarritoPage;
-
