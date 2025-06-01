@@ -1,12 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import productoService from "../services/productoService";
 import imagenProductoService from "../services/imagenProductoService";
 import "../styles/pdp.css";
-import { FaTimes, FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import {
+  FaTimes,
+  FaChevronLeft,
+  FaChevronRight,
+  FaHeart,
+  FaRegHeart,
+} from "react-icons/fa";
 import { jwtDecode } from "jwt-decode";
 import favoritoService from "../services/favoritoService";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+import { API_BASE_URL } from "../services/apiConfig";
+import { CarritoContext } from "../context/CarritoContext";
 
 const PDP = () => {
   const { id } = useParams();
@@ -18,18 +25,61 @@ const PDP = () => {
   const token = localStorage.getItem("token");
   const decoded = token ? jwtDecode(token) : null;
   const usuarioId = decoded?.id || null;
-
+  const [cantidad, setCantidad] = useState(1);
   const [esFavorito, setEsFavorito] = useState(false);
+
+  const { cargarCarrito } = useContext(CarritoContext);
+
+  const isTokenExpired = (token) => {
+    if (!token) return true;
+    try {
+      const { exp } = JSON.parse(atob(token.split(".")[1]));
+      return Date.now() >= exp * 1000;
+    } catch {
+      return true;
+    }
+  };
+
+ const handleAddToCart = async () => {
+  if (!token || isTokenExpired(token)) {
+    alert("Debes iniciar sesión para añadir al carrito.");
+    return;
+  }
+
+  const payload = { productoId: id, cantidad };
+  const headers = {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  };
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/carrito/add`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(errorText || "Error al añadir producto al carrito");
+    }
+
+    alert("Producto añadido al carrito ✅");
+    if (cargarCarrito) await cargarCarrito();
+  } catch (error) {
+    console.error("Error en handleAddToCart:", error);
+    alert("Hubo un error. Inténtalo de nuevo.");
+  }
+};
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Obtener producto
         const resProducto = await productoService.getProductoById(id);
         const productoData = resProducto.data;
         setProducto(productoData);
 
-        // Obtener imágenes
         const resImagenes = await imagenProductoService.getByProducto(id);
         const imagenesData = resImagenes.data;
         setImagenes(imagenesData);
@@ -37,8 +87,19 @@ const PDP = () => {
           imagenesData[0]?.url || productoData.imagenUrl || "/placeholder.jpg"
         );
 
-        // Comprobar si es favorito
-        if (usuarioId) {
+        const isTokenExpired = (token) => {
+          if (!token) return true;
+          try {
+            const { exp } = JSON.parse(atob(token.split(".")[1]));
+            return Date.now() >= exp * 1000;
+          } catch {
+            return true;
+          }
+        };
+
+        if (token && !isTokenExpired(token)) {
+          const decoded = jwtDecode(token);
+          const usuarioId = decoded?.id;
           const favoritosRes = await favoritoService.obtenerPorUsuario(
             usuarioId,
             token
@@ -47,15 +108,15 @@ const PDP = () => {
           setEsFavorito(idsFavoritos.includes(id));
         }
       } catch (error) {
-        console.error("Error al cargar datos del producto", error);
+        console.error("Error al cargar datos del producto o favoritos", error);
       }
     };
 
     fetchData();
-  }, [id, usuarioId, token]);
+  }, [id, token]);
 
   const toggleFavorito = async () => {
-    if (!usuarioId) {
+    if (!token || isTokenExpired(token)) {
       alert("Debes iniciar sesión para usar favoritos.");
       return;
     }
@@ -70,6 +131,7 @@ const PDP = () => {
       }
     } catch (error) {
       console.error("Error al actualizar favorito:", error);
+      alert("Hubo un error. Inténtalo de nuevo.");
     }
   };
 
@@ -123,25 +185,21 @@ const PDP = () => {
 
         <div className="caracteristicas">
           <h2>Características técnicas</h2>
-
           {producto.formato && (
             <p>
               <strong>Formato:</strong> {producto.formato}
             </p>
           )}
-
           {producto.tipoAplicacion && (
             <p>
               <strong>Aplicación:</strong> {producto.tipoAplicacion}
             </p>
           )}
-
           {producto.peso && (
             <p>
               <strong>Peso:</strong> {producto.peso} g/m²
             </p>
           )}
-
           {producto.familia && (
             <p>
               <strong>Familia:</strong> {producto.familia}
@@ -150,23 +208,32 @@ const PDP = () => {
         </div>
 
         <div className="acciones-pdp">
-          <button className="btn-personalizado" disabled>
-            Añadir al carrito
-          </button>
-
-          <button
-            type="button"
-            className={`btn-personalizado ${esFavorito ? "activo" : ""}`}
+          <div
             onClick={toggleFavorito}
+            className={`favorito-toggle ${esFavorito ? "activo" : ""}`}
+            role="button"
+            tabIndex={0}
             aria-label={
               esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"
             }
           >
-            <span className="icono-corazon">
-              {esFavorito ? <FaHeart /> : <FaRegHeart />}
-            </span>
+            {esFavorito ? <FaHeart /> : <FaRegHeart />}{" "}
             {esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"}
-          </button>
+          </div>
+
+          <div className="cantidad-carrito">
+            <label htmlFor="cantidad">Cantidad:</label>
+            <input
+              id="cantidad"
+              type="number"
+              min="1"
+              value={cantidad}
+              onChange={(e) => setCantidad(parseInt(e.target.value) || 1)}
+            />
+            <button className="btn-personalizado" onClick={handleAddToCart}>
+              Añadir al carrito
+            </button>
+          </div>
         </div>
       </div>
 

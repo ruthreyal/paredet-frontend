@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/navbar.css";
+import { CarritoContext } from "../context/CarritoContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +11,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [showColecciones, setShowColecciones] = useState(false);
   const toggleColecciones = () => setShowColecciones(!showColecciones);
+  const { totalCarrito } = useContext(CarritoContext);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleProfileMenu = () => setIsProfileMenuOpen(!isProfileMenuOpen);
@@ -100,7 +102,9 @@ const Navbar = () => {
                     <Link to="/favoritos">Favoritos</Link>
                   </li>
                   <li>
-                    <Link to="/pedidos">Mis pedidos</Link>
+                    <Link to="/pedidos" className="dropdown-item">
+                      Mis pedidos
+                    </Link>
                   </li>
                   {usuario.rolNombre === "ADMIN" && (
                     <li>
@@ -121,10 +125,16 @@ const Navbar = () => {
             </li>
           )}
           <li className="nav-item">
-            <Link className="nav-link" to="#">
+            <Link className="nav-link position-relative" to="/carrito">
               <i className="bi bi-cart"></i>
+              {totalCarrito > 0 && (
+                <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
+                  {totalCarrito}
+                </span>
+              )}
             </Link>
           </li>
+
           <li className="nav-item">
             <form
               onSubmit={(e) => {
@@ -195,8 +205,17 @@ const Navbar = () => {
                 <i className="bi bi-person text-white fs-5"></i>
               </Link>
             )}
-            <Link to="/carrito" onClick={toggleMenu}>
+            <Link
+              to="/carrito"
+              onClick={toggleMenu}
+              className="position-relative"
+            >
               <i className="bi bi-cart text-white fs-5"></i>
+              {totalCarrito > 0 && (
+                <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
+                  {totalCarrito}
+                </span>
+              )}
             </Link>
           </div>
 
@@ -222,9 +241,10 @@ const Navbar = () => {
                     Favoritos
                   </Link>
                 </li>
+
                 <Link
                   to="/pedidos"
-                  className="text-white d-block py-1"
+                  className="dropdown-item"
                   onClick={toggleMenu}
                 >
                   Mis pedidos

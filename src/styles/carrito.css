@@ -1,0 +1,53 @@
+.container h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  font-family: var(--font-principal);
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+  font-size: 0.95rem;
+}
+
+.table img {
+  border-radius: 0.5rem;
+  border: 1px solid #ddd;
+}
+
+.btn-outline-secondary,
+.btn-danger {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  border-radius: 0.4rem;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-warning {
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border-radius: 0.6rem;
+  background-color: var(--color-dorado);
+  border: none;
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #c6a94f;
+}
+
+.text-end h4 {
+  font-size: 1.4rem;
+  margin-top: 1rem;
+}

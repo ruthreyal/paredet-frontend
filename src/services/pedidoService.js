@@ -1,9 +1,27 @@
-
 import axios from "axios";
-import { API_BASE_URL } from "./apiConfig";
 
-const getPedidos = (usuarioId) => axios.get(`${API_BASE_URL}/pedidos/usuario/${usuarioId}`);
-const createPedido = (pedidoData) => axios.post(`${API_BASE_URL}/pedidos`, pedidoData);
+const API_URL = `${process.env.REACT_APP_API_URL}/pedidos`;
 
-const pedidoService = { getPedidos, createPedido };
-export default pedidoService;
+const getMisPedidos = async (token) => {
+  const response = await axios.get(`${API_URL}/mios`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+const getTodosPedidos = async (token) => {
+  const response = await axios.get(API_URL, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};
+
+export default {
+  getMisPedidos,
+  getTodosPedidos,
+};
+

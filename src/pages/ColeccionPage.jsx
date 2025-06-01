@@ -8,14 +8,6 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import "../styles/productos.css";
 import { Link } from "react-router-dom";
 
-const COLECCIONES = {
-  arber: "09b90179-3f19-48a6-8da9-6406910c7276",
-  rumi: "19fb4f34-50c3-4026-a2a2-f6b020c7ac7f",
-  indigo: "2e3f457c-4261-4bb1-84bc-8e964ae0b1da",
-  kalinka: "d7f36f1f-c6e4-4845-adbb-fcbc9f91c363",
-  georgia: "eaac8fdf-3e3e-4b10-bd94-3065574b6de8",
-};
-
 const ColeccionPage = () => {
   const { nombre } = useParams();
   const [productos, setProductos] = useState([]);
@@ -25,6 +17,24 @@ const ColeccionPage = () => {
   const token = localStorage.getItem("token");
   const decoded = token ? jwtDecode(token) : null;
   const usuarioId = decoded?.id || null;
+
+  const isTokenExpired = (token) => {
+    if (!token) return true;
+    try {
+      const { exp } = JSON.parse(atob(token.split(".")[1]));
+      return Date.now() >= exp * 1000;
+    } catch {
+      return true;
+    }
+  };
+
+  const COLECCIONES = {
+    arber: "09b90179-3f19-48a6-8da9-6406910c7276",
+    rumi: "19fb4f34-50c3-4026-a2a2-f6b020c7ac7f",
+    indigo: "2e3f457c-4261-4bb1-84bc-8e964ae0b1da",
+    kalinka: "d7f36f1f-c6e4-4845-adbb-fcbc9f91c363",
+    georgia: "eaac8fdf-3e3e-4b10-bd94-3065574b6de8",
+  };
 
   useEffect(() => {
     const fetchDatos = async () => {
@@ -36,7 +46,9 @@ const ColeccionPage = () => {
         const productosConImagen = await Promise.all(
           filtrados.map(async (producto) => {
             try {
-              const resImg = await imagenProductoService.getByProducto(producto.id);
+              const resImg = await imagenProductoService.getByProducto(
+                producto.id
+              );
               const imagenes = resImg.data;
               return {
                 ...producto,
@@ -51,7 +63,10 @@ const ColeccionPage = () => {
         setProductos(productosConImagen);
 
         if (usuarioId) {
-          const favoritosRes = await favoritoService.obtenerPorUsuario(usuarioId, token);
+          const favoritosRes = await favoritoService.obtenerPorUsuario(
+            usuarioId,
+            token
+          );
           const idsFavoritos = favoritosRes.map((f) => String(f.productoId));
           setFavoritos(idsFavoritos);
         }
@@ -77,7 +92,7 @@ const ColeccionPage = () => {
   };
 
   const handleFavorito = async (productoId) => {
-    if (!usuarioId) {
+    if (!token || isTokenExpired(token)) {
       alert("Debes iniciar sesión para añadir a favoritos.");
       return;
     }
@@ -128,7 +143,11 @@ const ColeccionPage = () => {
           const esFavorito = favoritos.includes(idStr);
 
           return (
-            <Link to={`/producto/${producto.id}`} key={producto.id} className="card-producto">
+            <Link
+              to={`/producto/${producto.id}`}
+              key={producto.id}
+              className="card-producto"
+            >
               <div className="imagen-wrapper">
                 <img
                   src={producto.imagenGaleria || "/placeholder.jpg"}
@@ -142,7 +161,9 @@ const ColeccionPage = () => {
                     e.preventDefault();
                     handleFavorito(producto.id);
                   }}
-                  aria-label={`${esFavorito ? "Quitar de" : "Añadir a"} favoritos`}
+                  aria-label={`${
+                    esFavorito ? "Quitar de" : "Añadir a"
+                  } favoritos`}
                 >
                   {esFavorito ? <FaHeart /> : <FaRegHeart />}
                 </button>
@@ -159,4 +180,3 @@ const ColeccionPage = () => {
 };
 
 export default ColeccionPage;
-

@@ -7,7 +7,6 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import "../styles/productos.css";
 import { Link } from "react-router-dom";
 
-
 const Producto = () => {
   const [productos, setProductos] = useState([]);
   const [orden, setOrden] = useState("relevancia");
@@ -23,6 +22,16 @@ const Producto = () => {
     fotomural: "c6d9fe55-60a0-4c0f-aef3-27c3f7f57747",
   };
 
+  const isTokenExpired = (token) => {
+    if (!token) return true;
+    try {
+      const { exp } = JSON.parse(atob(token.split(".")[1]));
+      return Date.now() >= exp * 1000;
+    } catch {
+      return true;
+    }
+  };
+
   const tipo = searchParams.get("tipo");
 
   useEffect(() => {
@@ -34,7 +43,10 @@ const Producto = () => {
         setProductos(filtrados);
 
         if (usuarioId) {
-          const favoritosRes = await favoritoService.obtenerPorUsuario(usuarioId, token);
+          const favoritosRes = await favoritoService.obtenerPorUsuario(
+            usuarioId,
+            token
+          );
           const idsFavoritos = favoritosRes.map((f) => String(f.productoId));
           setFavoritos(idsFavoritos);
         }
@@ -60,7 +72,7 @@ const Producto = () => {
   };
 
   const handleFavorito = async (productoId) => {
-    if (!usuarioId) {
+    if (!token || isTokenExpired(token)) {
       alert("Debes iniciar sesión para añadir a favoritos.");
       return;
     }
@@ -70,7 +82,11 @@ const Producto = () => {
 
     try {
       if (yaEsFavorito) {
-        console.log("Eliminando favorito con:", { usuarioId, productoId: idStr, token });
+        console.log("Eliminando favorito con:", {
+          usuarioId,
+          productoId: idStr,
+          token,
+        });
 
         await favoritoService.eliminar(usuarioId, idStr, token);
         setFavoritos(favoritos.filter((id) => id !== idStr));
@@ -113,7 +129,11 @@ const Producto = () => {
           const esFavorito = favoritos.includes(idStr);
 
           return (
-            <Link to={`/producto/${producto.id}`} key={producto.id} className="card-producto">
+            <Link
+              to={`/producto/${producto.id}`}
+              key={producto.id}
+              className="card-producto"
+            >
               <div className="imagen-wrapper">
                 <img
                   src={producto.imagenUrl || "/placeholder.jpg"}
@@ -127,7 +147,9 @@ const Producto = () => {
                     e.preventDefault();
                     handleFavorito(producto.id);
                   }}
-                  aria-label={`${esFavorito ? "Quitar de" : "Añadir a"} favoritos`}
+                  aria-label={`${
+                    esFavorito ? "Quitar de" : "Añadir a"
+                  } favoritos`}
                 >
                   {esFavorito ? <FaHeart /> : <FaRegHeart />}
                 </button>
@@ -136,7 +158,6 @@ const Producto = () => {
               <p>{producto.coleccion?.nombre}</p>
               <p className="precio">{producto.precio} €</p>
             </Link>
-
           );
         })}
       </div>
@@ -145,4 +166,3 @@ const Producto = () => {
 };
 
 export default Producto;
- 
