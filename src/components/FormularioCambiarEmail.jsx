@@ -3,28 +3,53 @@ import axios from "axios";
 import { API_BASE_URL } from "../services/apiConfig";
 import { AuthContext } from "../context/AuthContext";
 import registroService from "../services/registroService";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import "../styles/formularios.css";
+import { FaEye, FaEyeSlash, FaExclamationCircle } from "react-icons/fa";
+import AlertaToast from "./AlertaToast";
 
 const FormularioCambiarEmail = ({ emailActual }) => {
   const [nuevoEmail, setNuevoEmail] = useState("");
   const [password, setPassword] = useState("");
   const [verPassword, setVerPassword] = useState(false);
-  const [mensaje, setMensaje] = useState("");
-  const [tipoMensaje, setTipoMensaje] = useState("info");
-  const [mostrarModal, setMostrarModal] = useState(false);
+  const [errors, setErrors] = useState({});
   const { logout } = useContext(AuthContext);
+
+  const [toast, setToast] = useState({
+    mostrar: false,
+    mensaje: "",
+    tipo: "info",
+  });
+
+  const mostrarToast = (mensaje, tipo = "info") => {
+    setToast({ mostrar: true, mensaje, tipo });
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, mostrar: false }));
+    }, 4000);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const nuevosErrores = {};
     const token = localStorage.getItem("token");
+
+    if (!nuevoEmail.trim()) {
+      nuevosErrores.nuevoEmail = "El nuevo email es obligatorio.";
+    } else if (!/\S+@\S+\.\S+/.test(nuevoEmail)) {
+      nuevosErrores.nuevoEmail = "Introduce un email válido.";
+    }
+
+    if (!password.trim()) {
+      nuevosErrores.password = "La contraseña actual es obligatoria.";
+    }
+
+    if (Object.keys(nuevosErrores).length > 0) {
+      setErrors(nuevosErrores);
+      return;
+    }
 
     try {
       const yaExiste = await registroService.emailExiste(nuevoEmail);
       if (yaExiste) {
-        setMensaje("El nuevo email ya está registrado.");
-        setTipoMensaje("error");
-        setMostrarModal(true);
+        setErrors({ nuevoEmail: "El nuevo email ya está registrado." });
         return;
       }
 
@@ -34,9 +59,10 @@ const FormularioCambiarEmail = ({ emailActual }) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setMensaje(res.data);
-      setTipoMensaje("success");
-      setMostrarModal(true);
+      mostrarToast(res.data, "success");
+      setNuevoEmail("");
+      setPassword("");
+      setErrors({});
 
       setTimeout(() => {
         logout();
@@ -49,16 +75,21 @@ const FormularioCambiarEmail = ({ emailActual }) => {
         return "Error al actualizar el email.";
       })();
 
-      setMensaje(errorMsg);
-      setTipoMensaje("error");
-      setMostrarModal(true);
+      setErrors({ password: errorMsg });
     }
   };
 
   return (
     <section className="mb-4" aria-label="Formulario para cambiar el email">
+      <AlertaToast
+        mostrar={toast.mostrar}
+        onCerrar={() => setToast({ ...toast, mostrar: false })}
+        titulo="Notificación"
+        mensaje={toast.mensaje}
+        tipo={toast.tipo}
+      />
 
-      <h3 className="mb-3">Cambiar email</h3>
+      <h5 className="mb-3">Cambiar email</h5>
 
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -74,6 +105,12 @@ const FormularioCambiarEmail = ({ emailActual }) => {
             aria-required="true"
             aria-label="Introduce tu nuevo email"
           />
+          {errors.nuevoEmail && (
+            <div className="form-error" role="alert">
+              <FaExclamationCircle className="icono-error" />
+              {errors.nuevoEmail}
+            </div>
+          )}
         </div>
 
         <div className="mb-3 position-relative">
@@ -103,40 +140,23 @@ const FormularioCambiarEmail = ({ emailActual }) => {
               {verPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
           </div>
+          {errors.password && (
+            <div className="form-error" role="alert">
+              <FaExclamationCircle className="icono-error" />
+              {errors.password}
+            </div>
+          )}
         </div>
 
-       <button type="submit" className="btn btn-dark w-100">
+        <button type="submit" className="btn btn-dark w-100">
           Actualizar email
         </button>
       </form>
-
-      {mostrarModal && (
-        <div
-          className="modal-overlay"
-          role="alertdialog"
-          aria-modal="true"
-          aria-labelledby="mensaje-cambio-email"
-        >
-          <div className="modal-contenido">
-            <p
-              id="mensaje-cambio-email"
-              className={`alerta-${tipoMensaje}`}
-            >
-              {mensaje}
-            </p>
-            <button
-              onClick={() => setMostrarModal(false)}
-              aria-label="Cerrar aviso"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
     </section>
   );
 };
 
 export default FormularioCambiarEmail;
+
 
 

@@ -22,7 +22,6 @@ import AdminLayout from "./pages/admin/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import AdminUsuarios from "./pages/admin/AdminUsuarios";
 import UsuarioForm from "./components/UsuarioForm";
-import EditarUsuario from "./pages/admin/EditarUsuario";
 import AdminCategorias from "./pages/admin/AdminCategorias";
 import AdminColecciones from "./pages/admin/AdminColecciones";
 import FormularioProducto from "./pages/admin/FormularioProducto";
@@ -48,10 +47,6 @@ function App() {
                 <Route index element={<Dashboard />} />
                 <Route path="usuarios" element={<AdminUsuarios />} />
                 <Route path="usuarios/crear" element={<UsuarioForm />} />
-                <Route
-                  path="usuarios/editar/:email"
-                  element={<EditarUsuario />}
-                />
                 <Route path="categorias" element={<AdminCategorias />} />
                 <Route path="colecciones" element={<AdminColecciones />} />
                 <Route path="productos" element={<AdminProductos />} />

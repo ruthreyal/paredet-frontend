@@ -121,7 +121,7 @@ const EntidadSimpleAdmin = ({ titulo, endpoint, nombreEntidadSingular }) => {
 
       <div className="mb-3">
         <button
-          className="btn-gold"
+          className="btn btn-outline-dark w-40"
           onClick={() => {
             setModoCrear(true);
             setMensaje("");
@@ -174,7 +174,7 @@ const EntidadSimpleAdmin = ({ titulo, endpoint, nombreEntidadSingular }) => {
             carpeta="colecciones"
           />
 
-          <button className="btn-gold mt-2" onClick={handleGuardarNuevo}>
+          <button className="btn btn-outline-dark w-40" onClick={handleGuardarNuevo}>
             Guardar {nombreEntidadSingular}
           </button>
         </div>
@@ -224,13 +224,13 @@ const EntidadSimpleAdmin = ({ titulo, endpoint, nombreEntidadSingular }) => {
 
                       <div className="mt-2">
                         <button
-                          className="btn-accion btn-editar"
+                          className="btn btn-outline-dark w-40"
                           onClick={() => handleGuardarEdicion(item.id)}
                         >
                           Guardar
                         </button>
                         <button
-                          className="btn-accion btn-eliminar"
+                          className="btn btn-dark w-40"
                           onClick={() => setModoEditarId(null)}
                         >
                           Cancelar
@@ -245,7 +245,7 @@ const EntidadSimpleAdmin = ({ titulo, endpoint, nombreEntidadSingular }) => {
                   <td>{item.nombre}</td>
                   <td className="text-end">
                     <button
-                      className="btn-accion btn-editar"
+                      className="btn btn-outline-dark w-40"
                       onClick={() =>
                         handleEditar(
                           item.id,
@@ -258,7 +258,7 @@ const EntidadSimpleAdmin = ({ titulo, endpoint, nombreEntidadSingular }) => {
                       Editar
                     </button>
                     <button
-                      className="btn-accion btn-eliminar"
+                      className="btn btn-dark w-40"
                       onClick={() => handleEliminar(item.id)}
                       aria-label={`Eliminar ${nombreEntidadSingular}`}
                     >

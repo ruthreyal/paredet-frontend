@@ -8,6 +8,7 @@ import FormularioCambiarContraseña from "../components/FormularioCambiarContras
 import FormularioCambiarEmail from "../components/FormularioCambiarEmail";
 import paisesConCiudades from "../data/cities.json";
 import "../styles/formularios.css";
+import AlertaToast from "../components/AlertaToast";
 
 const PerfilPage = () => {
   const [usuario, setUsuario] = useState(null);
@@ -21,6 +22,17 @@ const PerfilPage = () => {
   const [verNueva, setVerNueva] = useState(false);
 
   const token = localStorage.getItem("token");
+  const [toast, setToast] = useState({
+    mostrar: false,
+    mensaje: "",
+    tipo: "elegante",
+  });
+  const mostrarToast = (mensaje, tipo = "info") => {
+    setToast({ mostrar: true, mensaje, tipo });
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, mostrar: false }));
+    }, 4000);
+  };
 
   useEffect(() => {
     if (token) {
@@ -29,7 +41,10 @@ const PerfilPage = () => {
         const extractedEmail = payload?.sub || null;
         setEmail(extractedEmail);
       } catch {
-        console.error("Error al extraer email del token.");
+        mostrarToast(
+          "Error al procesar tu sesión. Vuelve a iniciar sesión.",
+          "error"
+        );
       }
     }
   }, [token]);
@@ -109,24 +124,31 @@ const PerfilPage = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setErrors({});
-      mostrarMensaje("Datos actualizados correctamente", "success");
+      mostrarToast("Datos actualizados correctamente", "elegante");
     } catch {
-      mostrarMensaje("Error al actualizar los datos", "error");
+      mostrarToast("Error al actualizar los datos", "error");
     }
   };
 
   const handleCambiarPassword = async (e) => {
     e.preventDefault();
 
-    if (!contrasenaActual || !nuevaPassword) {
-      return mostrarMensaje("Debes completar ambos campos de contraseña.", "error");
+    const nuevosErrores = {};
+
+    if (!contrasenaActual.trim()) {
+      nuevosErrores.contrasenaActual = "La contraseña actual es obligatoria.";
     }
 
-    if (nuevaPassword.length < 6) {
-      return mostrarMensaje(
-        "La nueva contraseña debe tener al menos 6 caracteres.",
-        "error"
-      );
+    if (!nuevaPassword.trim()) {
+      nuevosErrores.nuevaPassword = "La nueva contraseña es obligatoria.";
+    } else if (nuevaPassword.length < 6) {
+      nuevosErrores.nuevaPassword =
+        "La nueva contraseña debe tener al menos 6 caracteres.";
+    }
+
+    if (Object.keys(nuevosErrores).length > 0) {
+      setErrors(nuevosErrores);
+      return;
     }
 
     try {
@@ -135,11 +157,15 @@ const PerfilPage = () => {
         { actual: contrasenaActual, nueva: nuevaPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      mostrarMensaje("Contraseña actualizada correctamente", "success");
+
+      setErrors({});
       setContrasenaActual("");
       setNuevaPassword("");
+      mostrarToast("Contraseña actualizada correctamente", "elegante");
     } catch {
-      mostrarMensaje("La contraseña actual no es correcta", "error");
+      setErrors({
+        contrasenaActual: "La contraseña actual no es correcta.",
+      });
     }
   };
 
@@ -167,66 +193,74 @@ const PerfilPage = () => {
   }
 
   return (
-    <main className="container form-container py-5">
-      <section className="form-box" style={{ maxWidth: "500px", width: "100%" }}>
-        <h2>Mi perfil</h2>
+    <>
+      <AlertaToast
+        mostrar={toast.mostrar}
+        onCerrar={() => setToast({ ...toast, mostrar: false })}
+        titulo="Notificación"
+        mensaje={toast.mensaje}
+        tipo={toast.tipo}
+      />
 
-        <form
-          onSubmit={handleGuardar}
-          aria-label="Formulario de actualización de perfil"
+      <main className="container form-container py-5">
+        <section
+          className="form-box"
+          style={{ maxWidth: "500px", width: "100%" }}
         >
-          <UsuarioForm
-            formData={usuario}
-            handleChange={handleChange}
-            readonlyEmail={true}
-            paisesConCiudades={paisesConCiudades}
+          <h2>Mi perfil</h2>
+
+          <form
+            onSubmit={handleGuardar}
+            aria-label="Formulario de actualización de perfil"
+            noValidate
+          >
+            <UsuarioForm
+              formData={usuario}
+              handleChange={handleChange}
+              readonlyEmail={true}
+              paisesConCiudades={paisesConCiudades}
+              errors={errors}
+            />
+            <button type="submit" className="btn btn-dark w-100">
+              <FaSave className="me-2" /> Guardar cambios
+            </button>
+          </form>
+
+          <hr className="my-4" />
+
+          <FormularioCambiarContraseña
+            contrasenaActual={contrasenaActual}
+            nuevaPassword={nuevaPassword}
+            verActual={verActual}
+            setVerActual={setVerActual}
+            verNueva={verNueva}
+            setVerNueva={setVerNueva}
+            handleChange={(e) => {
+              const { name, value } = e.target;
+              if (name === "contrasenaActual") setContrasenaActual(value);
+              if (name === "nuevaPassword") setNuevaPassword(value);
+            }}
+            handleSubmit={handleCambiarPassword}
             errors={errors}
           />
-          <button type="submit" className="btn btn-dark w-100">
-            <FaSave className="me-2" /> Guardar cambios
+
+          <hr className="my-4" />
+
+          <FormularioCambiarEmail emailActual={usuario.email} />
+
+          <hr className="my-4" />
+
+          <button
+            className="btn btn-outline-dark w-100"
+            onClick={handleEliminarCuenta}
+            aria-label="Eliminar cuenta"
+          >
+            <FaTrash className="me-2" /> Eliminar cuenta
           </button>
-        </form>
-
-        {mensaje && (
-          <div className={`alerta-${tipoMensaje} mt-3`} role="status" aria-live="polite">
-            {mensaje}
-          </div>
-        )}
-
-        <hr className="my-4" />
-
-        <FormularioCambiarContraseña
-          contrasenaActual={contrasenaActual}
-          nuevaPassword={nuevaPassword}
-          verActual={verActual}
-          setVerActual={setVerActual}
-          verNueva={verNueva}
-          setVerNueva={setVerNueva}
-          handleChange={(e) => {
-            const { name, value } = e.target;
-            if (name === "contrasenaActual") setContrasenaActual(value);
-            if (name === "nuevaPassword") setNuevaPassword(value);
-          }}
-          handleSubmit={handleCambiarPassword}
-        />
-
-        <hr className="my-4" />
-
-        <FormularioCambiarEmail emailActual={usuario.email} />
-
-        <hr className="my-4" />
-
-        <button
-          className="btn-claro-inverso"
-          onClick={handleEliminarCuenta}
-          aria-label="Eliminar cuenta"
-        >
-          <FaTrash className="me-2" /> Eliminar cuenta
-        </button>
-      </section>
-    </main>
+        </section>
+      </main>
+    </>
   );
 };
 
 export default PerfilPage;
-

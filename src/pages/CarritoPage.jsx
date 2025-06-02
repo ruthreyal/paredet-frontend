@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { CarritoContext } from "../context/CarritoContext";
 import { Link } from "react-router-dom";
 import "../styles/carrito.css";
+import AlertaToast from "../components/AlertaToast";
 
 const CarritoPage = () => {
   const {
@@ -11,8 +12,20 @@ const CarritoPage = () => {
     calcularTotal,
     finalizarCompra,
     mensajeCompra,
-    setMensajeCompra,
   } = useContext(CarritoContext);
+
+  const [toast, setToast] = useState({
+    mostrar: false,
+    mensaje: "",
+    tipo: "info",
+  });
+
+  const mostrarToast = (mensaje, tipo = "info") => {
+    setToast({ mostrar: true, mensaje, tipo });
+    setTimeout(() => {
+      setToast({ ...toast, mostrar: false });
+    }, 4000);
+  };
 
   if (carrito.length === 0 && !mensajeCompra) {
     return (
@@ -28,22 +41,13 @@ const CarritoPage = () => {
   return (
     <div className="container py-5">
       <h2 className="mb-4 text-center">Resumen de tu compra</h2>
-
-      {mensajeCompra && (
-        <div
-          className="alert alert-success alert-dismissible fade show"
-          role="alert"
-        >
-          {mensajeCompra}
-          <button
-            type="button"
-            className="btn-close"
-            data-bs-dismiss="alert"
-            aria-label="Close"
-            onClick={() => setMensajeCompra("")}
-          ></button>
-        </div>
-      )}
+      <AlertaToast
+        mostrar={toast.mostrar}
+        onCerrar={() => setToast({ ...toast, mostrar: false })}
+        titulo="Notificación"
+        mensaje={toast.mensaje}
+        tipo={toast.tipo}
+      />
 
       {carrito.length > 0 && (
         <>
@@ -62,14 +66,16 @@ const CarritoPage = () => {
               <tbody>
                 {carrito.map((item) => (
                   <tr key={item.id}>
+                    {/* Imagen */}
                     <td>
                       <div className="mobile-label">Producto</div>
                       <img
                         src={item.producto?.imagenUrl || "/placeholder.jpg"}
                         alt={item.producto?.nombre}
+                        className="img-fluid"
                         style={{
-                          width: "60px",
-                          height: "60px",
+                          width: "100px",
+                          height: "100px",
                           objectFit: "cover",
                           borderRadius: "6px",
                           border: "1px solid #ddd",
@@ -77,9 +83,12 @@ const CarritoPage = () => {
                       />
                     </td>
 
-                    <td>
+                    {/* Nombre + cantidad + precio + eliminar */}
+                    <td className="text-start d-md-flex flex-column justify-content-center align-items-start gap-2">
                       <strong>{item.producto?.nombre}</strong>
-                      <div className="d-flex justify-content-start align-items-center gap-2 mt-2">
+
+                      {/* Controles cantidad */}
+                      <div className="d-flex align-items-center gap-2">
                         <button
                           className="btn btn-sm btn-outline-secondary"
                           onClick={() =>
@@ -100,7 +109,8 @@ const CarritoPage = () => {
                         </button>
                       </div>
 
-                      <div className="detalles-precio mt-2">
+                      {/* Detalles precios */}
+                      <div className="detalles-precio">
                         <div>
                           Precio unitario: {item.producto?.precio?.toFixed(2)} €
                         </div>
@@ -108,13 +118,15 @@ const CarritoPage = () => {
                           Subtotal:{" "}
                           {(item.producto?.precio * item.cantidad).toFixed(2)} €
                         </div>
-                        <button
-                          className="btn btn-sm btn-danger mt-2"
-                          onClick={() => eliminarDelCarrito(item.id)}
-                        >
-                          <i className="bi bi-trash"></i>
-                        </button>
                       </div>
+
+                      {/* Eliminar */}
+                      <button
+                        className="btn btn-outline-dark mt-2"
+                        onClick={() => eliminarDelCarrito(item.id)}
+                      >
+                        <i className="bi bi-trash"></i>
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -126,7 +138,12 @@ const CarritoPage = () => {
             <h4>
               Total: <strong>{calcularTotal().toFixed(2)} €</strong>
             </h4>
-            <button onClick={finalizarCompra} className="btn btn-warning mt-2">
+            <button className="btn btn-outline-dark w-40"
+              onClick={async () => {
+                await finalizarCompra();
+                mostrarToast("¡Compra realizada con éxito!", "elegante");
+              }}
+            >
               Finalizar compra
             </button>
           </div>

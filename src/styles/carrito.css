@@ -61,7 +61,14 @@ html, body {
 .text-end h4 {
   font-size: 1.4rem;
   margin-top: 1rem;
+  margin-bottom: 1rem;
 }
+
+.table td:first-child img {
+  width: 100px;
+  height: 100px;
+}
+
 
 @media (max-width: 768px) {
   .table-responsive {
@@ -116,13 +123,6 @@ html, body {
 @media (max-width: 768px) {
   .mobile-label {
     display: block;
-  }
-
-  table.table td {
-    display: block;
-    width: 100%;
-    padding: 0.5rem 0;
-    text-align: left;
   }
 
   table.table tr {
@@ -241,4 +241,17 @@ html, body {
     display: block;
   }
 }
+
+@media (min-width: 768px) {
+  .table td img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .detalles-precio {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+}
+
 

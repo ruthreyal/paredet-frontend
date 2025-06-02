@@ -34,14 +34,19 @@ const UsuarioForm = ({
           id="nombre"
           name="nombre"
           type="text"
-          className="input-field"
+          className={`input-field ${errors?.nombre ? "is-invalid" : ""}`}
           required
           value={formData.nombre}
           onChange={handleChange}
           aria-required="true"
+          aria-describedby={errors?.nombre ? "error-nombre" : undefined}
         />
         {errors?.nombre && (
-          <div className="form-error" role="alert">
+          <div
+            className="form-error invalid-feedback"
+            id="error-nombre"
+            role="alert"
+          >
             <FaExclamationCircle className="icono-error" />
             {errors.nombre}
           </div>
@@ -56,14 +61,19 @@ const UsuarioForm = ({
           id="apellido"
           name="apellido"
           type="text"
-          className="input-field"
+          className={`input-field ${errors?.apellido ? "is-invalid" : ""}`}
           required
           aria-required="true"
+          aria-describedby={errors?.apellido ? "error-apellido" : undefined}
           value={formData.apellido}
           onChange={handleChange}
         />
         {errors?.apellido && (
-          <div className="form-error" role="alert">
+          <div
+            className="form-error invalid-feedback"
+            id="error-apellido"
+            role="alert"
+          >
             <FaExclamationCircle className="icono-error" />
             {errors.apellido}
           </div>
@@ -80,15 +90,20 @@ const UsuarioForm = ({
           type="text"
           inputMode="email"
           autoComplete="email"
-          className="input-field"
+          className={`input-field ${errors?.email ? "is-invalid" : ""}`}
           required
           aria-required="true"
+          aria-describedby={errors?.email ? "error-email" : undefined}
           value={formData.email}
           onChange={handleChange}
           readOnly={readonlyEmail}
         />
         {errors?.email && (
-          <div className="form-error" role="alert">
+          <div
+            className="form-error invalid-feedback"
+            id="error-email"
+            role="alert"
+          >
             <FaExclamationCircle className="icono-error" />
             {errors.email}
           </div>
@@ -103,14 +118,19 @@ const UsuarioForm = ({
           id="telefono"
           name="telefono"
           type="text"
-          className="input-field"
+          className={`input-field ${errors?.telefono ? "is-invalid" : ""}`}
           required
           aria-required="true"
+          aria-describedby={errors?.telefono ? "error-telefono" : undefined}
           value={formData.telefono}
           onChange={handleChange}
         />
         {errors?.telefono && (
-          <div className="form-error" role="alert">
+          <div
+            className="form-error invalid-feedback"
+            id="error-telefono"
+            role="alert"
+          >
             <FaExclamationCircle className="icono-error" />
             {errors.telefono}
           </div>
@@ -123,12 +143,17 @@ const UsuarioForm = ({
           id="direccion"
           name="direccion"
           type="text"
-          className="input-field"
+          className={`input-field ${errors?.direccion ? "is-invalid" : ""}`}
+          aria-describedby={errors?.direccion ? "error-direccion" : undefined}
           value={formData.direccion}
           onChange={handleChange}
         />
         {errors?.direccion && (
-          <div className="form-error" role="alert">
+          <div
+            className="form-error invalid-feedback"
+            id="error-direccion"
+            role="alert"
+          >
             <FaExclamationCircle className="icono-error" />
             {errors.direccion}
           </div>
@@ -148,9 +173,16 @@ const UsuarioForm = ({
           placeholder="Selecciona un país"
           isSearchable
           aria-label="País"
+          classNamePrefix="react-select"
+          className={errors?.pais ? "react-select-error" : ""}
+          aria-describedby={errors?.pais ? "error-pais" : undefined}
         />
         {errors?.pais && (
-          <div className="form-error" role="alert">
+          <div
+            className="form-error invalid-feedback"
+            id="error-pais"
+            role="alert"
+          >
             <FaExclamationCircle className="icono-error" />
             {errors.pais}
           </div>
@@ -171,9 +203,16 @@ const UsuarioForm = ({
           isSearchable
           isDisabled={!formData.pais}
           aria-label="Ciudad"
+          classNamePrefix="react-select"
+          className={errors?.ciudad ? "react-select-error" : ""}
+          aria-describedby={errors?.ciudad ? "error-ciudad" : undefined}
         />
         {errors?.ciudad && (
-          <div className="form-error" role="alert">
+          <div
+            className="form-error invalid-feedback"
+            id="error-ciudad"
+            role="alert"
+          >
             <FaExclamationCircle className="icono-error" />
             {errors.ciudad}
           </div>
@@ -186,12 +225,19 @@ const UsuarioForm = ({
           id="codigoPostal"
           name="codigoPostal"
           type="text"
-          className="input-field"
+          className={`input-field ${errors?.codigoPostal ? "is-invalid" : ""}`}
+          aria-describedby={
+            errors?.codigoPostal ? "error-codigoPostal" : undefined
+          }
           value={formData.codigoPostal}
           onChange={handleChange}
         />
         {errors?.codigoPostal && (
-          <div className="form-error" role="alert">
+          <div
+            className="form-error invalid-feedback"
+            id="error-codigoPostal"
+            role="alert"
+          >
             <FaExclamationCircle className="icono-error" />
             {errors.codigoPostal}
           </div>
@@ -206,17 +252,22 @@ const UsuarioForm = ({
           <select
             id="rol"
             name="rol"
-            className="input-field"
+            className={`input-field ${errors?.rol ? "is-invalid" : ""}`}
             value={formData.rol}
             onChange={handleChange}
             required
             aria-required="true"
+            aria-describedby={errors?.rol ? "error-rol" : undefined}
           >
             <option value="USER">Usuario</option>
             <option value="ADMIN">Administrador</option>
           </select>
           {errors?.rol && (
-            <div className="form-error" role="alert">
+            <div
+              className="form-error invalid-feedback"
+              id="error-rol"
+              role="alert"
+            >
               <FaExclamationCircle className="icono-error" />
               {errors.rol}
             </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { jwtDecode } from "jwt-decode";
 import favoritoService from "../services/favoritoService";
 import productoService from "../services/productoService";
@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 import AlertaToast from "../components/AlertaToast";
 import { API_BASE_URL } from "../services/apiConfig";
 import { CarritoContext } from "../context/CarritoContext";
-import { useContext } from "react";
 
 import "../styles/favoritos.css";
 
@@ -15,6 +14,16 @@ const Favoritos = () => {
   const [productos, setProductos] = useState([]);
   const [mostrarAlerta, setMostrarAlerta] = useState(false);
   const [mensajeAlerta, setMensajeAlerta] = useState(null);
+
+  const [toast, setToast] = useState({
+    mostrar: false,
+    mensaje: "",
+    tipo: "info",
+  });
+
+  const mostrarToast = (mensaje, tipo = "info") => {
+    setToast({ mostrar: true, mensaje, tipo });
+  };
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -30,11 +39,13 @@ const Favoritos = () => {
         try {
           await favoritoService.eliminar(usuarioId, productoId, token);
           setProductos((prev) => prev.filter((p) => p.id !== productoId));
+          mostrarToast("Producto eliminado de favoritos", "info");
         } catch (error) {
           console.error(
             "Error al eliminar favorito:",
             error.response?.data || error.message
           );
+          mostrarToast("Error al eliminar el favorito", "error");
         }
       }, 400);
     }
@@ -46,14 +57,8 @@ const Favoritos = () => {
         setMensajeAlerta(
           <>
             Para ver tus favoritos, primero debes{" "}
-            <a href="/login" className="text-primary">
-              iniciar sesión
-            </a>{" "}
-            o{" "}
-            <a href="/registro" className="text-primary">
-              registrarte
-            </a>
-            .
+            <a href="/login" className="text-primary">iniciar sesión</a> o{" "}
+            <a href="/registro" className="text-primary">registrarte</a>.
           </>
         );
         setMostrarAlerta(true);
@@ -68,13 +73,8 @@ const Favoritos = () => {
 
         const productosConDatos = await Promise.all(
           favoritosData.map(async (fav) => {
-            const producto = await productoService.getProductoById(
-              fav.productoId
-            );
-
-            const imagenRes = await imagenProductoService.getByProducto(
-              fav.productoId
-            );
+            const producto = await productoService.getProductoById(fav.productoId);
+            const imagenRes = await imagenProductoService.getByProducto(fav.productoId);
             return {
               ...producto.data,
               imagen: imagenRes.data?.[0]?.url || "/placeholder.jpg",
@@ -95,7 +95,7 @@ const Favoritos = () => {
 
   const handleAddToCart = async (productoId, cantidad = 1) => {
     if (!token) {
-      alert("Debes iniciar sesión para añadir productos al carrito.");
+      mostrarToast("Debes iniciar sesión para añadir productos al carrito", "error");
       return;
     }
 
@@ -118,10 +118,10 @@ const Favoritos = () => {
       }
 
       if (cargarCarrito) await cargarCarrito();
-      alert("Producto añadido al carrito");
+      mostrarToast("Producto añadido al carrito", "elegante");
     } catch (error) {
       console.error("Error en handleAddToCart:", error);
-      alert("Hubo un error. Inténtalo de nuevo.");
+      mostrarToast("Hubo un error. Inténtalo de nuevo.", "error");
     }
   };
 
@@ -174,7 +174,7 @@ const Favoritos = () => {
                 {/* Botones */}
                 <div className="col-md-3 mt-3 mt-md-0 d-flex flex-column gap-2">
                   <button
-                    className="btn btn-outline-secondary btn-sm"
+                    className="btn btn-outline-dark w-100"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleAddToCart(producto.id);
@@ -183,7 +183,7 @@ const Favoritos = () => {
                     Añadir al carrito
                   </button>
                   <button
-                    className="btn btn-outline-danger btn-sm"
+                    className="btn btn-dark w-100"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleEliminarFavorito(producto.id);
@@ -198,14 +198,24 @@ const Favoritos = () => {
         )}
       </main>
 
+      {/* Alertas */}
       <AlertaToast
         mostrar={mostrarAlerta}
         onCerrar={() => setMostrarAlerta(false)}
         titulo="Aviso"
         mensaje={mensajeAlerta}
       />
+
+      <AlertaToast
+        mostrar={toast.mostrar}
+        onCerrar={() => setToast({ ...toast, mostrar: false })}
+        titulo="Notificación"
+        mensaje={toast.mensaje}
+        tipo={toast.tipo}
+      />
     </>
   );
 };
 
 export default Favoritos;
+

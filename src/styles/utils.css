@@ -15,93 +15,132 @@
   margin-bottom: 2rem;
 }
 
-.alert-elegante {
+/* =========================== */
+/* PERSONALIZACIÓN BOTONES BS */
+/* =========================== */
+
+/* Botón dorado (btn-warning) con tu color principal */
+.btn-warning {
   background-color: var(--color-principal);
-  color: var(--color-secundario);
+  color: var(--color-negro);
   border: none;
-  padding: 1rem;
-  border-radius: var(--border-radius);
-  text-align: center;
 }
 
-/* Botón dorado principal */
-.btn-gold {
-  background-color: var(--color-principal);
-  color: var(--color-negro) !important;
-  border: none;
-  padding: 0.5rem 1.3rem;
-  font-weight: bold;
-  border-radius: var(--border-radius);
-  transition: background-color 0.3s ease;
-}
-
-
-.btn-gold:hover {
-  background-color: #b88e3f;
-}
-
-/* Botones de acciones en tabla */
-.btn-accion {
-  padding: 0.4rem 1rem;
-  font-size: 0.85rem;
-  border-radius: var(--border-radius);
-  border: none;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn-editar {
-  background-color: var(--color-principal);
+.btn-warning:hover,
+.btn-warning:focus {
+  background-color: #b88e3f; /* dorado más oscuro */
   color: var(--color-negro);
 }
 
-.btn-editar:hover {
-  background-color: #b88e3f;
-}
-
-.btn-eliminar {
+/* Botón negro (btn-dark) con tipografía y radio personalizado */
+.btn-dark {
   background-color: var(--color-negro);
   color: var(--color-secundario);
   border: none;
-  padding: 0.5rem 1.3rem;
-  font-weight: bold;
+  font-family: var(--font-secundaria);
   border-radius: var(--border-radius);
-  transition: background-color 0.3s ease;
 }
 
-.btn-eliminar:hover {
+.btn-dark:hover,
+.btn-dark:focus {
   background-color: #000;
 }
 
-.btn-claro-inverso {
+/* Botón blanco con borde negro (btn-outline-dark) */
+.btn-outline-dark {
   background-color: transparent;
-  color: var(--color-principal);
-  border: 2px solid var(--color-principal);
-  border-radius: var(--border-radius);
-  padding: 0.4rem 0.9rem;
-  font-weight: bold;
-  font-family: var(--font-secundaria);
-  width: 100%;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.btn-claro-inverso:hover {
-  background-color: var(--color-principal);
   color: var(--color-negro);
+  border: 2px solid var(--color-negro);
+  font-family: var(--font-secundaria);
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
 }
 
-.alerta-exito {
-  background-color: #d1e7dd;
-  color: #0f5132;
-  border-left: 5px solid #198754;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
-  font-size: 0.95rem;
+.btn-outline-dark:hover,
+.btn-outline-dark:focus {
+  background-color: var(--color-negro);
+  color: var(--color-secundario);
+}
+
+/* Botón negro con borde blanco (btn-outline-light) — opcional */
+.btn-outline-light {
+  background-color: var(--color-negro);
+  color: var(--color-secundario);
+  border: 2px solid var(--color-secundario);
+  font-family: var(--font-secundaria);
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+}
+
+.btn-outline-light:hover,
+.btn-outline-light:focus {
+  background-color: transparent;
+  color: var(--color-negro);
+  border-color: var(--color-negro);
+}
+
+
+/* ALERTAS TIPO TOAST UNIFICADAS */
+
+.alerta-elegante {
+  background-color: var(--color-principal); /* dorado */
+  color: var(--color-negro);
+  border-left: 5px solid var(--color-negro);
+  padding: 1rem;
+  border-radius: var(--border-radius);
   text-align: center;
+  font-weight: bold;
 }
 
+.alerta-error {
+  background-color: #f8d7da;
+  color: #842029;
+  border-left: 5px solid #dc3545;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-weight: bold;
+}
 
+.alerta-info {
+  background-color: #f0f0f0;
+  color: #333;
+  border-left: 5px solid #ccc;
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+  font-weight: bold;
+}
+
+.toast {
+  min-height: 4rem !important; 
+  display: flex;
+  align-items: center;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  border-radius: var(--border-radius);
+}
+
+@keyframes toastFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast.show {
+  animation: toastFadeIn 0.5s ease-out forwards;
+}
+
+@media (max-width: 768px) {
+  .toast {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+}
 
 
 

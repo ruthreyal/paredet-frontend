@@ -375,7 +375,7 @@ const FormularioProducto = ({ modo = "crear" }) => {
           </button>
 
           {modo === "editar" && (
-            <button type="button" className="btn-gold" onClick={handleEliminar}>
+            <button type="button" className="btn btn-dark w-40" onClick={handleEliminar}>
               Eliminar producto
             </button>
           )}

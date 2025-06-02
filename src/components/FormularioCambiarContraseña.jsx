@@ -1,5 +1,5 @@
 import React from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaExclamationCircle } from "react-icons/fa";
 
 const FormularioCambiarContraseña = ({
   contrasenaActual,
@@ -9,14 +9,19 @@ const FormularioCambiarContraseña = ({
   verNueva,
   setVerNueva,
   handleChange,
-  handleSubmit
+  handleSubmit,
+  errors = {}
 }) => {
   return (
     <form onSubmit={handleSubmit}>
-      <h5 className="mb-3">Cambiar contraseña <span aria-hidden="true">*</span></h5>
+      <h5 className="mb-3">
+        Cambiar contraseña <span aria-hidden="true">*</span>
+      </h5>
 
       <div className="mb-3 position-relative">
-        <label htmlFor="contrasenaActual">Contraseña actual <span aria-hidden="true">*</span></label>
+        <label htmlFor="contrasenaActual">
+          Contraseña actual <span aria-hidden="true">*</span>
+        </label>
         <div className="input-icon-wrapper">
           <input
             id="contrasenaActual"
@@ -32,13 +37,21 @@ const FormularioCambiarContraseña = ({
             onClick={() => setVerActual(!verActual)}
             aria-label="Mostrar u ocultar contraseña actual"
           >
-            {verActual ? <FaEye /> : <FaEyeSlash /> }
+            {verActual ? <FaEye /> : <FaEyeSlash />}
           </span>
         </div>
+        {errors?.contrasenaActual && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.contrasenaActual}
+          </div>
+        )}
       </div>
 
       <div className="mb-3 position-relative">
-        <label htmlFor="nuevaPassword">Nueva contraseña</label>
+        <label htmlFor="nuevaPassword">
+          Nueva contraseña <span aria-hidden="true">*</span>
+        </label>
         <div className="input-icon-wrapper">
           <input
             id="nuevaPassword"
@@ -55,9 +68,15 @@ const FormularioCambiarContraseña = ({
             onClick={() => setVerNueva(!verNueva)}
             aria-label="Mostrar u ocultar nueva contraseña"
           >
-            {verNueva ? <FaEye /> : <FaEyeSlash /> }
+            {verNueva ? <FaEye /> : <FaEyeSlash />}
           </span>
         </div>
+        {errors?.nuevaPassword && (
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.nuevaPassword}
+          </div>
+        )}
       </div>
 
       <button type="submit" className="btn btn-dark w-100">
@@ -68,3 +87,4 @@ const FormularioCambiarContraseña = ({
 };
 
 export default FormularioCambiarContraseña;
+

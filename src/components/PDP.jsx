@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import productoService from "../services/productoService";
 import imagenProductoService from "../services/imagenProductoService";
 import "../styles/pdp.css";
+import AlertaToast from "../components/AlertaToast";
+
 import {
   FaTimes,
   FaChevronLeft,
@@ -27,6 +29,18 @@ const PDP = () => {
   const usuarioId = decoded?.id || null;
   const [cantidad, setCantidad] = useState(1);
   const [esFavorito, setEsFavorito] = useState(false);
+  const [toast, setToast] = useState({
+    mostrar: false,
+    mensaje: "",
+    tipo: "info",
+  });
+
+  const mostrarToast = (mensaje, tipo = "info") => {
+    setToast({ mostrar: true, mensaje, tipo });
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, mostrar: false }));
+    }, 4000);
+  };
 
   const { cargarCarrito } = useContext(CarritoContext);
 
@@ -40,38 +54,39 @@ const PDP = () => {
     }
   };
 
- const handleAddToCart = async () => {
-  if (!token || isTokenExpired(token)) {
-    alert("Debes iniciar sesión para añadir al carrito.");
-    return;
-  }
+  const handleAddToCart = async () => {
+    if (!token || isTokenExpired(token)) {
+      mostrarToast("Debes iniciar sesión para añadir al carrito", "info");
 
-  const payload = { productoId: id, cantidad };
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
-  };
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/carrito/add`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(errorText || "Error al añadir producto al carrito");
+      return;
     }
 
-    alert("Producto añadido al carrito ✅");
-    if (cargarCarrito) await cargarCarrito();
-  } catch (error) {
-    console.error("Error en handleAddToCart:", error);
-    alert("Hubo un error. Inténtalo de nuevo.");
-  }
-};
+    const payload = { productoId: id, cantidad };
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
 
+    try {
+      const response = await fetch(`${API_BASE_URL}/carrito/add`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Error al añadir producto al carrito");
+      }
+
+      mostrarToast("Producto añadido al carrito.", "elegante");
+
+      if (cargarCarrito) await cargarCarrito();
+    } catch (error) {
+      mostrarToast("Producto añadido al carrito.", "error");
+
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -117,7 +132,8 @@ const PDP = () => {
 
   const toggleFavorito = async () => {
     if (!token || isTokenExpired(token)) {
-      alert("Debes iniciar sesión para usar favoritos.");
+      mostrarToast("Debes iniciar sesión para usar favoritos.", "info");
+
       return;
     }
 
@@ -130,8 +146,8 @@ const PDP = () => {
         setEsFavorito(true);
       }
     } catch (error) {
-      console.error("Error al actualizar favorito:", error);
-      alert("Hubo un error. Inténtalo de nuevo.");
+      mostrarToast("Hubo un error intentelo de nuevo.", "error");
+
     }
   };
 
@@ -150,121 +166,133 @@ const PDP = () => {
   if (!producto) return <p>Cargando producto...</p>;
 
   return (
-    <div className="pdp-container">
-      <div className="pdp-galeria">
-        <img
-          src={imagenActiva}
-          alt={producto.nombre}
-          className="imagen-principal"
-          onClick={() =>
-            abrirLightbox(imagenes.findIndex((img) => img.url === imagenActiva))
-          }
-        />
-        <div className="miniaturas">
-          {imagenes.map((img, idx) => (
-            <img
-              key={idx}
-              src={img.url}
-              alt={`Miniatura ${idx + 1}`}
-              onClick={() => {
-                setImagenActiva(img.url);
-                abrirLightbox(idx);
-              }}
-              className={imagenActiva === img.url ? "activa" : ""}
-            />
-          ))}
-        </div>
-      </div>
+    <>
+      <AlertaToast
+        mostrar={toast.mostrar}
+        onCerrar={() => setToast({ ...toast, mostrar: false })}
+        titulo="Notificación"
+        mensaje={toast.mensaje}
+        tipo={toast.tipo}
+      />
 
-      <div className="pdp-info">
-        <h1>{producto.nombre}</h1>
-        <p>
-          <strong>Referencia:</strong> {producto.referencia}
-        </p>
-        <p>{producto.descripcion}</p>
-
-        <div className="caracteristicas">
-          <h2>Características técnicas</h2>
-          {producto.formato && (
-            <p>
-              <strong>Formato:</strong> {producto.formato}
-            </p>
-          )}
-          {producto.tipoAplicacion && (
-            <p>
-              <strong>Aplicación:</strong> {producto.tipoAplicacion}
-            </p>
-          )}
-          {producto.peso && (
-            <p>
-              <strong>Peso:</strong> {producto.peso} g/m²
-            </p>
-          )}
-          {producto.familia && (
-            <p>
-              <strong>Familia:</strong> {producto.familia}
-            </p>
-          )}
-        </div>
-
-        <div className="acciones-pdp">
-          <div
-            onClick={toggleFavorito}
-            className={`favorito-toggle ${esFavorito ? "activo" : ""}`}
-            role="button"
-            tabIndex={0}
-            aria-label={
-              esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"
+      <div className="pdp-container">
+        <div className="pdp-galeria">
+          <img
+            src={imagenActiva}
+            alt={producto.nombre}
+            className="imagen-principal"
+            onClick={() =>
+              abrirLightbox(
+                imagenes.findIndex((img) => img.url === imagenActiva)
+              )
             }
-          >
-            {esFavorito ? <FaHeart /> : <FaRegHeart />}{" "}
-            {esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"}
+          />
+          <div className="miniaturas">
+            {imagenes.map((img, idx) => (
+              <img
+                key={idx}
+                src={img.url}
+                alt={`Miniatura ${idx + 1}`}
+                onClick={() => {
+                  setImagenActiva(img.url);
+                  abrirLightbox(idx);
+                }}
+                className={imagenActiva === img.url ? "activa" : ""}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="pdp-info">
+          <h1>{producto.nombre}</h1>
+          <p>
+            <strong>Referencia:</strong> {producto.referencia}
+          </p>
+          <p>{producto.descripcion}</p>
+
+          <div className="caracteristicas">
+            <h2>Características técnicas</h2>
+            {producto.formato && (
+              <p>
+                <strong>Formato:</strong> {producto.formato}
+              </p>
+            )}
+            {producto.tipoAplicacion && (
+              <p>
+                <strong>Aplicación:</strong> {producto.tipoAplicacion}
+              </p>
+            )}
+            {producto.peso && (
+              <p>
+                <strong>Peso:</strong> {producto.peso} g/m²
+              </p>
+            )}
+            {producto.familia && (
+              <p>
+                <strong>Familia:</strong> {producto.familia}
+              </p>
+            )}
           </div>
 
-          <div className="cantidad-carrito">
-            <label htmlFor="cantidad">Cantidad:</label>
-            <input
-              id="cantidad"
-              type="number"
-              min="1"
-              value={cantidad}
-              onChange={(e) => setCantidad(parseInt(e.target.value) || 1)}
-            />
-            <button className="btn-personalizado" onClick={handleAddToCart}>
-              Añadir al carrito
+          <div className="acciones-pdp">
+            <div
+              onClick={toggleFavorito}
+              className={`favorito-toggle ${esFavorito ? "activo" : ""}`}
+              role="button"
+              tabIndex={0}
+              aria-label={
+                esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"
+              }
+            >
+              {esFavorito ? <FaHeart /> : <FaRegHeart />}{" "}
+              {esFavorito ? "Quitar de favoritos" : "Añadir a favoritos"}
+            </div>
+
+            <div className="cantidad-carrito">
+              <label htmlFor="cantidad">Cantidad:</label>
+              <input
+                id="cantidad"
+                type="number"
+                min="1"
+                value={cantidad}
+                onChange={(e) => setCantidad(parseInt(e.target.value) || 1)}
+              />
+              <button className="btn btn-outline-dark w-100" onClick={handleAddToCart}>
+                Añadir al carrito
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {lightboxAbierto && (
+          <div className="lightbox">
+            <button
+              className="cerrar"
+              aria-label="Cerrar galería"
+              onClick={cerrarLightbox}
+            >
+              <FaTimes />
+            </button>
+
+            <button
+              className="flecha izq"
+              onClick={() => cambiarImagen(-1)}
+              aria-label="Anterior"
+            >
+              <FaChevronLeft />
+            </button>
+            <img src={imagenes[indexImagen].url} alt="Imagen ampliada" />
+            <button
+              className="flecha der"
+              onClick={() => cambiarImagen(1)}
+              aria-label="Siguiente"
+            >
+              <FaChevronRight />
             </button>
           </div>
-        </div>
+        )}
       </div>
-
-      {lightboxAbierto && (
-        <div className="lightbox">
-          <button
-            className="cerrar"
-            aria-label="Cerrar galería"
-            onClick={cerrarLightbox}
-          >
-            <FaTimes />
-          </button>
-
-          <button
-            className="flecha izq"
-            onClick={() => cambiarImagen(-1)}
-            aria-label="Anterior"
-          >
-            <FaChevronLeft />
-          </button>
-          <img src={imagenes[indexImagen].url} alt="Imagen ampliada" />
-          <button
-            className="flecha der"
-            onClick={() => cambiarImagen(1)}
-            aria-label="Siguiente"
-          >
-            <FaChevronRight />
-          </button>
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 

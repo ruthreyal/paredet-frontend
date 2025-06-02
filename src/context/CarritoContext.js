@@ -1,4 +1,10 @@
-import React, { createContext, useState, useEffect, useContext, useMemo } from "react";
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  useMemo,
+} from "react";
 import carritoService from "../services/carritoService";
 import { AuthContext } from "./AuthContext";
 import axios from "axios";
@@ -13,7 +19,7 @@ const CarritoProvider = ({ children }) => {
   const [mensajeCompra, setMensajeCompra] = useState("");
 
   const cargarCarrito = async () => {
-    if (!usuario || !token) return;
+    if (!usuario || !token || usuario.rol === "ADMIN") return;
 
     try {
       const items = await carritoService.obtenerPorUsuario(token);
@@ -48,7 +54,11 @@ const CarritoProvider = ({ children }) => {
 
   const actualizarCantidad = async (carritoItemId, nuevaCantidad) => {
     try {
-      await carritoService.actualizarCantidad(carritoItemId, nuevaCantidad, token);
+      await carritoService.actualizarCantidad(
+        carritoItemId,
+        nuevaCantidad,
+        token
+      );
       await cargarCarrito();
     } catch (error) {
       console.error("Error al actualizar cantidad:", error);
@@ -56,46 +66,42 @@ const CarritoProvider = ({ children }) => {
   };
 
   const finalizarCompra = async () => {
-  try {
-    await axios.post(
-      `${API_BASE_URL}/pedidos/realizar`,
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    setCarrito([]);
-    setTotalCarrito(0);
-    alert("Gracias por tu compra");
-    await cargarCarrito();
-  } catch (error) {
-    console.error("Error al finalizar compra:", error);
-    alert("No se pudo completar el pedido");
-  }
-};
+    try {
+      await axios.post(
+        `${API_BASE_URL}/pedidos/realizar`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return true;
+    } catch (error) {
+      console.error("Error al finalizar compra:", error);
+      return false;
+    }
+  };
 
-
-  const value = useMemo(() => ({
-    carrito,
-    totalCarrito,
-    cargarCarrito,
-    calcularTotal,
-    eliminarDelCarrito,
-    actualizarCantidad,
-    finalizarCompra,
-    mensajeCompra,
-    setMensajeCompra,
-  }), [carrito, totalCarrito, mensajeCompra]);
+  const value = useMemo(
+    () => ({
+      carrito,
+      totalCarrito,
+      cargarCarrito,
+      calcularTotal,
+      eliminarDelCarrito,
+      actualizarCantidad,
+      finalizarCompra,
+      mensajeCompra,
+      setMensajeCompra,
+    }),
+    [carrito, totalCarrito, mensajeCompra]
+  );
 
   return (
-    <CarritoContext.Provider value={value}>
-      {children}
-    </CarritoContext.Provider>
+    <CarritoContext.Provider value={value}>{children}</CarritoContext.Provider>
   );
 };
 
 export default CarritoProvider;
-
 

@@ -21,14 +21,14 @@ const AdminLayout = () => {
 
   // Rutas del panel de administración
   const rutasAdmin = [
-  { path: "/admin", label: "Dashboard" },
-  { path: "/admin/productos", label: "Productos" },
-  { path: "/admin/pedidos", label: "Pedidos" },
-  { path: "/admin/usuarios", label: "Usuarios" },
-  { path: "/admin/categorias", label: "Categorías" },
-  { path: "/admin/colecciones", label: "Colecciones" },
-  { path: "/", label: "Ir a la web" }
-];
+    { path: "/admin", label: "Dashboard" },
+    { path: "/admin/productos", label: "Productos" },
+    { path: "/admin/pedidos", label: "Pedidos" },
+    { path: "/admin/usuarios", label: "Usuarios" },
+    { path: "/admin/categorias", label: "Categorías" },
+    { path: "/admin/colecciones", label: "Colecciones" },
+    { path: "/", label: "Ir a la web" },
+  ];
 
   return (
     <div className="admin-container d-flex flex-column flex-lg-row">
@@ -43,8 +43,8 @@ const AdminLayout = () => {
           <span></span>
           <span></span>
         </button>
-        <h4 className="text-white m-0">Panel Admin</h4>
-        <button onClick={handleLogout} className="btn-cerrar-sesion">
+        <h4 className="btn-outline-dark">Panel Admin</h4>
+        <button onClick={handleLogout} className="btn btn-outline-light">
           Cerrar sesión
         </button>
       </div>
@@ -60,7 +60,11 @@ const AdminLayout = () => {
           <ul className="nav flex-column">
             {rutasAdmin.map(({ path, label }) => (
               <li key={path}>
-                <Link to={path} className="nav-link" onClick={handleCloseMenuIfMobile}>
+                <Link
+                  to={path}
+                  className="nav-link"
+                  onClick={handleCloseMenuIfMobile}
+                >
                   {label}
                 </Link>
               </li>
@@ -69,7 +73,7 @@ const AdminLayout = () => {
         </div>
 
         <div className="logout-wrapper text-center mt-auto d-none d-lg-block">
-          <button onClick={handleLogout} className="btn-claro-inverso">
+          <button onClick={handleLogout} className="btn btn-outline-light">
             Cerrar sesión
           </button>
         </div>
@@ -84,4 +88,3 @@ const AdminLayout = () => {
 };
 
 export default AdminLayout;
-

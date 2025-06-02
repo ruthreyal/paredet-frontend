@@ -6,6 +6,7 @@ import registroService from "../services/registroService";
 import { AuthContext } from "../context/AuthContext";
 import UsuarioForm from "../components/UsuarioForm";
 import FormularioContraseñaNueva from "../components/FormularioContraseñaNueva";
+import AlertaToast from "../components/AlertaToast";
 
 const Registro = () => {
   const [formData, setFormData] = useState({
@@ -34,6 +35,12 @@ const Registro = () => {
       [e.target.name]: e.target.value,
     }));
   };
+
+  const [toast, setToast] = useState({
+    mostrar: false,
+    mensaje: "",
+    tipo: "elegante",
+  });
 
   const validarFormulario = async () => {
     const nuevosErrores = {};
@@ -114,7 +121,14 @@ const Registro = () => {
     try {
       const token = await registroService.registerPublic(usuarioARegistrar);
       login(token);
-      navigate("/");
+      setToast({
+        mostrar: true,
+        mensaje: "Usuario registrado con éxito",
+        tipo: "elegante",
+      });
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
     } catch (error) {
       if (error.response && error.response.data?.mensaje) {
         setErrors({ general: error.response.data.mensaje });
@@ -125,50 +139,59 @@ const Registro = () => {
   };
 
   return (
-    <main
-      className="container d-flex justify-content-center align-items-center"
-      style={{ minHeight: "80vh", paddingTop: "3rem", paddingBottom: "3rem" }}
-    >
-      <section
-        className="form-box d-flex flex-column justify-content-between"
-        style={{ maxWidth: "500px", width: "100%" }}
-        aria-labelledby="registro"
+    <>
+      <AlertaToast
+        mostrar={toast.mostrar}
+        onCerrar={() => setToast({ ...toast, mostrar: false })}
+        titulo="¡Registro exitoso!"
+        mensaje={toast.mensaje}
+        tipo={toast.tipo}
+      />
+      <main
+        className="container d-flex justify-content-center align-items-center"
+        style={{ minHeight: "80vh", paddingTop: "3rem", paddingBottom: "3rem" }}
       >
-        <h2 id="registro" className="section-title">
-          Formulario de registro
-        </h2>
-        <form
-          onSubmit={handleSubmit}
-          aria-label="Formulario de registro de usuario"
-          noValidate
+        <section
+          className="form-box d-flex flex-column justify-content-between"
+          style={{ maxWidth: "500px", width: "100%" }}
+          aria-labelledby="registro"
         >
-          <UsuarioForm
-            formData={formData}
-            handleChange={handleChange}
-            readonlyEmail={false}
-            isAdmin={false}
-            errors={errors}
+          <h2 id="registro" className="section-title">
+            Formulario de registro
+          </h2>
+          <form
             onSubmit={handleSubmit}
+            aria-label="Formulario de registro de usuario"
             noValidate
-          />
+          >
+            <UsuarioForm
+              formData={formData}
+              handleChange={handleChange}
+              readonlyEmail={false}
+              isAdmin={false}
+              errors={errors}
+              onSubmit={handleSubmit}
+              noValidate
+            />
 
-          <FormularioContraseñaNueva
-            password={formData.password}
-            repetirPassword={formData.repetirPassword}
-            verPassword={verPassword}
-            setVerPassword={setVerPassword}
-            verRepetir={verRepetir}
-            setVerRepetir={setVerRepetir}
-            handleChange={handleChange}
-            errors={errors}
-          />
+            <FormularioContraseñaNueva
+              password={formData.password}
+              repetirPassword={formData.repetirPassword}
+              verPassword={verPassword}
+              setVerPassword={setVerPassword}
+              verRepetir={verRepetir}
+              setVerRepetir={setVerRepetir}
+              handleChange={handleChange}
+              errors={errors}
+            />
 
-          <button type="submit" className="btn btn-outline-dark w-100 mt-2">
-            <FaUserPlus className="me-2" /> Registrarse
-          </button>
-        </form>
-      </section>
-    </main>
+            <button type="submit" className="btn btn-outline-dark w-100 mt-2">
+              <FaUserPlus className="me-2" /> Registrarse
+            </button>
+          </form>
+        </section>
+      </main>
+    </>
   );
 };
 

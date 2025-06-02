@@ -331,6 +331,12 @@
   color: var(--color-secundario);
 }
 
+.badge-carrito {
+  background-color: var(--color-principal) !important;
+  color: #fff !important;
+  font-weight: bold;
+}
+
 
 
 

@@ -110,10 +110,12 @@
 }
 
 .form-error {
-  color: #850b05;
-  font-size: 0.875rem;
+  color: #dc3545;
+  font-size: 0.9rem;
   margin-top: 0.25rem;
+  display: block;
 }
+
 
 .icono-error {
   margin-right: 0.5rem;
@@ -167,11 +169,12 @@
 
 .input-field {
   width: 100%;
-  padding: 0.75rem 2.5rem 0.75rem 1rem;
-  border: 1px solid #ccc;
-  border-radius: var(--border-radius);
+  padding: 0.45rem 0.75rem;
   font-size: 1rem;
-  font-family: inherit;
+  font-family: var(--font-secundaria);
+  border: 1px solid #ced4da;
+  border-radius: var(--border-radius);
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .eye-icon {
@@ -210,20 +213,15 @@
   width: 100%;
 }
 
+.react-select-error .react-select__control {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
 
+.invalid-feedback {
+  font-size: 0.9rem;
+  color: #dc3545;
+  display: block;
+  margin-top: 0.25rem;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-  

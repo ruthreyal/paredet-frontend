@@ -25,7 +25,7 @@ const AdminProductos = () => {
       <h2 className="section-title">Gestión de Productos</h2>
 
       <button
-        className="btn-gold mb-3"
+        className="btn btn-outline-dark w-40"
         onClick={() => navigate("/admin/productos/crear")}
       >
         + Crear producto

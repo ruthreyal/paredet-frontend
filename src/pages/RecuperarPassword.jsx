@@ -2,12 +2,24 @@ import React, { useState } from "react";
 import registroService from "../services/registroService";
 import authService from "../services/authService";
 import { FaExclamationCircle } from "react-icons/fa";
+import AlertaToast from "../components/AlertaToast";
 import "../styles/formularios.css";
 
 const RecuperarPassword = () => {
   const [email, setEmail] = useState("");
-  const [mensaje, setMensaje] = useState("");
   const [errors, setErrors] = useState({});
+  const [toast, setToast] = useState({
+    mostrar: false,
+    mensaje: "",
+    tipo: "info",
+  });
+
+  const mostrarToast = (mensaje, tipo = "info") => {
+    setToast({ mostrar: true, mensaje, tipo });
+    setTimeout(() => {
+      setToast((prev) => ({ ...prev, mostrar: false }));
+    }, 4000);
+  };
 
   const validar = () => {
     const nuevosErrores = {};
@@ -19,7 +31,6 @@ const RecuperarPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMensaje(""); // Limpia mensaje anterior
     const nuevosErrores = validar();
 
     if (Object.keys(nuevosErrores).length > 0) {
@@ -28,9 +39,7 @@ const RecuperarPassword = () => {
     }
 
     try {
-      console.log("📩 Comprobando si existe el email:", email);
       const existe = await registroService.emailExiste(email);
-
       if (!existe) {
         setErrors({
           email: "El email no corresponde a ningún usuario registrado.",
@@ -38,25 +47,17 @@ const RecuperarPassword = () => {
         return;
       }
 
-      console.log("✅ Email válido, enviando solicitud de recuperación...");
-
       await authService.solicitarRecuperacion(email);
-
-      setMensaje("Enlace de recuperación enviado al correo indicado.");
       setErrors({});
-      setTimeout(() => setMensaje(""), 3000);
-
+      setEmail("");
+      mostrarToast("Enlace de recuperación enviado al correo indicado.", "elegante");
     } catch (error) {
-  console.error("❌ Error al solicitar recuperación:", error);
-
-  const mensajeError =
-    error.response?.data?.error || 
-    error.response?.data?.mensaje || 
-    "Ha ocurrido un error al procesar la solicitud.";
-
-  setMensaje(mensajeError);
-}
-
+      const mensajeError =
+        error.response?.data?.error ||
+        error.response?.data?.mensaje ||
+        "Ha ocurrido un error al procesar la solicitud.";
+      mostrarToast(mensajeError, "error");
+    }
   };
 
   return (
@@ -64,6 +65,14 @@ const RecuperarPassword = () => {
       className="container login container"
       style={{ minHeight: "80vh", paddingTop: "3rem", paddingBottom: "3rem" }}
     >
+      <AlertaToast
+        mostrar={toast.mostrar}
+        onCerrar={() => setToast({ ...toast, mostrar: false })}
+        titulo="Notificación"
+        mensaje={toast.mensaje}
+        tipo={toast.tipo}
+      />
+
       <section
         className="form-box"
         style={{ maxWidth: "500px", width: "100%" }}
@@ -94,16 +103,12 @@ const RecuperarPassword = () => {
               </div>
             )}
           </div>
+
           <div className="mb-3">
             <button className="btn btn-outline-dark w-100" type="submit">
               Enviar enlace
             </button>
           </div>
-          {mensaje && (
-            <div className="form-success mt-3 text-center" role="status">
-              {mensaje}
-            </div>
-          )}
         </form>
       </section>
     </main>
@@ -111,4 +116,5 @@ const RecuperarPassword = () => {
 };
 
 export default RecuperarPassword;
+
 

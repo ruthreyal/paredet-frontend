@@ -5,7 +5,12 @@ import registroService from "../../services/registroService";
 import usuarioService from "../../services/usuarioService";
 import "../../styles/formularios.css";
 
-const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar, token }) => {
+const FormularioCrearUsuario = ({
+  usuarioInicial,
+  onUsuarioGuardado,
+  onCancelar,
+  token,
+}) => {
   const esEdicion = Boolean(usuarioInicial);
 
   const [formData, setFormData] = useState({
@@ -47,11 +52,17 @@ const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar,
     const nuevosErrores = {};
 
     // Validaciones generales
-    if (!formData.nombre.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
+    if (
+      !formData.nombre.trim() ||
+      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)
+    ) {
       nuevosErrores.nombre = "El nombre solo debe contener letras.";
     }
 
-    if (!formData.apellido.trim() || !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)) {
+    if (
+      !formData.apellido.trim() ||
+      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)
+    ) {
       nuevosErrores.apellido = "El apellido solo debe contener letras.";
     }
 
@@ -77,7 +88,8 @@ const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar,
     }
 
     if (formData.codigoPostal && formData.codigoPostal.length > 10) {
-      nuevosErrores.codigoPostal = "El código postal no puede tener más de 10 caracteres.";
+      nuevosErrores.codigoPostal =
+        "El código postal no puede tener más de 10 caracteres.";
     }
 
     if (!esEdicion || mostrarPassword) {
@@ -85,7 +97,8 @@ const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar,
         formData.password.length < 8 ||
         !/(?=.*[A-Za-z])(?=.*\d)/.test(formData.password)
       ) {
-        nuevosErrores.password = "La contraseña debe tener al menos 8 caracteres, una letra y un número.";
+        nuevosErrores.password =
+          "La contraseña debe tener al menos 8 caracteres, una letra y un número.";
       }
 
       if (formData.password !== formData.repetirPassword) {
@@ -108,7 +121,11 @@ const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar,
 
     try {
       if (esEdicion) {
-        await usuarioService.actualizarUsuario(usuarioInicial.email, payload, token);
+        await usuarioService.actualizarUsuario(
+          usuarioInicial.email,
+          payload,
+          token
+        );
         setErrors({ exito: "Usuario actualizado correctamente." });
       } else {
         await registroService.registerConToken(payload, token);
@@ -124,10 +141,30 @@ const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar,
     setTimeout(() => setErrors({}), 4000);
   };
 
+  const handleEliminar = async () => {
+    const confirmacion = window.confirm(
+      "¿Estás segura de que deseas eliminar este usuario?"
+    );
+    if (!confirmacion) return;
+
+    try {
+      await usuarioService.eliminarUsuario(usuarioInicial.email, token);
+      if (onUsuarioGuardado) onUsuarioGuardado();
+    } catch (error) {
+      setErrors({ general: "Error al eliminar el usuario." });
+      console.error(
+        "Error al eliminar:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   return (
     <section className="form-box formulario-panel-admin">
       <div className="header-flex mb-5">
-        <h2 className="section-title mb-0">{esEdicion ? "Perfil" : "Registro"}</h2>
+        <h2 className="section-title mb-0">
+          {esEdicion ? "Perfil" : "Registro"}
+        </h2>
         {onCancelar && (
           <button
             type="button"
@@ -140,7 +177,11 @@ const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar,
         )}
       </div>
 
-      <form onSubmit={handleSubmit} aria-label="Formulario usuario" className="mb-4 formulario-panel-admin">
+      <form
+        onSubmit={handleSubmit}
+        aria-label="Formulario usuario"
+        className="mb-4 formulario-panel-admin"
+      >
         <UsuarioForm
           formData={formData}
           handleChange={handleChange}
@@ -157,7 +198,10 @@ const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar,
             aria-expanded={mostrarPassword}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && setMostrarPassword(!mostrarPassword)}
+            onKeyDown={(e) =>
+              (e.key === "Enter" || e.key === " ") &&
+              setMostrarPassword(!mostrarPassword)
+            }
           >
             {mostrarPassword ? "Ocultar contraseña ▲" : "Cambiar contraseña ▼"}
           </p>
@@ -188,9 +232,19 @@ const FormularioCrearUsuario = ({ usuarioInicial, onUsuarioGuardado, onCancelar,
           </div>
         )}
 
-        <button type="submit" className="btn btn-outline-dark w-100 mt-2">
+        <button type="submit" className="btn btn-outline-dark w-100">
           {esEdicion ? "Guardar cambios" : "Guardar usuario"}
         </button>
+        {esEdicion && (
+          <button
+            type="button"
+            className="btn btn-dark w-100 mt-4"
+            onClick={handleEliminar}
+            aria-label="Eliminar usuario"
+          >
+            Eliminar usuario
+          </button>
+        )}
       </form>
     </section>
   );
