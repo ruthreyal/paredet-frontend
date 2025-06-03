@@ -5,6 +5,16 @@
   display: flex;
 }
 
+.navbar .nav-link,
+.navbar .dropdown-toggle,
+.dropdown-menu-oscuro a,
+.submenu-desplegable a,
+.mobile-menu .nav-link {
+  color: var(--color-secundario);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
 .navbar-nav .nav-link {
   font-size: 1rem;
   font-weight: 500;
@@ -337,7 +347,14 @@
   font-weight: bold;
 }
 
-
+/* Efecto hover dorado */
+.navbar .nav-link:hover,
+.navbar .dropdown-toggle:hover,
+.dropdown-menu-oscuro a:hover,
+.submenu-desplegable a:hover,
+.mobile-menu .nav-link:hover {
+  color: var(--color-principal);
+}
 
 
 

@@ -238,6 +238,7 @@
 .cuadrada .imagen-wrapper {
   aspect-ratio: 1 / 1;
   height: auto;
+  transition: none !important;
 }
 
 .card-producto {

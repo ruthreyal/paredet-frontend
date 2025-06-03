@@ -146,7 +146,7 @@ const ColeccionPage = () => {
             <Link
               to={`/producto/${producto.id}`}
               key={producto.id}
-              className="card-producto"
+              className="card-producto cuadrada sin-animacion"
             >
               <div className="imagen-wrapper">
                 <img
