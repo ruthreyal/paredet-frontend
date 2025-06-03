@@ -35,7 +35,7 @@ const Footer = () => {
         mostrar={mostrarAlerta}
         onCerrar={() => setMostrarAlerta(false)}
         tipo="info"
-        mensaje={`La página de ${redSocial} está en construcción`}
+        mensaje={`La página de ${redSocial} está en construcción.`}
       />
     </footer>
   );
