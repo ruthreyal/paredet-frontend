@@ -239,7 +239,7 @@
 }
 
 .favorito-toggle.activo {
-  color: #e60023; 
+  color: --color-princial; 
 }
 
 .cantidad-carrito {
@@ -253,6 +253,12 @@
   font-weight: 500;
 }
 
+#cantidad {
+  width: 60px !important;
+  padding: 0.3rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
 
 
 

@@ -13,6 +13,7 @@
   font-size: 2rem;
   color: var(--color-texto);
   margin-bottom: 0;
+  padding-top: 65px;
 }
 
 .lista-favoritos {

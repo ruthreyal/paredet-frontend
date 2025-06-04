@@ -114,7 +114,7 @@ const RestablecerPassword = () => {
           />
 
           <div className="mb-3">
-            <button className="btn-claro-inverso w-100" type="submit">
+            <button className="btn btn-outline-dark w-100" type="submit">
               Guardar nueva contraseña
             </button>
           </div>

@@ -43,14 +43,15 @@ const AlertaToast = ({
       <div className={`toast show ${clase}`} role="alert" aria-atomic="true">
         <div className="d-flex align-items-center gap-2">
           {tipo === "elegante" && (
-            <FaCheckCircle style={{ color: "var(--color-principal)", fontSize: "1.3rem" }} />
+            <FaCheckCircle style={{ color: "var(--color-principal)", fontSize: "3rem", padding: "3px", textAlign: "center" }} />
           )}
           {tipo === "error" && (
-            <FaTimesCircle style={{ color: "#dc3545", fontSize: "1.3rem" }} />
+            <FaTimesCircle style={{ color: "#dc3545", fontSize: "3rem", padding: "3px", textAlign: "center" }} />
           )}
           {tipo === "info" && (
-            <FaInfoCircle style={{ color: "var(--color-principal)", fontSize: "1.3rem" }} />
+            <FaInfoCircle style={{ color: "var(--color-principal)", fontSize: "1.5rem", padding: "3px", textAlign: "center"}} />
           )}
+          <br/>
           <span>{mensaje}</span>
         </div>
       </div>
