@@ -83,6 +83,11 @@ const CarritoProvider = ({ children }) => {
     }
   };
 
+  const vaciarCarrito = () => {
+    setCarrito([]);
+    setTotalCarrito(0);
+  };
+
   const value = useMemo(
     () => ({
       carrito,
@@ -94,6 +99,7 @@ const CarritoProvider = ({ children }) => {
       finalizarCompra,
       mensajeCompra,
       setMensajeCompra,
+      vaciarCarrito,
     }),
     [carrito, totalCarrito, mensajeCompra]
   );
@@ -104,4 +110,3 @@ const CarritoProvider = ({ children }) => {
 };
 
 export default CarritoProvider;
-

@@ -12,11 +12,12 @@ const Navbar = () => {
   const [showColecciones, setShowColecciones] = useState(false);
   const toggleColecciones = () => setShowColecciones(!showColecciones);
   const { totalCarrito } = useContext(CarritoContext);
-
+  const { vaciarCarrito } = useContext(CarritoContext);
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleProfileMenu = () => setIsProfileMenuOpen(!isProfileMenuOpen);
 
   const handleLogout = () => {
+    vaciarCarrito();
     logout();
     setIsProfileMenuOpen(false);
     navigate("/");
