@@ -299,8 +299,8 @@
 
 .submenu-desplegable a:hover,
 .submenu-desplegable button:hover {
-  color: var(--color-principal);
-  background-color: #2a2a2a;
+  color: var(--color-fondo);
+  background-color: --color-negro;
   border-radius: 4px;
 }
 
@@ -342,8 +342,8 @@
 }
 
 .badge-carrito {
-  background-color: var(--color-principal) !important;
-  color: #fff !important;
+  background-color: var(--color-secundario) !important;
+  color: #1c1c1c !important;
   font-weight: bold;
 }
 
