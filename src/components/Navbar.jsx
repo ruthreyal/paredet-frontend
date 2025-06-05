@@ -186,7 +186,7 @@ const Navbar = () => {
           <Link to="/carrito" className="text-white position-relative fs-5" aria-label="Carrito">
             <i className="bi bi-cart"></i>
             {totalCarrito > 0 && (
-              <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
+              <span className="badge badge-carrito text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
                 {totalCarrito}
               </span>
             )}
