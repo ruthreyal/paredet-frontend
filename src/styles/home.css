@@ -7,7 +7,7 @@
 
 .hero-slider {
   height: 40vh !important; 
-  height: calc(30vh - 80px);
+  height: calc(30vh - 80px) !important;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -138,6 +138,7 @@
   .slider-text {
     font-size: 2rem !important;
     letter-spacing: 1px;
+    padding-top: 70px;
   }
 }
 

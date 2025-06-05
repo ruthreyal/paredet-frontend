@@ -8,6 +8,7 @@ import SubidaGaleria from "../../components/SubidaGaleria";
 import { FaExclamationCircle } from "react-icons/fa";
 import "../../styles/formularioProducto.css";
 import "../../styles/utils.css";
+import AlertaToast from "../../components/AlertaToast";
 
 const FormularioProducto = ({ modo = "crear" }) => {
   const navigate = useNavigate();
@@ -15,6 +16,8 @@ const FormularioProducto = ({ modo = "crear" }) => {
   const token = localStorage.getItem("token");
   const [originalNombre, setOriginalNombre] = useState("");
   const [originalReferencia, setOriginalReferencia] = useState("");
+  const [toastConfirmacion, setToastConfirmacion] = useState(false);
+  const [nuevoProductoId, setNuevoProductoId] = useState(null);
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -136,13 +139,18 @@ const FormularioProducto = ({ modo = "crear" }) => {
 
     try {
       if (modo === "crear") {
-        await productoService.createProducto(productoParaEnviar, token);
+        const resp = await productoService.createProducto(
+          productoParaEnviar,
+          token
+        );
+        const nuevoId = resp.data.id;
+        setNuevoProductoId(nuevoId);
+        setToastConfirmacion(true);
       } else {
         await productoService.updateProducto(id, productoParaEnviar, token);
+        setMensaje("Cambios guardados correctamente");
+        setTimeout(() => navigate("/admin/productos"), 1500);
       }
-
-      setMensaje("Producto guardado correctamente");
-      setTimeout(() => navigate("/admin/productos"), 1500);
     } catch (error) {
       if (error.response?.status === 400 && error.response?.data?.mensaje) {
         setErrors({ general: error.response.data.mensaje });
@@ -375,12 +383,32 @@ const FormularioProducto = ({ modo = "crear" }) => {
           </button>
 
           {modo === "editar" && (
-            <button type="button" className="btn btn-dark w-40" onClick={handleEliminar}>
+            <button
+              type="button"
+              className="btn btn-dark w-40"
+              onClick={handleEliminar}
+            >
               Eliminar producto
             </button>
           )}
         </div>
       </form>
+      <AlertaToast
+        mostrar={toastConfirmacion}
+        onCerrar={() => setToastConfirmacion(false)}
+        mensaje="¿Quieres subir más imágenes a la galería?"
+        tipo="info"
+        mostrarBotones={true}
+        autoCerrar={false}
+        onAceptar={() => {
+          setToastConfirmacion(false);
+          navigate(`/admin/productos/editar/${nuevoProductoId}`);
+        }}
+        onCancelar={() => {
+          setToastConfirmacion(false);
+          navigate("/admin/productos");
+        }}
+      />
     </div>
   );
 };

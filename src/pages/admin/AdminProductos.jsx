@@ -6,6 +6,7 @@ import "../../styles/admin.css";
 const AdminProductos = () => {
   const [productos, setProductos] = useState([]);
   const navigate = useNavigate();
+  const [busqueda, setBusqueda] = useState("");
 
   useEffect(() => {
     const cargarProductos = async () => {
@@ -20,16 +21,31 @@ const AdminProductos = () => {
     cargarProductos();
   }, []);
 
+  const productosFiltrados = productos.filter((producto) =>
+    producto.nombre.toLowerCase().includes(busqueda.toLowerCase())
+  );
+
   return (
     <div className="admin-usuarios-container">
       <h2 className="section-title">Gestión de Productos</h2>
 
-      <button
-        className="btn btn-outline-dark w-40"
-        onClick={() => navigate("/admin/productos/crear")}
-      >
-        + Crear producto
-      </button>
+      <div className="acciones-admin-productos">
+        <button
+          className="btn btn-outline-dark"
+          onClick={() => navigate("/admin/productos/crear")}
+        >
+          + Crear producto
+        </button>
+
+        <input
+          type="text"
+          className="form-control buscador-admin"
+          placeholder="Buscar producto..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+          aria-label="Buscar producto por nombre"
+        />
+      </div>
 
       {productos.length === 0 ? (
         <p>No hay productos registrados.</p>
@@ -43,7 +59,7 @@ const AdminProductos = () => {
             </tr>
           </thead>
           <tbody>
-            {productos.map((producto) => (
+            {productosFiltrados.map((producto) => (
               <tr
                 key={producto.id}
                 onClick={() =>
