@@ -49,12 +49,17 @@ const Registro = () => {
       nuevosErrores.nombre = "El nombre es obligatorio.";
     } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.nombre)) {
       nuevosErrores.nombre = "El nombre solo debe contener letras.";
+    } else if (formData.nombre.length > 20) {
+      nuevosErrores.nombre = "El nombre no puede tener más de 20 caracteres.";
     }
 
     if (!formData.apellido.trim()) {
       nuevosErrores.apellido = "El apellido es obligatorio.";
     } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(formData.apellido)) {
       nuevosErrores.apellido = "El apellido solo debe contener letras.";
+    } else if (formData.apellido.length > 20) {
+      nuevosErrores.apellido =
+        "El apellido no puede tener más de 20 caracteres.";
     }
 
     if (!formData.email.trim()) {
@@ -97,6 +102,9 @@ const Registro = () => {
     if (formData.codigoPostal.length > 10) {
       nuevosErrores.codigoPostal =
         "El código postal no puede tener más de 10 caracteres.";
+    } else if (!/^\d+$/.test(formData.codigoPostal)) {
+      nuevosErrores.codigoPostal =
+        "El código postal solo debe contener números.";
     }
 
     return nuevosErrores;

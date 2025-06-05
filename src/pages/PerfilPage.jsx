@@ -76,18 +76,21 @@ const PerfilPage = () => {
 
     const nuevosErrores = {};
 
-    if (
-      !usuario.nombre.trim() ||
-      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuario.nombre)
-    ) {
+    if (!usuario.nombre.trim()) {
+      nuevosErrores.nombre = "El nombre es obligatorio.";
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuario.nombre)) {
       nuevosErrores.nombre = "El nombre solo debe contener letras.";
+    } else if (usuario.nombre.length > 20) {
+      nuevosErrores.nombre = "El nombre no puede tener más de 20 caracteres.";
     }
 
-    if (
-      !usuario.apellido.trim() ||
-      !/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuario.apellido)
-    ) {
+    if (!usuario.apellido.trim()) {
+      nuevosErrores.apellido = "El apellido es obligatorio.";
+    } else if (!/^[A-Za-zÁÉÍÓÚáéíóúñÑ\s]+$/.test(usuario.apellido)) {
       nuevosErrores.apellido = "El apellido solo debe contener letras.";
+    } else if (usuario.apellido.length > 20) {
+      nuevosErrores.apellido =
+        "El apellido no puede tener más de 20 caracteres.";
     }
 
     if (!/^\d{9}$/.test(usuario.telefono)) {
@@ -110,6 +113,9 @@ const PerfilPage = () => {
     if (usuario.codigoPostal.length > 10) {
       nuevosErrores.codigoPostal =
         "El código postal no puede tener más de 10 caracteres.";
+    } else if (!/^\d+$/.test(usuario.codigoPostal)) {
+      nuevosErrores.codigoPostal =
+        "El código postal solo debe contener números.";
     }
 
     if (Object.keys(nuevosErrores).length > 0) {
