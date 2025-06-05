@@ -110,12 +110,14 @@ const PerfilPage = () => {
       nuevosErrores.ciudad = "La ciudad no puede tener más de 50 caracteres.";
     }
 
-    if (usuario.codigoPostal.length > 10) {
-      nuevosErrores.codigoPostal =
-        "El código postal no puede tener más de 10 caracteres.";
-    } else if (!/^\d+$/.test(usuario.codigoPostal)) {
-      nuevosErrores.codigoPostal =
-        "El código postal solo debe contener números.";
+    if (usuario.codigoPostal) {
+      if (usuario.codigoPostal.length > 10) {
+        nuevosErrores.codigoPostal =
+          "El código postal no puede tener más de 10 caracteres.";
+      } else if (!/^\d+$/.test(usuario.codigoPostal)) {
+        nuevosErrores.codigoPostal =
+          "El código postal solo debe contener números.";
+      }
     }
 
     if (Object.keys(nuevosErrores).length > 0) {

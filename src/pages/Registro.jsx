@@ -99,12 +99,14 @@ const Registro = () => {
       nuevosErrores.pais = "El país no puede tener más de 50 caracteres.";
     }
 
-    if (formData.codigoPostal.length > 10) {
-      nuevosErrores.codigoPostal =
-        "El código postal no puede tener más de 10 caracteres.";
-    } else if (!/^\d+$/.test(formData.codigoPostal)) {
-      nuevosErrores.codigoPostal =
-        "El código postal solo debe contener números.";
+    if (formData.codigoPostal) {
+      if (formData.codigoPostal.length > 10) {
+        nuevosErrores.codigoPostal =
+          "El código postal no puede tener más de 10 caracteres.";
+      } else if (!/^\d+$/.test(formData.codigoPostal)) {
+        nuevosErrores.codigoPostal =
+          "El código postal solo debe contener números.";
+      }
     }
 
     return nuevosErrores;
