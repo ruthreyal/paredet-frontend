@@ -29,12 +29,12 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg navbar-dark px-4 shadow-sm d-none d-lg-flex justify-content-between align-items-center sticky-top">
         <ul className="navbar-nav d-flex justify-content-evenly flex-grow-1">
           <li className="nav-item">
-            <Link className="nav-link" to="/productos?tipo=papel-pintado">
+            <Link className="nav-link" to="/productos?tipo=papel-pintado" aria-label="Papeles pintados">
               Papeles Pintados
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/productos?tipo=fotomural">
+            <Link className="nav-link" to="/productos?tipo=fotomural" aria-label="Fotomurales">
               Fotomurales
             </Link>
           </li>
@@ -53,22 +53,22 @@ const Navbar = () => {
               aria-labelledby="coleccionesDropdown"
             >
               <li>
-                <Link className="dropdown-item" to="/colecciones/arber">
+                <Link className="dropdown-item" to="/colecciones/arber" aria-label="Arber">
                   Arber
                 </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="/colecciones/rumi">
+                <Link className="dropdown-item" to="/colecciones/rumi" aria-label="Rumi">
                   Rumi
                 </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="/colecciones/indigo">
+                <Link className="dropdown-item" to="/colecciones/indigo" aria-label="Indigo">
                   Indigo
                 </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="/colecciones/georgia">
+                <Link className="dropdown-item" to="/colecciones/georgia" aria-label="Georgia">
                   Georgia
                 </Link>
               </li>
@@ -76,7 +76,7 @@ const Navbar = () => {
           </li>
 
           <li className="nav-item">
-            <Link to="/empresa" className="nav-link">
+            <Link to="/empresa" className="nav-link" aria-label="La empresa">
               La Empresa
             </Link>
           </li>
@@ -91,19 +91,20 @@ const Navbar = () => {
                   role="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
+                  aria-label="Iniciar sesión"
                 >
                   <i className="bi bi-person"></i>{" "}
                   <span className="ms-1">¡Hola, {usuario.nombre}!</span>
                 </Link>
                 <ul className="dropdown-menu dropdown-menu-end dropdown-menu-oscuro">
                   <li>
-                    <Link to="/perfil">Mi perfil</Link>
+                    <Link to="/perfil" aria-label="Mi perfil">Mi perfil</Link>
                   </li>
                   <li>
-                    <Link to="/favoritos">Favoritos</Link>
+                    <Link to="/favoritos" aria-label="Favoritos">Favoritos</Link>
                   </li>
                   <li>
-                    <Link to="/pedidos" className="dropdown-item">
+                    <Link to="/pedidos" className="dropdown-item" aria-label="Mis pedidos">
                       Mis pedidos
                     </Link>
                   </li>
@@ -113,20 +114,20 @@ const Navbar = () => {
                     </li>
                   )}
                   <li>
-                    <button onClick={handleLogout}>Cerrar sesión</button>
+                    <button onClick={handleLogout} aria-label="Cerrar sesion">Cerrar sesión</button>
                   </li>
                 </ul>
               </div>
             </li>
           ) : (
             <li className="nav-item">
-              <Link className="nav-link" to="/login">
+              <Link className="nav-link" to="/login" aria-label="Iniciar sesion">
                 <i className="bi bi-person"></i>
               </Link>
             </li>
           )}
           <li className="nav-item">
-            <Link className="nav-link position-relative" to="/carrito">
+            <Link className="nav-link position-relative" to="/carrito" aria-label="Carrito">
               <i className="bi bi-cart"></i>
               {totalCarrito > 0 && (
                 <span className="badge badge-carrito position-absolute top-0 start-100 translate-middle rounded-pill">
@@ -154,7 +155,7 @@ const Navbar = () => {
                 className="form-control me-2"
                 aria-label="Buscar productos"
               />
-              <button type="submit" className="btn btn-outline-light">
+              <button type="submit" className="btn btn-outline-light" aria-label="Buscar">
                 <i className="bi bi-search"></i>
               </button>
             </form>
@@ -168,7 +169,7 @@ const Navbar = () => {
           <button
             className={`menu-toggle ${isOpen ? "open" : ""}`}
             onClick={toggleMenu}
-            aria-label="Toggle menu"
+            aria-label="menu"
           >
             <span></span>
             <span></span>
@@ -182,7 +183,7 @@ const Navbar = () => {
             PAREDET
           </Link>
 
-          <Link to="/carrito" className="text-white position-relative fs-5">
+          <Link to="/carrito" className="text-white position-relative fs-5" aria-label="Carrito">
             <i className="bi bi-cart"></i>
             {totalCarrito > 0 && (
               <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
@@ -201,12 +202,13 @@ const Navbar = () => {
                 onClick={toggleProfileMenu}
                 aria-expanded={isProfileMenuOpen}
                 aria-controls="submenu-usuario"
+                
               >
                 ¡Hola, {usuario.nombre}!{" "}
                 <i className="bi bi-caret-down-fill"></i>
               </button>
             ) : (
-              <Link to="/login" onClick={toggleMenu}>
+              <Link to="/login" onClick={toggleMenu} aria-label="Iniciar sesión">
                 <i className="bi bi-person text-white fs-5"></i>
               </Link>
             )}
@@ -240,6 +242,7 @@ const Navbar = () => {
                 <Link
                   to="/perfil"
                   className="text-white d-block py-1"
+                  aria-label="Mi perfil"
                   onClick={toggleMenu}
                 >
                   Mi perfil
@@ -250,6 +253,7 @@ const Navbar = () => {
                   <Link
                     to="/favoritos"
                     className="text-white d-block py-1"
+                    aria-label="Favoritos"
                     onClick={toggleMenu}
                   >
                     Favoritos
@@ -259,6 +263,7 @@ const Navbar = () => {
                 <Link
                   to="/pedidos"
                   className="dropdown-item"
+                  aria-label="Mis pedidos"
                   onClick={toggleMenu}
                 >
                   Mis pedidos
@@ -283,6 +288,7 @@ const Navbar = () => {
                     toggleMenu();
                   }}
                   className="btn btn-link text-white text-start py-1 px-0"
+                  aria-label="Cerrar sesión"
                 >
                   Cerrar sesión
                 </button>
@@ -296,6 +302,7 @@ const Navbar = () => {
               <Link
                 className="nav-link text-white"
                 to="/productos?tipo=papel-pintado"
+                aria-label="Papeles pintados"
                 onClick={toggleMenu}
               >
                 Papeles Pintados
@@ -305,6 +312,7 @@ const Navbar = () => {
               <Link
                 className="nav-link text-white"
                 to="/productos?tipo=fotomural"
+                aria-label="Fotomurales"
                 onClick={toggleMenu}
               >
                 Fotomurales
@@ -325,6 +333,7 @@ const Navbar = () => {
                     <Link
                       to="/colecciones/arber"
                       className="text-white d-block py-1"
+                      aria-label="Arber"
                       onClick={toggleMenu}
                     >
                       Arber
@@ -334,6 +343,7 @@ const Navbar = () => {
                     <Link
                       to="/colecciones/rumi"
                       className="text-white d-block py-1"
+                      aria-label="Rumi"
                       onClick={toggleMenu}
                     >
                       Rumi
@@ -343,6 +353,7 @@ const Navbar = () => {
                     <Link
                       to="/colecciones/indigo"
                       className="text-white d-block py-1"
+                      aria-label="Indigo"
                       onClick={toggleMenu}
                     >
                       Indigo
@@ -352,6 +363,7 @@ const Navbar = () => {
                     <Link
                       to="/colecciones/georgia"
                       className="text-white d-block py-1"
+                      aria-label="Georgia"
                       onClick={toggleMenu}
                     >
                       Georgia
@@ -361,7 +373,7 @@ const Navbar = () => {
               )}
             </li>
             <li className="nav-item mb-2">
-              <Link to="/empresa" className="nav-link">
+              <Link to="/empresa" className="nav-link" aria-label="La empresa">
                 La Empresa
               </Link>
             </li>
