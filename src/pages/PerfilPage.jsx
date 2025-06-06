@@ -11,10 +11,9 @@ import "../styles/formularios.css";
 import AlertaToast from "../components/AlertaToast";
 
 const PerfilPage = () => {
+  const [confirmarEliminacion, setConfirmarEliminacion] = useState(false);
   const [usuario, setUsuario] = useState(null);
   const [email, setEmail] = useState(null);
-  const [mensaje, setMensaje] = useState("");
-  const [tipoMensaje, setTipoMensaje] = useState("info");
   const [errors, setErrors] = useState({});
   const [contrasenaActual, setContrasenaActual] = useState("");
   const [nuevaPassword, setNuevaPassword] = useState("");
@@ -55,17 +54,12 @@ const PerfilPage = () => {
       .getUsuarioPorEmail(email, token)
       .then(setUsuario)
       .catch(() =>
-        mostrarMensaje("Error al cargar los datos del usuario", "error")
+        mostrarToast(
+          "Error al procesar tu sesión. Vuelve a iniciar sesión.",
+          "error"
+        )
       );
   }, [email, token]);
-
-  const mostrarMensaje = (texto, tipo = "info") => {
-    setMensaje(texto);
-    setTipoMensaje(tipo);
-    setTimeout(() => {
-      setMensaje("");
-    }, 3000);
-  };
 
   const handleChange = (e) => {
     setUsuario((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -177,14 +171,11 @@ const PerfilPage = () => {
     }
   };
 
-  const handleEliminarCuenta = async () => {
-    if (
-      !window.confirm(
-        "¿Estás segura de que deseas eliminar tu cuenta? Esta acción no se puede deshacer."
-      )
-    )
-      return;
+  const handleEliminarCuenta = () => {
+    setConfirmarEliminacion(true);
+  };
 
+  const confirmarEliminarUsuario = async () => {
     try {
       await axios.delete(`${API_BASE_URL}/usuarios/email/${email}`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -192,7 +183,9 @@ const PerfilPage = () => {
       localStorage.removeItem("token");
       window.location.href = "/";
     } catch {
-      mostrarMensaje("Error al eliminar la cuenta", "error");
+      mostrarToast("Error al eliminar la cuenta", "error");
+    } finally {
+      setConfirmarEliminacion(false);
     }
   };
 
@@ -208,6 +201,16 @@ const PerfilPage = () => {
         titulo="Notificación"
         mensaje={toast.mensaje}
         tipo={toast.tipo}
+      />
+      <AlertaToast
+        mostrar={confirmarEliminacion}
+        onCerrar={() => setConfirmarEliminacion(false)}
+        mensaje="¿Estás segura de que deseas eliminar tu cuenta? Esta acción no se puede deshacer."
+        tipo="error"
+        autoCerrar={false}
+        mostrarBotones={true}
+        onAceptar={confirmarEliminarUsuario}
+        onCancelar={() => setConfirmarEliminacion(false)}
       />
 
       <main className="container form-container py-5">

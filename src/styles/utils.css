@@ -82,20 +82,18 @@
 /* ALERTAS TIPO TOAST UNIFICADAS */
 
 .alerta-elegante {
-  background-color: var(--color-principal); /* dorado */
-  color: var(--color-negro);
-  border-left: 5px solid var(--color-negro);
-  padding: 1rem;
+  background-color: #ffffff !important;
+  color: var(--color-texto) !important;
+  padding: 1rem 1.25rem;
   border-radius: var(--border-radius);
   text-align: center;
   font-weight: bold;
 }
 
 .alerta-error {
-  background-color: #f8d7da;
-  color: #842029;
-  border-left: 5px solid #dc3545;
-  padding: 1rem;
+ background-color: #ffffff !important;
+  color: var(--color-texto) !important;
+  padding: 1rem 1.25rem;
   border-radius: var(--border-radius);
   text-align: center;
   font-weight: bold;

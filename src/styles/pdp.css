@@ -15,10 +15,9 @@
   display: flex;
   flex-direction: column;
   gap: 3rem;
-  max-width: 100%;
-  box-sizing: border-box;
-  padding: 0 1rem;
+  max-width: 600px;
 }
+
 
 .imagen-principal {
   width: 100%;
@@ -310,6 +309,26 @@
   }
 }
 
+@media (max-width: 768px) {
+  .pdp-container {
+    flex-direction: column;
+    padding-top: 93px;
+    overflow-x: hidden;
+  }
+
+  .pdp-galeria,
+  .pdp-info {
+    flex: 1 1 100%;
+    max-width: 100%;
+    padding: 0 1rem;
+    box-sizing: border-box;
+  }
+
+  .imagen-principal {
+    width: 100%;
+    max-width: 100%;
+  }
+}
 
 
 
