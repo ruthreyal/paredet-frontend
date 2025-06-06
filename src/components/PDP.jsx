@@ -84,7 +84,6 @@ const PDP = () => {
       if (cargarCarrito) await cargarCarrito();
     } catch (error) {
       mostrarToast("Producto añadido al carrito.", "error");
-
     }
   };
 
@@ -147,7 +146,13 @@ const PDP = () => {
       }
     } catch (error) {
       mostrarToast("Hubo un error intentelo de nuevo.", "error");
+    }
+  };
 
+  const scrollCarrusel = (offset) => {
+    const carrusel = document.getElementById("carruselMiniaturas");
+    if (carrusel) {
+      carrusel.scrollBy({ left: offset, behavior: "smooth" });
     }
   };
 
@@ -187,19 +192,35 @@ const PDP = () => {
               )
             }
           />
-          <div className="miniaturas">
-            {imagenes.map((img, idx) => (
-              <img
-                key={idx}
-                src={img.url}
-                alt={`Miniatura ${idx + 1}`}
-                onClick={() => {
-                  setImagenActiva(img.url);
-                  abrirLightbox(idx);
-                }}
-                className={imagenActiva === img.url ? "activa" : ""}
-              />
-            ))}
+          <div className="miniaturas-carrusel">
+            <button
+              className="btn-carrusel izq"
+              onClick={() => scrollCarrusel(-100)}
+            >
+              <FaChevronLeft />
+            </button>
+
+            <div className="miniaturas" id="carruselMiniaturas">
+              {imagenes.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img.url}
+                  alt={`Miniatura ${idx + 1}`}
+                  onClick={() => {
+                    setImagenActiva(img.url);
+                    abrirLightbox(idx);
+                  }}
+                  className={imagenActiva === img.url ? "activa" : ""}
+                />
+              ))}
+            </div>
+
+            <button
+              className="btn-carrusel der"
+              onClick={() => scrollCarrusel(100)}
+            >
+              <FaChevronRight />
+            </button>
           </div>
         </div>
 
@@ -257,7 +278,10 @@ const PDP = () => {
                 value={cantidad}
                 onChange={(e) => setCantidad(parseInt(e.target.value) || 1)}
               />
-              <button className="btn btn-outline-dark w-100" onClick={handleAddToCart}>
+              <button
+                className="btn btn-outline-dark w-100"
+                onClick={handleAddToCart}
+              >
                 Añadir al carrito
               </button>
             </div>
