@@ -108,7 +108,10 @@ const Producto = () => {
         setFavoritos([...favoritos, idStr]);
       }
     } catch (error) {
-      mostrarToast("No se pudo actualizar el favorito. Inténtalo de nuevo.", "error");
+      mostrarToast(
+        "No se pudo actualizar el favorito. Inténtalo de nuevo.",
+        "error"
+      );
     }
   };
 

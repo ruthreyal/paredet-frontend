@@ -54,6 +54,28 @@ const PDP = () => {
     }
   };
 
+  useEffect(() => {
+    const carrusel = document.getElementById("carruselMiniaturas");
+
+    if (!carrusel) return;
+
+    const handleWheel = (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        carrusel.scrollBy({
+          left: e.deltaY > 0 ? 100 : -100,
+          behavior: "smooth",
+        });
+      }
+    };
+
+    carrusel.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      carrusel.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
+
   const handleAddToCart = async () => {
     if (!token || isTokenExpired(token)) {
       mostrarToast("Debes iniciar sesión para añadir al carrito", "info");
