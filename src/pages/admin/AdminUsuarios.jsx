@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useCallback } from "react";
 import usuarioService from "../../services/usuarioService";
 import "../../styles/adminUsuarios.css";
 import FormularioCrearUsuario from "./FormularioCrearUsuario";
@@ -13,20 +13,16 @@ const AdminUsuarios = () => {
 
   const token = localStorage.getItem("token");
 
-  const cargarUsuarios = async () => {
-    try {
-      const data = await usuarioService.getTodosUsuarios(token);
-      setUsuarios(data);
-    } catch (error) {
-      setMensaje("Error al cargar usuarios");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    cargarUsuarios();
-  }, [token]);
+  const cargarUsuarios = useCallback(async () => {
+  try {
+    const data = await usuarioService.getTodosUsuarios(token);
+    setUsuarios(data);
+  } catch (error) {
+    setMensaje("Error al cargar usuarios");
+  } finally {
+    setLoading(false);
+  }
+}, [token]);
 
   const usuariosFiltrados = usuarios.filter((usuario) =>
     usuario.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||

@@ -12,6 +12,7 @@ const CarritoPage = () => {
     calcularTotal,
     finalizarCompra,
     mensajeCompra,
+    vaciarCarrito,
   } = useContext(CarritoContext);
 
   const [toast, setToast] = useState({
@@ -138,10 +139,14 @@ const CarritoPage = () => {
             <h4>
               Total: <strong>{calcularTotal().toFixed(2)} €</strong>
             </h4>
-            <button className="btn btn-outline-dark w-40"
+            <button
+              className="btn btn-outline-dark w-40"
               onClick={async () => {
-                await finalizarCompra();
-                mostrarToast("¡Compra realizada con éxito!", "elegante");
+                const ok = await finalizarCompra();
+                if (ok) {
+                  vaciarCarrito();
+                  mostrarToast("¡Compra realizada con éxito!", "elegante");
+                }
               }}
             >
               Finalizar compra

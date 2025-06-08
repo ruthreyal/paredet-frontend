@@ -106,8 +106,12 @@ const FormularioProducto = ({ modo = "crear" }) => {
       nuevosErrores.precio = "El precio debe ser mayor que 0.";
     }
 
-    if (formData.stock < 0) {
+    if (formData.stock === "") {
+      nuevosErrores.stock = "El stock es obligatorio.";
+    } else if (Number(formData.stock) < 0) {
       nuevosErrores.stock = "El stock no puede ser negativo.";
+    } else if (!Number.isInteger(Number(formData.stock))) {
+      nuevosErrores.stock = "El stock debe ser un número entero.";
     }
 
     if (formData.peso < 0) {

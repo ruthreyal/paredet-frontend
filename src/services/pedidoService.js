@@ -28,9 +28,10 @@ const getVentasMesActual = (token) =>
   });
 
 
-export default {
+const pedidoService = {
   getMisPedidos,
   getTodosPedidos,
   getVentasMesActual
 };
 
+export default pedidoService;

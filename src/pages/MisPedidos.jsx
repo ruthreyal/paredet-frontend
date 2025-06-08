@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import pedidoService from "../services/pedidoService";
-import { jwtDecode } from "jwt-decode";
 
 const MisPedidos = () => {
   const [pedidos, setPedidos] = useState([]);

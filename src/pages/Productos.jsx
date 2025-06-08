@@ -149,7 +149,7 @@ const Producto = () => {
       <main className="contenedor-productos">
         <div className="filtro-orden">
           <h2 className="titulo-pagina">
-            {tipo === "papel-pintado" ? "Papel pintado" : "Fotomurales"}
+            {tipo === "papel-pintado" ? "Papel Pintado" : "Fotomurales"}
           </h2>
           <div>
             <label htmlFor="orden">Ordenar por:</label>

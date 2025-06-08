@@ -37,9 +37,13 @@ const Home = () => {
         const response = await productoService.getProductos();
         const productos = response.data;
 
-        setSliderProductos(productos.slice(0, 3));
-        setTextoActivo(0); 
-        setProductos(productos.slice(0, 4));
+        const productosOrdenados = [...productos].sort(
+          (a, b) => new Date(b.fechaCreacion) - new Date(a.fechaCreacion)
+        );
+
+        setSliderProductos(productosOrdenados.slice(0, 3));
+        setTextoActivo(0);
+        setProductos(productosOrdenados.slice(0, 4));
       } catch (error) {
         console.error("Error al cargar productos", error);
       }
@@ -75,6 +79,20 @@ const Home = () => {
           </div>
         </section>
       )}
+      <section className="info">
+        <p>
+          Con los papeles pintados decorativos, las paredes se convierten en
+          garantes de comodidad. En nuestra tienda online encontrará todo lo que
+          necesita para decorarlas a su gusto. Papel pintado de lujo, ofrecemos una amplia gama para
+          pedir en línea. No importa si se decide por un papel pintado tnt o un
+          fotomural - con nosotros comprará todo lo que busca para dar un toque
+          individual a las paredes. Convierta su hogar en un lugar con un
+          ambiente especial y utilice los papeles pintados de alta calidad. Encontrará colecciónes y catálogos más
+          diversos.
+          Deje que su creatividad fluya libremente en su salón, oficina o
+          habitación de los niños y realice sus ideas para empapelar.
+        </p>
+      </section>
 
       <section className="novedades">
         <h2>Novedades</h2>
