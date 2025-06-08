@@ -43,7 +43,7 @@ const AuthProvider = ({ children }) => {
           "/login",
           "/registro",
           "/restablecer-password",
-          "/recuperar-password"
+          "/recuperar-password",
         ];
 
         const rutaActual = location.pathname;
@@ -74,27 +74,27 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-  let timeout;
+    let timeout;
 
-  if (token && !isTokenExpired(token)) {
-    const { exp } = JSON.parse(atob(token.split(".")[1]));
-    const tiempoRestante = exp * 1000 - Date.now();
+    if (token && !isTokenExpired(token)) {
+      const { exp } = JSON.parse(atob(token.split(".")[1]));
+      const tiempoRestante = exp * 1000 - Date.now();
 
-    timeout = setTimeout(() => {
-  localStorage.removeItem("token");
-  setToken(null);
-  setUsuario(null);
-  setMensajeLogout("Tu sesión ha caducado. Por favor, vuelve a iniciar sesión.");
-  navigate("/");
-}, tiempoRestante);
+      timeout = setTimeout(() => {
+        localStorage.removeItem("token");
+        setToken(null);
+        setUsuario(null);
+        setMensajeLogout(
+          "Tu sesión ha caducado. Por favor, vuelve a iniciar sesión."
+        );
+        navigate("/");
+      }, tiempoRestante);
+    }
 
-  }
-
-  return () => {
-    if (timeout) clearTimeout(timeout);
-  };
-}, [token, navigate]);
-
+    return () => {
+      if (timeout) clearTimeout(timeout);
+    };
+  }, [token, navigate]);
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -105,26 +105,20 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-  value={{
-    usuario,
-    token,
-    login,
-    logout,
-    cargando,
-    isAuthenticated: !!usuario,
-    mensajeLogout,
-    setMensajeLogout
-  }}
->
-
+      value={{
+        usuario,
+        token,
+        login,
+        logout,
+        cargando,
+        isAuthenticated: !!usuario,
+        mensajeLogout,
+        setMensajeLogout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
 export default AuthProvider;
-
-
-
-
-

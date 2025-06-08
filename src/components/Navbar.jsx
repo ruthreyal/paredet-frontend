@@ -1,8 +1,9 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import "../styles/navbar.css";
 import { CarritoContext } from "../context/CarritoContext";
+import coleccionService from "../services/coleccionService";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +16,20 @@ const Navbar = () => {
   const { vaciarCarrito } = useContext(CarritoContext);
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleProfileMenu = () => setIsProfileMenuOpen(!isProfileMenuOpen);
+  const [colecciones, setColecciones] = useState([]);
+
+  useEffect(() => {
+    const cargarColecciones = async () => {
+      try {
+        const response = await coleccionService.getColecciones();
+        setColecciones(response.data);
+      } catch (error) {
+        console.error("Error al cargar colecciones:", error);
+      }
+    };
+
+    cargarColecciones();
+  }, []);
 
   const handleLogout = () => {
     vaciarCarrito();
@@ -29,12 +44,20 @@ const Navbar = () => {
       <nav className="navbar navbar-expand-lg navbar-dark px-4 shadow-sm d-none d-lg-flex justify-content-between align-items-center sticky-top">
         <ul className="navbar-nav d-flex justify-content-evenly flex-grow-1">
           <li className="nav-item">
-            <Link className="nav-link" to="/productos?tipo=papel-pintado" aria-label="Papeles pintados">
+            <Link
+              className="nav-link"
+              to="/productos?tipo=papel-pintado"
+              aria-label="Papeles pintados"
+            >
               Papeles Pintados
             </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/productos?tipo=fotomural" aria-label="Fotomurales">
+            <Link
+              className="nav-link"
+              to="/productos?tipo=fotomural"
+              aria-label="Fotomurales"
+            >
               Fotomurales
             </Link>
           </li>
@@ -52,26 +75,17 @@ const Navbar = () => {
               className="dropdown-menu dropdown-menu-oscuro"
               aria-labelledby="coleccionesDropdown"
             >
-              <li>
-                <Link className="dropdown-item" to="/colecciones/arber" aria-label="Arber">
-                  Arber
-                </Link>
-              </li>
-              <li>
-                <Link className="dropdown-item" to="/colecciones/rumi" aria-label="Rumi">
-                  Rumi
-                </Link>
-              </li>
-              <li>
-                <Link className="dropdown-item" to="/colecciones/indigo" aria-label="Indigo">
-                  Indigo
-                </Link>
-              </li>
-              <li>
-                <Link className="dropdown-item" to="/colecciones/georgia" aria-label="Georgia">
-                  Georgia
-                </Link>
-              </li>
+              {colecciones.map((coleccion) => (
+                <li key={coleccion.id}>
+                  <Link
+                    className="dropdown-item"
+                    to={`/colecciones/${coleccion.nombre.toLowerCase()}`}
+                    aria-label={coleccion.nombre}
+                  >
+                    {coleccion.nombre}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </li>
 
@@ -98,13 +112,21 @@ const Navbar = () => {
                 </Link>
                 <ul className="dropdown-menu dropdown-menu-end dropdown-menu-oscuro">
                   <li>
-                    <Link to="/perfil" aria-label="Mi perfil">Mi perfil</Link>
+                    <Link to="/perfil" aria-label="Mi perfil">
+                      Mi perfil
+                    </Link>
                   </li>
                   <li>
-                    <Link to="/favoritos" aria-label="Favoritos">Favoritos</Link>
+                    <Link to="/favoritos" aria-label="Favoritos">
+                      Favoritos
+                    </Link>
                   </li>
                   <li>
-                    <Link to="/pedidos" className="dropdown-item" aria-label="Mis pedidos">
+                    <Link
+                      to="/pedidos"
+                      className="dropdown-item"
+                      aria-label="Mis pedidos"
+                    >
                       Mis pedidos
                     </Link>
                   </li>
@@ -114,20 +136,30 @@ const Navbar = () => {
                     </li>
                   )}
                   <li>
-                    <button onClick={handleLogout} aria-label="Cerrar sesion">Cerrar sesión</button>
+                    <button onClick={handleLogout} aria-label="Cerrar sesion">
+                      Cerrar sesión
+                    </button>
                   </li>
                 </ul>
               </div>
             </li>
           ) : (
             <li className="nav-item">
-              <Link className="nav-link" to="/login" aria-label="Iniciar sesion">
+              <Link
+                className="nav-link"
+                to="/login"
+                aria-label="Iniciar sesion"
+              >
                 <i className="bi bi-person"></i>
               </Link>
             </li>
           )}
           <li className="nav-item">
-            <Link className="nav-link position-relative" to="/carrito" aria-label="Carrito">
+            <Link
+              className="nav-link position-relative"
+              to="/carrito"
+              aria-label="Carrito"
+            >
               <i className="bi bi-cart"></i>
               {totalCarrito > 0 && (
                 <span className="badge badge-carrito position-absolute top-0 start-100 translate-middle rounded-pill">
@@ -155,7 +187,11 @@ const Navbar = () => {
                 className="form-control me-2"
                 aria-label="Buscar productos"
               />
-              <button type="submit" className="btn btn-outline-light" aria-label="Buscar">
+              <button
+                type="submit"
+                className="btn btn-outline-light"
+                aria-label="Buscar"
+              >
                 <i className="bi bi-search"></i>
               </button>
             </form>
@@ -183,7 +219,11 @@ const Navbar = () => {
             PAREDET
           </Link>
 
-          <Link to="/carrito" className="text-white position-relative fs-5" aria-label="Carrito">
+          <Link
+            to="/carrito"
+            className="text-white position-relative fs-5"
+            aria-label="Carrito"
+          >
             <i className="bi bi-cart"></i>
             {totalCarrito > 0 && (
               <span className="badge badge-carrito text-dark position-absolute top-0 start-100 translate-middle rounded-pill">
@@ -202,13 +242,16 @@ const Navbar = () => {
                 onClick={toggleProfileMenu}
                 aria-expanded={isProfileMenuOpen}
                 aria-controls="submenu-usuario"
-                
               >
                 ¡Hola, {usuario.nombre}!{" "}
                 <i className="bi bi-caret-down-fill"></i>
               </button>
             ) : (
-              <Link to="/login" onClick={toggleMenu} aria-label="Iniciar sesión">
+              <Link
+                to="/login"
+                onClick={toggleMenu}
+                aria-label="Iniciar sesión"
+              >
                 <i className="bi bi-person text-white fs-5"></i>
               </Link>
             )}
@@ -329,46 +372,18 @@ const Navbar = () => {
               </button>
               {showColecciones && (
                 <ul className="submenu-desplegable list-unstyled ps-5 mt-2">
-                  <li>
-                    <Link
-                      to="/colecciones/arber"
-                      className="text-white d-block py-1"
-                      aria-label="Arber"
-                      onClick={toggleMenu}
-                    >
-                      Arber
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/colecciones/rumi"
-                      className="text-white d-block py-1"
-                      aria-label="Rumi"
-                      onClick={toggleMenu}
-                    >
-                      Rumi
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/colecciones/indigo"
-                      className="text-white d-block py-1"
-                      aria-label="Indigo"
-                      onClick={toggleMenu}
-                    >
-                      Indigo
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/colecciones/georgia"
-                      className="text-white d-block py-1"
-                      aria-label="Georgia"
-                      onClick={toggleMenu}
-                    >
-                      Georgia
-                    </Link>
-                  </li>
+                  {colecciones.map((coleccion) => (
+                    <li key={coleccion.id}>
+                      <Link
+                        to={`/colecciones/${coleccion.nombre.toLowerCase()}`}
+                        className="text-white d-block py-1"
+                        aria-label={coleccion.nombre}
+                        onClick={toggleMenu}
+                      >
+                        {coleccion.nombre}
+                      </Link>
+                    </li>
+                  ))}
                 </ul>
               )}
             </li>

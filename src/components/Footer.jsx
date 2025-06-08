@@ -15,7 +15,9 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-info">
-        <p><strong>Paredet</strong></p>
+        <p>
+          <strong>Paredet</strong>
+        </p>
         <p>Empresa ficticia creada como parte de un proyecto educativo.</p>
         <p>Ubicación: Calle Imaginaria 123, Madrid, España</p>
         <p>Email: paredet.tiendaonline@gmail.com | Teléfono: +34 912 345 678</p>
@@ -28,7 +30,10 @@ const Footer = () => {
           <FaTwitter onClick={() => handleClick("Twitter")} />
         </div>
       </div>
-      <small>&copy; {new Date().getFullYear()} Paredet. Todos los derechos reservados.</small>
+      <small>
+        &copy; {new Date().getFullYear()} Paredet. Todos los derechos
+        reservados.
+      </small>
 
       {/* Alerta de redes sociales */}
       <AlertaToast
@@ -42,5 +47,3 @@ const Footer = () => {
 };
 
 export default Footer;
-
-

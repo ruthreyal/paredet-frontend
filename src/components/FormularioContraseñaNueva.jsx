@@ -2,7 +2,6 @@ import React from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { FaExclamationCircle } from "react-icons/fa";
 
-
 const FormularioContraseñaNueva = ({
   password,
   repetirPassword,
@@ -11,7 +10,7 @@ const FormularioContraseñaNueva = ({
   verRepetir,
   setVerRepetir,
   handleChange,
-  errors
+  errors,
 }) => {
   return (
     <>
@@ -38,7 +37,10 @@ const FormularioContraseñaNueva = ({
           </span>
         </div>
         {errors?.password && (
-          <div className="form-error" role="alert"><FaExclamationCircle className="icono-error" />{errors.password}</div>
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.password}
+          </div>
         )}
       </div>
 
@@ -65,7 +67,10 @@ const FormularioContraseñaNueva = ({
           </span>
         </div>
         {errors?.repetirPassword && (
-          <div className="form-error" role="alert"><FaExclamationCircle className="icono-error" />{errors.repetirPassword}</div>
+          <div className="form-error" role="alert">
+            <FaExclamationCircle className="icono-error" />
+            {errors.repetirPassword}
+          </div>
         )}
       </div>
     </>
@@ -73,4 +78,3 @@ const FormularioContraseñaNueva = ({
 };
 
 export default FormularioContraseñaNueva;
-

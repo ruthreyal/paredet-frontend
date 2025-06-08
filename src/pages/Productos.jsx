@@ -7,6 +7,7 @@ import { FaHeart, FaRegHeart } from "react-icons/fa";
 import "../styles/productos.css";
 import { Link } from "react-router-dom";
 import AlertaToast from "../components/AlertaToast";
+import categoriaService from "../services/categoriaService";
 
 const Producto = () => {
   const [productos, setProductos] = useState([]);
@@ -18,10 +19,6 @@ const Producto = () => {
   const decoded = token ? jwtDecode(token) : null;
   const usuarioId = decoded?.id || null;
 
-  const CATEGORIAS = {
-    "papel-pintado": "60b75e42-81be-4134-a929-8720423f3b23",
-    fotomural: "c6d9fe55-60a0-4c0f-aef3-27c3f7f57747",
-  };
   const [toast, setToast] = useState({
     mostrar: false,
     mensaje: "",
@@ -47,11 +44,33 @@ const Producto = () => {
   const tipo = searchParams.get("tipo");
 
   useEffect(() => {
+    const slugify = (texto) =>
+      texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // elimina acentos
+        .replace(/\s+/g, "-"); // reemplaza espacios por guiones
+
     const fetchDatos = async () => {
       try {
-        const res = await productoService.getProductos();
-        const idCategoria = CATEGORIAS[tipo];
-        const filtrados = res.data.filter((p) => p.categoriaId === idCategoria);
+        const [productosRes, categoriasRes] = await Promise.all([
+          productoService.getProductos(),
+          categoriaService.getCategorias(),
+        ]);
+
+        const categoriaEncontrada = categoriasRes.data.find(
+          (cat) => slugify(cat.nombre) === tipo
+        );
+
+        if (!categoriaEncontrada) {
+          console.warn("No se encontró categoría para tipo:", tipo);
+          setProductos([]);
+          return;
+        }
+
+        const filtrados = productosRes.data.filter(
+          (p) => p.categoriaId === categoriaEncontrada.id
+        );
         setProductos(filtrados);
 
         if (usuarioId) {

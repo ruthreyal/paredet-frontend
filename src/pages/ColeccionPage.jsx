@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import productoService from "../services/productoService";
 import imagenProductoService from "../services/imagenProductoService";
 import favoritoService from "../services/favoritoService";
+import coleccionService from "../services/coleccionService";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import "../styles/productos.css";
-import { Link } from "react-router-dom";
 
 const ColeccionPage = () => {
   const { nombre } = useParams();
@@ -28,20 +28,33 @@ const ColeccionPage = () => {
     }
   };
 
-  const COLECCIONES = {
-    arber: "09b90179-3f19-48a6-8da9-6406910c7276",
-    rumi: "19fb4f34-50c3-4026-a2a2-f6b020c7ac7f",
-    indigo: "2e3f457c-4261-4bb1-84bc-8e964ae0b1da",
-    kalinka: "d7f36f1f-c6e4-4845-adbb-fcbc9f91c363",
-    georgia: "eaac8fdf-3e3e-4b10-bd94-3065574b6de8",
-  };
+  const slugify = (texto) =>
+    texto
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, "-");
 
   useEffect(() => {
     const fetchDatos = async () => {
       try {
-        const res = await productoService.getProductos();
-        const idColeccion = COLECCIONES[nombre.toLowerCase()];
-        const filtrados = res.data.filter((p) => p.coleccionId === idColeccion);
+        const [productosRes, coleccionesRes] = await Promise.all([
+          productoService.getProductos(),
+          coleccionService.getColecciones(),
+        ]);
+
+        const coleccionEncontrada = coleccionesRes.data.find(
+          (col) => slugify(col.nombre) === nombre
+        );
+
+        if (!coleccionEncontrada) {
+          setProductos([]);
+          return;
+        }
+
+        const filtrados = productosRes.data.filter(
+          (p) => p.coleccionId === coleccionEncontrada.id
+        );
 
         const productosConImagen = await Promise.all(
           filtrados.map(async (producto) => {
@@ -71,7 +84,7 @@ const ColeccionPage = () => {
           setFavoritos(idsFavoritos);
         }
       } catch (error) {
-        console.error("Error al obtener datos:", error);
+        console.error("Error al obtener datos de colección:", error);
       }
     };
 
@@ -119,7 +132,7 @@ const ColeccionPage = () => {
     <main className="contenedor-productos cuadrada">
       <div className="filtro-orden">
         <h2 className="titulo-pagina">
-          {nombre.charAt(0).toUpperCase() + nombre.slice(1)}
+          {nombre.charAt(0).toUpperCase() + nombre.slice(1).replace("-", " ")}
         </h2>
         <div>
           <label htmlFor="orden">Ordenar por:</label>
@@ -169,7 +182,7 @@ const ColeccionPage = () => {
                 </button>
               </div>
               <h3>{producto.nombre}</h3>
-              <p>{producto.coleccion?.nombre}</p>
+              <p>{producto.categoria?.nombre}</p>
               <p className="precio">{producto.precio} €</p>
             </Link>
           );
@@ -180,3 +193,4 @@ const ColeccionPage = () => {
 };
 
 export default ColeccionPage;
+

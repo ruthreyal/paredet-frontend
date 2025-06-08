@@ -10,7 +10,7 @@ const FormularioCambiarContraseña = ({
   setVerNueva,
   handleChange,
   handleSubmit,
-  errors = {}
+  errors = {},
 }) => {
   return (
     <form onSubmit={handleSubmit}>
@@ -87,4 +87,3 @@ const FormularioCambiarContraseña = ({
 };
 
 export default FormularioCambiarContraseña;
-

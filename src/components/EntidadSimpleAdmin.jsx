@@ -174,7 +174,10 @@ const EntidadSimpleAdmin = ({ titulo, endpoint, nombreEntidadSingular }) => {
             carpeta="colecciones"
           />
 
-          <button className="btn btn-outline-dark w-40" onClick={handleGuardarNuevo}>
+          <button
+            className="btn btn-outline-dark w-40"
+            onClick={handleGuardarNuevo}
+          >
             Guardar {nombreEntidadSingular}
           </button>
         </div>
